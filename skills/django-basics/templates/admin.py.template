@@ -1,0 +1,372 @@
+# Django Admin Configuration Template
+# Copy patterns you need and customize
+
+from django.contrib import admin
+from django.utils.html import format_html
+from django.urls import reverse
+from django.db.models import Count
+from .models import YourModel, RelatedModel
+
+
+# =============================================================================
+# BASIC ADMIN REGISTRATION
+# =============================================================================
+
+# Simple registration (minimal customization)
+# admin.site.register(YourModel)
+
+
+# =============================================================================
+# FULL-FEATURED ADMIN
+# =============================================================================
+
+@admin.register(YourModel)
+class YourModelAdmin(admin.ModelAdmin):
+    """
+    Full-featured admin for YourModel.
+    """
+
+    # List view configuration
+    list_display = [
+        'name',
+        'author',
+        'is_active',
+        'created_at',
+        'view_count_display',  # Custom method
+        'actions_column',  # Custom actions
+    ]
+
+    list_filter = [
+        'is_active',
+        'is_featured',
+        'created_at',
+        ('author', admin.RelatedOnlyFieldListFilter),  # Only show authors with items
+    ]
+
+    search_fields = [
+        'name',
+        'description',
+        'author__username',
+        'author__email',
+    ]
+
+    # Ordering
+    ordering = ['-created_at']
+
+    # Date hierarchy
+    date_hierarchy = 'created_at'
+
+    # Pagination
+    list_per_page = 25
+
+    # Editable fields in list view
+    list_editable = ['is_active', 'is_featured']
+
+    # Fields shown in detail view
+    fields = [
+        'name',
+        'slug',
+        'description',
+        'author',
+        'is_active',
+        'is_featured',
+        ('created_at', 'updated_at'),  # Display side-by-side
+    ]
+
+    # Read-only fields
+    readonly_fields = ['created_at', 'updated_at', 'view_count_display']
+
+    # Auto-populate fields
+    prepopulated_fields = {'slug': ('name',)}
+
+    # Organize fields into sections
+    fieldsets = (
+        ('Basic Information', {
+            'fields': ('name', 'slug', 'description')
+        }),
+        ('Relationships', {
+            'fields': ('author',),
+            'classes': ('collapse',)  # Collapsible section
+        }),
+        ('Status', {
+            'fields': ('is_active', 'is_featured'),
+            'description': 'Control visibility and featuring'
+        }),
+        ('Metadata', {
+            'fields': ('created_at', 'updated_at'),
+            'classes': ('collapse',)
+        }),
+    )
+
+    # Filter by related fields
+    autocomplete_fields = ['author']  # Requires search_fields in related admin
+
+    # Raw ID fields (for FK/M2M with many items)
+    # raw_id_fields = ['author']
+
+    # Custom actions
+    actions = ['make_active', 'make_inactive', 'mark_as_featured']
+
+    @admin.action(description='Mark selected items as active')
+    def make_active(self, request, queryset):
+        """Bulk action to activate items."""
+        updated = queryset.update(is_active=True)
+        self.message_user(request, f'{updated} items marked as active.')
+
+    @admin.action(description='Mark selected items as inactive')
+    def make_inactive(self, request, queryset):
+        """Bulk action to deactivate items."""
+        updated = queryset.update(is_active=False)
+        self.message_user(request, f'{updated} items marked as inactive.')
+
+    @admin.action(description='Mark as featured')
+    def mark_as_featured(self, request, queryset):
+        """Bulk action to feature items."""
+        updated = queryset.update(is_featured=True)
+        self.message_user(request, f'{updated} items marked as featured.')
+
+    # Custom display methods
+    @admin.display(description='View Count', ordering='view_count')
+    def view_count_display(self, obj):
+        """Display view count with formatting."""
+        if hasattr(obj, 'view_count'):
+            if obj.view_count > 1000:
+                return format_html('<strong>{}</strong>', obj.view_count)
+            return obj.view_count
+        return '-'
+
+    @admin.display(description='Actions')
+    def actions_column(self, obj):
+        """Display custom action links."""
+        view_url = reverse('yourapp:detail', args=[obj.slug])
+        return format_html(
+            '<a href="{}" target="_blank">View</a>',
+            view_url
+        )
+
+    # Override queryset
+    def get_queryset(self, request):
+        """Optimize queryset with select_related/prefetch_related."""
+        queryset = super().get_queryset(request)
+        queryset = queryset.select_related('author')
+        # Add annotations
+        queryset = queryset.annotate(
+            related_count=Count('related_items')
+        )
+        return queryset
+
+    # Custom form validation
+    def save_model(self, request, obj, form, change):
+        """Override save to add custom logic."""
+        if not change:  # Creating new object
+            obj.author = request.user
+        super().save_model(request, obj, form, change)
+
+
+# =============================================================================
+# INLINE ADMIN (For related models)
+# =============================================================================
+
+class RelatedModelInline(admin.TabularInline):
+    """
+    Inline for editing related models.
+    Use TabularInline for compact display or StackedInline for full fields.
+    """
+    model = RelatedModel
+    extra = 1  # Number of empty forms
+    max_num = 10  # Maximum number of forms
+    fields = ['name', 'is_active']
+    # readonly_fields = ['created_at']
+
+
+@admin.register(RelatedModel)
+class RelatedModelAdmin(admin.ModelAdmin):
+    """Admin for RelatedModel."""
+    list_display = ['name', 'created_at']
+    search_fields = ['name']
+
+    # Add inline to parent model
+    # inlines = [RelatedModelInline]
+
+
+# =============================================================================
+# ADVANCED ADMIN CUSTOMIZATION
+# =============================================================================
+
+@admin.register(YourModel)
+class AdvancedYourModelAdmin(admin.ModelAdmin):
+    """
+    Advanced admin with all features.
+    """
+
+    # Custom list view template
+    change_list_template = 'admin/yourapp/yourmodel_change_list.html'
+
+    # Custom detail view template
+    # change_form_template = 'admin/yourapp/yourmodel_change_form.html'
+
+    # Permissions
+    def has_delete_permission(self, request, obj=None):
+        """Only superusers can delete."""
+        return request.user.is_superuser
+
+    def has_change_permission(self, request, obj=None):
+        """Users can only edit their own items."""
+        if obj is not None and not request.user.is_superuser:
+            return obj.author == request.user
+        return True
+
+    # Custom filters
+    def get_list_filter(self, request):
+        """Customize filters based on user."""
+        filters = super().get_list_filter(request)
+        if request.user.is_superuser:
+            return filters + ('author',)
+        return filters
+
+    # Custom queryset based on user
+    def get_queryset(self, request):
+        """Show all items for superusers, own items for others."""
+        qs = super().get_queryset(request)
+        if request.user.is_superuser:
+            return qs
+        return qs.filter(author=request.user)
+
+
+# =============================================================================
+# CUSTOM ADMIN FILTERS
+# =============================================================================
+
+from django.contrib.admin import SimpleListFilter
+
+
+class ActiveStatusFilter(SimpleListFilter):
+    """
+    Custom filter for active/inactive items.
+    """
+    title = 'status'
+    parameter_name = 'status'
+
+    def lookups(self, request, model_admin):
+        """Define filter options."""
+        return (
+            ('active', 'Active'),
+            ('inactive', 'Inactive'),
+            ('featured', 'Featured'),
+        )
+
+    def queryset(self, request, queryset):
+        """Apply filter."""
+        if self.value() == 'active':
+            return queryset.filter(is_active=True)
+        if self.value() == 'inactive':
+            return queryset.filter(is_active=False)
+        if self.value() == 'featured':
+            return queryset.filter(is_featured=True)
+        return queryset
+
+
+# Add to admin
+# list_filter = [ActiveStatusFilter, ...]
+
+
+# =============================================================================
+# ADMIN FORMS
+# =============================================================================
+
+from django import forms
+
+
+class YourModelAdminForm(forms.ModelForm):
+    """
+    Custom form for admin.
+    Use when: Need custom validation or widgets in admin.
+    """
+
+    class Meta:
+        model = YourModel
+        fields = '__all__'
+        widgets = {
+            'description': forms.Textarea(attrs={'rows': 10}),
+        }
+
+    def clean_name(self):
+        """Custom validation."""
+        name = self.cleaned_data.get('name')
+        if 'forbidden' in name.lower():
+            raise forms.ValidationError('Name contains forbidden words.')
+        return name
+
+
+@admin.register(YourModel)
+class YourModelWithFormAdmin(admin.ModelAdmin):
+    """Admin using custom form."""
+    form = YourModelAdminForm
+
+
+# =============================================================================
+# SITE CUSTOMIZATION
+# =============================================================================
+
+# Customize admin site
+admin.site.site_header = 'My Site Admin'
+admin.site.site_title = 'My Site Admin Portal'
+admin.site.index_title = 'Welcome to My Site Admin'
+
+
+# =============================================================================
+# COMMON ADMIN PATTERNS REFERENCE
+# =============================================================================
+
+"""
+List View Customization:
+- list_display: Fields/methods to show in list
+- list_filter: Filters in sidebar
+- search_fields: Fields to search
+- ordering: Default ordering
+- list_editable: Fields editable in list view
+- list_per_page: Items per page
+- date_hierarchy: Date-based navigation
+
+Detail View Customization:
+- fields: Fields to show (simple layout)
+- fieldsets: Organized sections
+- readonly_fields: Non-editable fields
+- prepopulated_fields: Auto-fill from other fields
+- autocomplete_fields: Autocomplete for FK/M2M
+- raw_id_fields: Raw ID for FK/M2M
+
+Actions:
+- actions: List of custom actions
+- @admin.action: Decorator for action methods
+
+Permissions:
+- has_add_permission(): Control add permission
+- has_change_permission(): Control edit permission
+- has_delete_permission(): Control delete permission
+- has_view_permission(): Control view permission
+
+Queryset Optimization:
+- get_queryset(): Customize queryset
+- select_related(): For FK/OneToOne
+- prefetch_related(): For M2M/reverse FK
+- annotate(): Add computed fields
+
+Inlines:
+- TabularInline: Compact table layout
+- StackedInline: Full field layout
+- extra: Number of empty forms
+- max_num: Maximum forms
+
+Display Methods:
+- @admin.display: Decorator for custom columns
+- description: Column header
+- ordering: Enable sorting
+- boolean: Show as boolean icon
+- short_description: (deprecated, use @admin.display)
+
+Filters:
+- SimpleListFilter: Custom filter class
+- lookups(): Define filter options
+- queryset(): Apply filter logic
+"""

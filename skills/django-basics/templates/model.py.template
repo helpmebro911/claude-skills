@@ -1,0 +1,171 @@
+# Django Model Template
+# Copy this template and customize for your needs
+
+from django.db import models
+from django.utils import timezone
+from django.contrib.auth import get_user_model
+
+User = get_user_model()
+
+
+class YourModel(models.Model):
+    """
+    Brief description of what this model represents.
+    """
+    # Primary fields
+    name = models.CharField(max_length=200, help_text="Display name")
+    slug = models.SlugField(max_length=200, unique=True, help_text="URL-friendly identifier")
+
+    # Content fields
+    description = models.TextField(blank=True, help_text="Detailed description")
+
+    # Relationship fields
+    author = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name='your_models',
+        help_text="User who created this"
+    )
+
+    # Status fields
+    is_active = models.BooleanField(default=True)
+    is_featured = models.BooleanField(default=False)
+
+    # Timestamps (auto-managed)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    # Optional: File/Image fields
+    # image = models.ImageField(upload_to='images/%Y/%m/%d/', blank=True, null=True)
+    # file = models.FileField(upload_to='files/', blank=True, null=True)
+
+    class Meta:
+        verbose_name = "Your Model"
+        verbose_name_plural = "Your Models"
+        ordering = ['-created_at']
+        indexes = [
+            models.Index(fields=['-created_at']),
+            models.Index(fields=['slug']),
+        ]
+        # Optional: Unique together constraint
+        # unique_together = [['field1', 'field2']]
+
+    def __str__(self):
+        """String representation for admin and debugging."""
+        return self.name
+
+    def get_absolute_url(self):
+        """Returns the URL to access this object."""
+        from django.urls import reverse
+        return reverse('yourapp:detail', kwargs={'slug': self.slug})
+
+    def save(self, *args, **kwargs):
+        """Override save to add custom logic."""
+        # Example: Auto-generate slug from name
+        if not self.slug:
+            from django.utils.text import slugify
+            self.slug = slugify(self.name)
+
+        super().save(*args, **kwargs)
+
+    # Custom methods
+    def is_recent(self):
+        """Check if created within last 7 days."""
+        from datetime import timedelta
+        return self.created_at >= timezone.now() - timedelta(days=7)
+
+
+# Example of a related model
+class RelatedModel(models.Model):
+    """
+    Related model with ManyToMany relationship.
+    """
+    your_models = models.ManyToManyField(
+        YourModel,
+        related_name='related_items',
+        blank=True
+    )
+    name = models.CharField(max_length=100)
+
+    class Meta:
+        verbose_name = "Related Model"
+        verbose_name_plural = "Related Models"
+        ordering = ['name']
+
+    def __str__(self):
+        return self.name
+
+
+# Example of a custom manager
+class PublishedManager(models.Manager):
+    """Custom manager to get only published items."""
+    def get_queryset(self):
+        return super().get_queryset().filter(is_active=True)
+
+
+class PublishableModel(models.Model):
+    """
+    Model with custom manager for published items.
+    """
+    title = models.CharField(max_length=200)
+    is_active = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    # Managers
+    objects = models.Manager()  # Default manager
+    published = PublishedManager()  # Custom manager
+
+    class Meta:
+        ordering = ['-created_at']
+
+    def __str__(self):
+        return self.title
+
+
+# Common field types reference:
+"""
+# Text fields
+CharField(max_length=N)              # Short text (< 255 chars)
+TextField()                          # Long text
+SlugField(max_length=N)             # URL-friendly text
+EmailField()                         # Email validation
+URLField()                           # URL validation
+
+# Numeric fields
+IntegerField()                       # Integer
+DecimalField(max_digits=N, decimal_places=N)  # Precise decimal
+FloatField()                         # Floating point
+
+# Date/Time fields
+DateField()                          # Date only
+TimeField()                          # Time only
+DateTimeField()                      # Date and time
+DateTimeField(auto_now=True)        # Auto-update on save
+DateTimeField(auto_now_add=True)    # Set once on creation
+
+# Boolean
+BooleanField()                       # True/False
+
+# Relationships
+ForeignKey(Model, on_delete=...)    # Many-to-one
+OneToOneField(Model, on_delete=...) # One-to-one
+ManyToManyField(Model)              # Many-to-many
+
+# Files
+FileField(upload_to='path/')        # File upload
+ImageField(upload_to='path/')       # Image upload
+
+# Other
+JSONField()                          # JSON data (Django 3.1+)
+UUIDField()                          # UUID
+"""
+
+# on_delete options for ForeignKey:
+"""
+CASCADE       # Delete this object when referenced object is deleted
+PROTECT       # Prevent deletion of referenced object
+SET_NULL      # Set to NULL (requires null=True)
+SET_DEFAULT   # Set to default value (requires default=...)
+SET(value)    # Set to specific value
+DO_NOTHING    # Do nothing (can cause database errors)
+"""

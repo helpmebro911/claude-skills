@@ -1,0 +1,370 @@
+# Django Views Template
+# Copy patterns you need and customize
+
+from django.shortcuts import render, get_object_or_404, redirect
+from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.urls import reverse_lazy
+from django.http import JsonResponse, HttpResponse
+from django.core.paginator import Paginator
+from .models import YourModel
+from .forms import YourModelForm
+
+
+# =============================================================================
+# FUNCTION-BASED VIEWS
+# =============================================================================
+
+def index(request):
+    """
+    Simple list view.
+    Use when: Custom logic needed, simple rendering.
+    """
+    items = YourModel.objects.all()
+    context = {'items': items}
+    return render(request, 'yourapp/index.html', context)
+
+
+def detail(request, slug):
+    """
+    Detail view with 404 handling.
+    Use when: Need to show single object details.
+    """
+    item = get_object_or_404(YourModel, slug=slug)
+    context = {'item': item}
+    return render(request, 'yourapp/detail.html', context)
+
+
+def list_with_pagination(request):
+    """
+    List view with pagination.
+    Use when: Need to paginate large querysets.
+    """
+    items_list = YourModel.objects.all()
+    paginator = Paginator(items_list, 25)  # Show 25 items per page
+
+    page_number = request.GET.get('page')
+    items = paginator.get_page(page_number)
+
+    context = {'items': items}
+    return render(request, 'yourapp/list.html', context)
+
+
+@login_required
+def create(request):
+    """
+    Create view with form handling.
+    Use when: Need custom form processing logic.
+    """
+    if request.method == 'POST':
+        form = YourModelForm(request.POST, request.FILES)
+        if form.is_valid():
+            item = form.save(commit=False)
+            item.author = request.user  # Set author to current user
+            item.save()
+            return redirect('yourapp:detail', slug=item.slug)
+    else:
+        form = YourModelForm()
+
+    context = {'form': form}
+    return render(request, 'yourapp/form.html', context)
+
+
+@login_required
+def update(request, slug):
+    """
+    Update view.
+    Use when: Need to edit existing objects.
+    """
+    item = get_object_or_404(YourModel, slug=slug)
+
+    # Optional: Check permissions
+    if item.author != request.user:
+        return HttpResponse('Unauthorized', status=401)
+
+    if request.method == 'POST':
+        form = YourModelForm(request.POST, request.FILES, instance=item)
+        if form.is_valid():
+            form.save()
+            return redirect('yourapp:detail', slug=item.slug)
+    else:
+        form = YourModelForm(instance=item)
+
+    context = {'form': form, 'item': item}
+    return render(request, 'yourapp/form.html', context)
+
+
+@login_required
+def delete(request, slug):
+    """
+    Delete view with confirmation.
+    Use when: Need custom delete logic or confirmation.
+    """
+    item = get_object_or_404(YourModel, slug=slug)
+
+    # Optional: Check permissions
+    if item.author != request.user:
+        return HttpResponse('Unauthorized', status=401)
+
+    if request.method == 'POST':
+        item.delete()
+        return redirect('yourapp:index')
+
+    context = {'item': item}
+    return render(request, 'yourapp/confirm_delete.html', context)
+
+
+def ajax_endpoint(request):
+    """
+    AJAX endpoint returning JSON.
+    Use when: Building API-like endpoints for frontend.
+    """
+    if request.method == 'POST':
+        # Process data
+        data = {'status': 'success', 'message': 'Data processed'}
+        return JsonResponse(data)
+
+    return JsonResponse({'error': 'Method not allowed'}, status=405)
+
+
+# =============================================================================
+# CLASS-BASED VIEWS
+# =============================================================================
+
+class ItemListView(ListView):
+    """
+    Generic list view.
+    Use when: Standard list with optional filtering.
+    """
+    model = YourModel
+    template_name = 'yourapp/list.html'
+    context_object_name = 'items'
+    paginate_by = 25
+
+    def get_queryset(self):
+        """Override to add filtering."""
+        queryset = super().get_queryset()
+        # Example: Filter by query parameter
+        query = self.request.GET.get('q')
+        if query:
+            queryset = queryset.filter(name__icontains=query)
+        return queryset
+
+    def get_context_data(self, **kwargs):
+        """Add extra context."""
+        context = super().get_context_data(**kwargs)
+        context['title'] = 'Items List'
+        return context
+
+
+class ItemDetailView(DetailView):
+    """
+    Generic detail view.
+    Use when: Standard object detail display.
+    """
+    model = YourModel
+    template_name = 'yourapp/detail.html'
+    context_object_name = 'item'
+    slug_field = 'slug'  # Model field to match
+    slug_url_kwarg = 'slug'  # URL parameter name
+
+    def get_context_data(self, **kwargs):
+        """Add related data."""
+        context = super().get_context_data(**kwargs)
+        # Example: Add related items
+        context['related'] = YourModel.objects.filter(
+            author=self.object.author
+        ).exclude(pk=self.object.pk)[:5]
+        return context
+
+
+class ItemCreateView(LoginRequiredMixin, CreateView):
+    """
+    Generic create view.
+    Use when: Standard object creation form.
+    """
+    model = YourModel
+    form_class = YourModelForm
+    template_name = 'yourapp/form.html'
+    success_url = reverse_lazy('yourapp:index')
+
+    def form_valid(self, form):
+        """Set author before saving."""
+        form.instance.author = self.request.user
+        return super().form_valid(form)
+
+
+class ItemUpdateView(LoginRequiredMixin, UpdateView):
+    """
+    Generic update view.
+    Use when: Standard object editing form.
+    """
+    model = YourModel
+    form_class = YourModelForm
+    template_name = 'yourapp/form.html'
+    slug_field = 'slug'
+    slug_url_kwarg = 'slug'
+
+    def get_queryset(self):
+        """Ensure user can only edit their own items."""
+        queryset = super().get_queryset()
+        return queryset.filter(author=self.request.user)
+
+
+class ItemDeleteView(LoginRequiredMixin, DeleteView):
+    """
+    Generic delete view.
+    Use when: Standard deletion with confirmation.
+    """
+    model = YourModel
+    template_name = 'yourapp/confirm_delete.html'
+    success_url = reverse_lazy('yourapp:index')
+    slug_field = 'slug'
+    slug_url_kwarg = 'slug'
+
+    def get_queryset(self):
+        """Ensure user can only delete their own items."""
+        queryset = super().get_queryset()
+        return queryset.filter(author=self.request.user)
+
+
+# =============================================================================
+# ADVANCED PATTERNS
+# =============================================================================
+
+from django.views import View
+from django.utils.decorators import method_decorator
+from django.views.decorators.http import require_http_methods
+
+
+class CustomView(View):
+    """
+    Custom view with multiple HTTP methods.
+    Use when: Need full control over HTTP method handling.
+    """
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        """Add login requirement to all methods."""
+        return super().dispatch(*args, **kwargs)
+
+    def get(self, request, *args, **kwargs):
+        """Handle GET requests."""
+        context = {'message': 'GET request'}
+        return render(request, 'yourapp/custom.html', context)
+
+    def post(self, request, *args, **kwargs):
+        """Handle POST requests."""
+        # Process form data
+        return redirect('yourapp:index')
+
+
+@require_http_methods(["GET", "POST"])
+def restricted_methods_view(request):
+    """
+    View that only accepts specific HTTP methods.
+    Use when: Need to restrict allowed HTTP methods.
+    """
+    if request.method == 'POST':
+        # Handle POST
+        pass
+    # Handle GET
+    return render(request, 'yourapp/template.html')
+
+
+# Multiple forms in one view
+def multi_form_view(request):
+    """
+    View with multiple forms.
+    Use when: Need to handle multiple forms on one page.
+    """
+    from .forms import Form1, Form2
+
+    if request.method == 'POST':
+        form1 = Form1(request.POST, prefix='form1')
+        form2 = Form2(request.POST, prefix='form2')
+
+        if form1.is_valid() and form2.is_valid():
+            form1.save()
+            form2.save()
+            return redirect('success')
+    else:
+        form1 = Form1(prefix='form1')
+        form2 = Form2(prefix='form2')
+
+    context = {'form1': form1, 'form2': form2}
+    return render(request, 'yourapp/multi_form.html', context)
+
+
+# =============================================================================
+# MIXINS FOR CLASS-BASED VIEWS
+# =============================================================================
+
+from django.core.exceptions import PermissionDenied
+
+
+class AuthorRequiredMixin:
+    """
+    Mixin to ensure user is the author of the object.
+    Use with UpdateView, DeleteView.
+    """
+    def get_object(self, *args, **kwargs):
+        obj = super().get_object(*args, **kwargs)
+        if obj.author != self.request.user:
+            raise PermissionDenied
+        return obj
+
+
+class TitleMixin:
+    """
+    Mixin to add page title to context.
+    """
+    title = None
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = self.title or self.model._meta.verbose_name_plural
+        return context
+
+
+# Example using mixins
+class MyUpdateView(LoginRequiredMixin, AuthorRequiredMixin, TitleMixin, UpdateView):
+    model = YourModel
+    form_class = YourModelForm
+    template_name = 'yourapp/form.html'
+    title = 'Edit Item'
+
+
+# =============================================================================
+# COMMON PATTERNS REFERENCE
+# =============================================================================
+
+"""
+When to use function-based views:
+- Simple logic
+- Custom workflows
+- Multiple forms
+- Complex conditional rendering
+- One-off functionality
+
+When to use class-based views:
+- CRUD operations (ListView, DetailView, CreateView, UpdateView, DeleteView)
+- Reusable patterns
+- Multiple views with shared logic
+- Inheritance and mixins
+
+Common generic views:
+- ListView: Display list of objects
+- DetailView: Display single object details
+- CreateView: Create new object with form
+- UpdateView: Update existing object with form
+- DeleteView: Delete object with confirmation
+- FormView: Handle form without model
+- TemplateView: Render template with context
+- RedirectView: Redirect to another URL
+
+Common mixins:
+- LoginRequiredMixin: Require login
+- PermissionRequiredMixin: Check specific permission
+- UserPassesTestMixin: Custom test for access
+"""

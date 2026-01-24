@@ -1,0 +1,411 @@
+# Django Forms Template
+# Copy patterns you need and customize
+
+from django import forms
+from django.core.exceptions import ValidationError
+from .models import YourModel
+
+
+# =============================================================================
+# MODELFORM (Most Common)
+# =============================================================================
+
+class YourModelForm(forms.ModelForm):
+    """
+    Form based on a Django model.
+    Use when: Creating/editing model instances.
+    """
+
+    class Meta:
+        model = YourModel
+        fields = ['name', 'description', 'is_active']  # Explicit fields
+        # fields = '__all__'  # All fields (not recommended)
+        # exclude = ['created_at', 'author']  # Exclude specific fields
+
+        # Custom labels
+        labels = {
+            'name': 'Item Name',
+            'description': 'Detailed Description',
+        }
+
+        # Help text
+        help_texts = {
+            'name': 'Enter a unique name for this item.',
+        }
+
+        # Custom widgets
+        widgets = {
+            'name': forms.TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Enter name...'
+            }),
+            'description': forms.Textarea(attrs={
+                'class': 'form-control',
+                'rows': 5,
+                'placeholder': 'Enter description...'
+            }),
+            'is_active': forms.CheckboxInput(attrs={
+                'class': 'form-check-input'
+            }),
+        }
+
+    # Field-level validation
+    def clean_name(self):
+        """Validate the name field."""
+        name = self.cleaned_data.get('name')
+
+        # Example validation
+        if len(name) < 3:
+            raise ValidationError('Name must be at least 3 characters long.')
+
+        # Check for uniqueness (case-insensitive)
+        if YourModel.objects.filter(name__iexact=name).exists():
+            # Exclude current instance when editing
+            if self.instance.pk:
+                if YourModel.objects.filter(name__iexact=name).exclude(pk=self.instance.pk).exists():
+                    raise ValidationError('This name is already taken.')
+            else:
+                raise ValidationError('This name is already taken.')
+
+        return name
+
+    # Form-level validation
+    def clean(self):
+        """Validate multiple fields together."""
+        cleaned_data = super().clean()
+        name = cleaned_data.get('name')
+        description = cleaned_data.get('description')
+
+        # Example: Cross-field validation
+        if name and description:
+            if name.lower() in description.lower():
+                raise ValidationError('Description should not contain the name.')
+
+        return cleaned_data
+
+    def save(self, commit=True):
+        """Override save to add custom logic."""
+        instance = super().save(commit=False)
+
+        # Example: Auto-generate slug
+        from django.utils.text import slugify
+        if not instance.slug:
+            instance.slug = slugify(instance.name)
+
+        if commit:
+            instance.save()
+            # Save many-to-many fields if using commit=False
+            self.save_m2m()
+
+        return instance
+
+
+# =============================================================================
+# REGULAR FORM (Not tied to a model)
+# =============================================================================
+
+class ContactForm(forms.Form):
+    """
+    Regular form not tied to a model.
+    Use when: Contact forms, search forms, custom logic.
+    """
+    name = forms.CharField(
+        max_length=100,
+        required=True,
+        label='Your Name',
+        widget=forms.TextInput(attrs={
+            'class': 'form-control',
+            'placeholder': 'John Doe'
+        })
+    )
+
+    email = forms.EmailField(
+        required=True,
+        label='Email Address',
+        widget=forms.EmailInput(attrs={
+            'class': 'form-control',
+            'placeholder': 'john@example.com'
+        })
+    )
+
+    message = forms.CharField(
+        required=True,
+        label='Your Message',
+        widget=forms.Textarea(attrs={
+            'class': 'form-control',
+            'rows': 5,
+            'placeholder': 'Enter your message...'
+        })
+    )
+
+    subscribe = forms.BooleanField(
+        required=False,
+        label='Subscribe to newsletter',
+        widget=forms.CheckboxInput(attrs={
+            'class': 'form-check-input'
+        })
+    )
+
+    def clean_email(self):
+        """Validate email domain."""
+        email = self.cleaned_data.get('email')
+
+        # Example: Only allow certain domains
+        allowed_domains = ['example.com', 'test.com']
+        domain = email.split('@')[1] if '@' in email else ''
+
+        if domain not in allowed_domains:
+            raise ValidationError(f'Please use an email from: {", ".join(allowed_domains)}')
+
+        return email
+
+    def send_email(self):
+        """Process the form data."""
+        if not self.is_valid():
+            return False
+
+        from django.core.mail import send_mail
+
+        send_mail(
+            subject=f'Contact from {self.cleaned_data["name"]}',
+            message=self.cleaned_data['message'],
+            from_email=self.cleaned_data['email'],
+            recipient_list=['admin@example.com'],
+        )
+
+        return True
+
+
+# =============================================================================
+# SEARCH FORM
+# =============================================================================
+
+class SearchForm(forms.Form):
+    """
+    Simple search form.
+    Use when: Need to search/filter querysets.
+    """
+    query = forms.CharField(
+        required=False,
+        label='Search',
+        widget=forms.TextInput(attrs={
+            'class': 'form-control',
+            'placeholder': 'Search...'
+        })
+    )
+
+    category = forms.ChoiceField(
+        required=False,
+        choices=[('', 'All Categories')] + [
+            ('cat1', 'Category 1'),
+            ('cat2', 'Category 2'),
+        ],
+        widget=forms.Select(attrs={'class': 'form-control'})
+    )
+
+    sort_by = forms.ChoiceField(
+        required=False,
+        choices=[
+            ('name', 'Name'),
+            ('-created_at', 'Newest First'),
+            ('created_at', 'Oldest First'),
+        ],
+        initial='-created_at',
+        widget=forms.Select(attrs={'class': 'form-control'})
+    )
+
+
+# =============================================================================
+# FORMS WITH FILE UPLOADS
+# =============================================================================
+
+class FileUploadForm(forms.ModelForm):
+    """
+    Form with file/image upload.
+    Use when: Handling file or image uploads.
+    """
+
+    class Meta:
+        model = YourModel
+        fields = ['name', 'image', 'file']
+
+        widgets = {
+            'image': forms.FileInput(attrs={
+                'class': 'form-control',
+                'accept': 'image/*'
+            }),
+            'file': forms.FileInput(attrs={
+                'class': 'form-control',
+                'accept': '.pdf,.doc,.docx'
+            }),
+        }
+
+    def clean_image(self):
+        """Validate image file."""
+        image = self.cleaned_data.get('image')
+
+        if image:
+            # Check file size (e.g., max 5MB)
+            if image.size > 5 * 1024 * 1024:
+                raise ValidationError('Image file too large (max 5MB).')
+
+            # Check file extension
+            valid_extensions = ['.jpg', '.jpeg', '.png', '.gif']
+            ext = image.name.split('.')[-1].lower()
+            if f'.{ext}' not in valid_extensions:
+                raise ValidationError('Invalid image format. Use JPG, PNG, or GIF.')
+
+        return image
+
+
+# =============================================================================
+# INLINE FORMSETS (For related models)
+# =============================================================================
+
+from django.forms import inlineformset_factory
+
+
+# Example: Author has many Books
+# BookFormSet = inlineformset_factory(
+#     Author,  # Parent model
+#     Book,    # Child model
+#     fields=['title', 'published_date'],
+#     extra=1,  # Number of empty forms
+#     can_delete=True
+# )
+
+
+# =============================================================================
+# CUSTOM FIELD TYPES
+# =============================================================================
+
+class CustomFieldForm(forms.Form):
+    """
+    Examples of different field types.
+    """
+    # Text fields
+    char_field = forms.CharField(max_length=100)
+    text_field = forms.CharField(widget=forms.Textarea)
+    email_field = forms.EmailField()
+    url_field = forms.URLField()
+    slug_field = forms.SlugField()
+
+    # Numeric fields
+    integer_field = forms.IntegerField()
+    decimal_field = forms.DecimalField(max_digits=5, decimal_places=2)
+    float_field = forms.FloatField()
+
+    # Date/Time fields
+    date_field = forms.DateField(widget=forms.DateInput(attrs={'type': 'date'}))
+    time_field = forms.TimeField(widget=forms.TimeInput(attrs={'type': 'time'}))
+    datetime_field = forms.DateTimeField(widget=forms.DateTimeInput(attrs={'type': 'datetime-local'}))
+
+    # Boolean
+    boolean_field = forms.BooleanField()
+
+    # Choice fields
+    choice_field = forms.ChoiceField(choices=[('1', 'Option 1'), ('2', 'Option 2')])
+    multiple_choice = forms.MultipleChoiceField(choices=[('1', 'Option 1'), ('2', 'Option 2')])
+
+    # Model choice fields (requires queryset)
+    # model_choice = forms.ModelChoiceField(queryset=YourModel.objects.all())
+    # model_multiple_choice = forms.ModelMultipleChoiceField(queryset=YourModel.objects.all())
+
+    # File fields
+    file_field = forms.FileField()
+    image_field = forms.ImageField()
+
+    # Hidden field
+    hidden_field = forms.CharField(widget=forms.HiddenInput())
+
+
+# =============================================================================
+# DYNAMIC FORMS
+# =============================================================================
+
+class DynamicForm(forms.ModelForm):
+    """
+    Form with dynamic field generation.
+    """
+
+    class Meta:
+        model = YourModel
+        fields = ['name', 'description']
+
+    def __init__(self, *args, **kwargs):
+        """Customize form based on parameters."""
+        user = kwargs.pop('user', None)  # Get custom parameter
+        super().__init__(*args, **kwargs)
+
+        # Example: Make field required based on user
+        if user and not user.is_staff:
+            self.fields['description'].required = True
+
+        # Example: Modify field widget
+        self.fields['name'].widget.attrs.update({
+            'class': 'form-control',
+            'placeholder': 'Enter name'
+        })
+
+        # Example: Add field dynamically
+        self.fields['extra_field'] = forms.CharField(
+            required=False,
+            label='Extra Information'
+        )
+
+        # Example: Remove field conditionally
+        if not user or not user.is_staff:
+            self.fields.pop('description', None)
+
+
+# =============================================================================
+# FORM VALIDATION HELPERS
+# =============================================================================
+
+def validate_file_extension(value):
+    """
+    Custom validator for file extensions.
+    Use in field: validators=[validate_file_extension]
+    """
+    import os
+    ext = os.path.splitext(value.name)[1]
+    valid_extensions = ['.pdf', '.doc', '.docx']
+    if not ext.lower() in valid_extensions:
+        raise ValidationError('Unsupported file extension.')
+
+
+def validate_phone_number(value):
+    """
+    Custom validator for phone numbers.
+    """
+    import re
+    phone_regex = re.compile(r'^\+?1?\d{9,15}$')
+    if not phone_regex.match(value):
+        raise ValidationError('Invalid phone number format.')
+
+
+# =============================================================================
+# COMMON FIELD ATTRIBUTES
+# =============================================================================
+
+"""
+Common field arguments:
+- required=True/False: Whether field is required
+- label='Label Text': Display label
+- initial='default': Default value
+- help_text='Help text': Help text displayed
+- widget=forms.TextInput(): Custom widget
+- validators=[validator_func]: Custom validators
+- error_messages={'required': 'Custom error'}: Custom error messages
+
+Common widget attributes:
+- attrs={'class': 'css-class'}: HTML attributes
+- attrs={'placeholder': 'text'}: Placeholder text
+- attrs={'disabled': True}: Disable input
+- attrs={'readonly': True}: Read-only input
+
+Common validation methods:
+- clean_<fieldname>(): Validate individual field
+- clean(): Validate form as a whole
+- ValidationError('message'): Raise validation error
+"""
