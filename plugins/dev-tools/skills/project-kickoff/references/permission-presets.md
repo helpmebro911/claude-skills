@@ -36,6 +36,13 @@ Every project gets these. Version control, file operations, and basic tools need
 "// --- Version Control ---",
 "Bash(git *)",
 "Bash(gh *)",
+"Bash(gh repo *)",
+"Bash(gh issue *)",
+"Bash(gh pr *)",
+"Bash(gh api *)",
+"Bash(gh search *)",
+"Bash(gh run *)",
+"Bash(gh release *)",
 
 "// --- File Operations ---",
 "Bash(ls *)",
