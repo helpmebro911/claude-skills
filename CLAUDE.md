@@ -15,11 +15,12 @@ Production workflow skills for Claude Code CLI. Each skill guides Claude through
 
 ```
 claude-skills/
-├── plugins/                                # 9 installable plugins (31 skills)
-│   ├── cloudflare/                         # Cloudflare Workers, Hono, D1/Drizzle, Vite
+├── plugins/                                # 9 installable plugins (32 skills)
+│   ├── cloudflare/                         # Cloudflare Workers, Hono, D1/Drizzle, Vite, TanStack Start
 │   │   └── skills/
 │   │       ├── cloudflare-worker-builder/
 │   │       ├── vite-flare-starter/
+│   │       ├── tanstack-start/
 │   │       ├── hono-api-scaffolder/
 │   │       └── d1-drizzle-schema/
 │   ├── web-design/                         # Web design methodology, patterns, SEO

@@ -8,7 +8,7 @@ Workflow skills for [Claude Code](https://claude.com/claude-code) that produce t
 
 | Plugin | Skills | What it produces |
 |--------|--------|-----------------|
-| **cloudflare** | cloudflare-worker-builder, vite-flare-starter, hono-api-scaffolder, d1-drizzle-schema | Deployable Cloudflare Workers, full-stack apps, Hono APIs, D1 schemas |
+| **cloudflare** | cloudflare-worker-builder, vite-flare-starter, tanstack-start, hono-api-scaffolder, d1-drizzle-schema | Deployable Cloudflare Workers, full-stack apps, TanStack Start SSR dashboards, Hono APIs, D1 schemas |
 | **web-design** | web-design-methodology, web-design-patterns, seo-local-business | Production HTML/CSS, component patterns, local business SEO |
 | **frontend** | tailwind-theme-builder, shadcn-ui | Themed Tailwind v4 + shadcn/ui setup with dark mode |
 | **design-assets** | color-palette, favicon-gen, icon-set-generator | Colour palettes, favicon packages, custom SVG icon sets |
