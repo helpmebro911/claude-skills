@@ -13,7 +13,7 @@ Workflow skills for [Claude Code](https://claude.com/claude-code) that produce t
 | **frontend** | tailwind-theme-builder, shadcn-ui | Themed Tailwind v4 + shadcn/ui setup with dark mode |
 | **design-assets** | color-palette, favicon-gen, icon-set-generator | Colour palettes, favicon packages, custom SVG icon sets |
 | **integrations** | google-chat-messages, google-apps-script, elevenlabs-agents, mcp-builder | Google Chat webhooks, Apps Script, ElevenLabs agents, MCP servers |
-| **dev-tools** | skill-creator, project-kickoff, context-manager, dev-session, github-release, gemini-peer-review, gemini-guide, claude-capabilities, ux-audit | Skill creation, project bootstrapping, context audits, session tracking, releases, Gemini peer review and API guide, UX audits |
+| **dev-tools** | skill-creator, project-kickoff, context-manager, dev-session, github-release, gemini-peer-review, gemini-guide, claude-capabilities, ux-audit, responsiveness-check | Skill creation, project bootstrapping, context audits, session tracking, releases, Gemini peer review and API guide, UX audits, responsive layout testing |
 | **shopify** | shopify-setup, shopify-products, shopify-content | Shopify API setup, product management, content pages, blog posts |
 | **wordpress** | wordpress-setup, wordpress-content, wordpress-elementor | WordPress WP-CLI access, content management, Elementor page editing |
 | **writing** | aussie-business-english | Australian business English writing style |

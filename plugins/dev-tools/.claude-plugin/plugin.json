@@ -1,6 +1,6 @@
 {
   "name": "dev-tools",
-  "description": "Skill creation, project kickoff and permission management, project context, dev sessions, GitHub releases, Gemini peer review and API guide, capabilities reference, and UX audits.",
+  "description": "Skill creation, project kickoff and permission management, project context, dev sessions, GitHub releases, Gemini peer review and API guide, capabilities reference, UX audits, and responsive layout testing.",
   "author": {
     "name": "Jeremy Dawes / Jezweb",
     "email": "jeremy@jezweb.net"

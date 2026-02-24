@@ -15,7 +15,7 @@ Production workflow skills for Claude Code CLI. Each skill guides Claude through
 
 ```
 claude-skills/
-├── plugins/                                # 9 installable plugins (30 skills)
+├── plugins/                                # 9 installable plugins (31 skills)
 │   ├── cloudflare/                         # Cloudflare Workers, Hono, D1/Drizzle, Vite
 │   │   └── skills/
 │   │       ├── cloudflare-worker-builder/
@@ -52,7 +52,8 @@ claude-skills/
 │   │       ├── gemini-peer-review/
 │   │       ├── gemini-guide/
 │   │       ├── claude-capabilities/
-│   │       └── ux-audit/
+│   │       ├── ux-audit/
+│   │       └── responsiveness-check/
 │   ├── shopify/                            # Shopify store management
 │   │   └── skills/
 │   │       ├── shopify-setup/
