@@ -1,302 +1,398 @@
 # Permission Presets
 
-Curated permission presets for `settings.local.json`. Each preset is a JSON array of permission strings grouped with `//` comments.
+Curated permission presets for `settings.local.json`. Each preset is a JSON array of permission strings grouped with `//` comments. Compose presets by stacking: Universal Base + language preset + deployment preset + extras.
 
 ## Syntax Reference
 
 | Pattern | Meaning |
 |---------|---------|
-| `Bash(git *)` | Space before `*` = word boundary (current preferred syntax) |
-| `Bash(git:*)` | Colon syntax (deprecated, still works) |
-| `Bash(git*)` | No space = no boundary (matches `gitk` too) |
-| `WebFetch(domain:example.com)` | Domain-scoped web access |
-| `WebSearch` | Blanket web search (no specifiers) |
-| `mcp__server__tool` | Specific MCP tool |
+| `Bash(git *)` | Space before `*` = word boundary. Matches `git status` but not `gitk`. **Preferred syntax.** |
+| `Bash(git*)` | No space = prefix match. Matches `git status` AND `gitk`. |
+| `Bash(nvidia-smi)` | Exact match — no arguments. Use for bare commands. |
+| `WebFetch` | Blanket web fetch (all domains) |
+| `WebFetch(domain:example.com)` | Domain-scoped web fetch |
+| `WebSearch` | Blanket web search |
+| `mcp__*` | All MCP servers and tools |
+| `mcp__brain__*` | All tools on one MCP server |
+| `mcp__brain__brain_sites` | One specific MCP tool |
 
-**Critical**: Project `settings.local.json` SHADOWS global settings (does not merge). If a project has its own allow list, it completely replaces the global one.
+### Format Notes
+
+- **Deprecated**: `Bash(git:*)` colon syntax still works but prefer space syntax `Bash(git *)`
+- **"Don't ask again"** prompt uses legacy colon format (e.g. `node:*`) — it's equivalent but looks different
+- **Comments**: `"// --- Section ---"` strings in the allow array are ignored and useful for organisation
+- **Not hot-reloaded**: Changes to `settings.local.json` require a session restart. "Don't ask again" bypasses this because it injects into the running session directly.
+
+**Critical**: Project `settings.local.json` **SHADOWS** global settings (does not merge). If a project has its own allow list, the global allow list is ignored entirely for that project.
+
+Shell operators (`&&`, `||`, `;`) are handled safely — `Bash(git *)` won't match `git add && rm -rf /`.
 
 ---
 
 ## Universal Base
 
-Every project gets these. Git and GitHub CLI are needed for all development work.
+Every project gets these. Version control, file operations, and basic tools needed for all development.
 
 ```json
-"// --- Git ---",
+"// --- Version Control ---",
 "Bash(git *)",
-
-"// --- GitHub CLI ---",
 "Bash(gh *)",
-"Bash(gh repo:*)",
-"Bash(gh issue:*)",
-"Bash(gh pr:*)",
-"Bash(gh api:*)",
-"Bash(gh search:*)",
-"Bash(gh run:*)",
-"Bash(gh release:*)",
-"Bash(gh label:*)",
-"Bash(gh workflow:*)",
+
+"// --- File Operations ---",
+"Bash(ls *)",
+"Bash(cat *)",
+"Bash(head *)",
+"Bash(tail *)",
+"Bash(wc *)",
+"Bash(sort *)",
+"Bash(mkdir *)",
+"Bash(cp *)",
+"Bash(mv *)",
+"Bash(touch *)",
+"Bash(chmod *)",
+"Bash(find *)",
+"Bash(tree *)",
+"Bash(du *)",
+"Bash(df *)",
+
+"// --- Archives ---",
+"Bash(tar *)",
+"Bash(zip *)",
+"Bash(unzip *)",
+"Bash(gzip *)",
+
+"// --- Text Processing ---",
+"Bash(grep *)",
+"Bash(rg *)",
+"Bash(awk *)",
+"Bash(sed *)",
+"Bash(diff *)",
+"Bash(jq *)",
+"Bash(echo *)",
+"Bash(printf *)",
+"Bash(tee *)",
+
+"// --- System ---",
+"Bash(which *)",
+"Bash(whereis *)",
+"Bash(type *)",
+"Bash(ps *)",
+"Bash(env *)",
+"Bash(date *)",
+"Bash(uname *)",
+"Bash(make *)",
+
+"// --- Network ---",
+"Bash(curl *)",
+"Bash(wget *)",
+"Bash(ssh *)",
+"Bash(scp *)",
+"Bash(rsync *)",
+"Bash(dig *)",
 
 "// --- Web ---",
-"WebSearch"
+"WebSearch",
+"WebFetch"
 ```
-
-Note: `Bash(gh *)` has a known bug where some subcommands don't match. Include both the broad pattern and explicit subcommand patterns as a workaround.
 
 ---
 
-## Cloudflare Worker
+## JavaScript / TypeScript
 
-For projects using Cloudflare Workers, D1, R2, KV. Add to Universal Base.
-
-```json
-"// --- Wrangler ---",
-"Bash(npx wrangler *)",
-"Bash(wrangler *)",
-
-"// --- Package Managers ---",
-"Bash(pnpm *)",
-"Bash(npm *)",
-"Bash(npx *)",
-
-"// --- Cloudflare Docs ---",
-"mcp__claude_ai_cloudflare-docs__search_cloudflare_documentation",
-"WebFetch(domain:developers.cloudflare.com)",
-
-"// --- Build & Dev ---",
-"Bash(curl *)",
-"Bash(node *)"
-```
-
-### Cloudflare Account Note
-
-Default account: Jezweb Team `0460574641fdbb98159c98ebf593e2bd`. Add `account_id` to `wrangler.jsonc` to avoid interactive prompts — don't put it in permission patterns.
-
----
-
-## Vercel App
-
-For Next.js or other Vercel-deployed projects. Add to Universal Base.
+For any JS/TS project. Add to Universal Base.
 
 ```json
-"// --- Vercel CLI ---",
-"Bash(npx vercel *)",
-"Bash(vercel *)",
-
-"// --- Package Managers ---",
-"Bash(pnpm *)",
-"Bash(npm *)",
-"Bash(npx *)",
-
-"// --- Database ---",
-"Bash(npx prisma *)",
-"Bash(prisma *)",
-
-"// --- Build & Dev ---",
-"Bash(curl *)",
-"Bash(node *)"
-```
-
-### Vercel Account Note
-
-Always use the Jezweb team account. Run `vercel switch jezweb` before deploying.
-
----
-
-## Node Generic
-
-For generic Node.js projects without a specific deployment target. Add to Universal Base.
-
-```json
-"// --- Package Managers ---",
-"Bash(pnpm *)",
-"Bash(npm *)",
-"Bash(npx *)",
-
-"// --- Runtime ---",
+"// --- Node.js ---",
 "Bash(node *)",
-"Bash(npx tsx *)"
+"Bash(npm *)",
+"Bash(npx *)",
+
+"// --- Alternative Runtimes ---",
+"Bash(bun *)",
+"Bash(bunx *)",
+"Bash(deno *)",
+
+"// --- Package Managers ---",
+"Bash(pnpm *)",
+"Bash(yarn *)",
+
+"// --- TypeScript ---",
+"Bash(tsc *)",
+"Bash(tsx *)",
+
+"// --- Bundlers ---",
+"Bash(esbuild *)",
+"Bash(vite *)",
+"Bash(turbo *)",
+
+"// --- Testing ---",
+"Bash(jest *)",
+"Bash(vitest *)",
+"Bash(playwright *)",
+"Bash(cypress *)",
+
+"// --- Linting / Formatting ---",
+"Bash(eslint *)",
+"Bash(prettier *)",
+"Bash(biome *)"
 ```
 
 ---
 
 ## Python
 
-For Python projects using uv or pip. Add to Universal Base.
+For Python projects. Add to Universal Base.
 
 ```json
-"// --- Python ---",
-"Bash(python3 *)",
+"// --- Python Runtime ---",
 "Bash(python *)",
-"Bash(pip *)",
-"Bash(uv *)",
+"Bash(python3 *)",
 
-"// --- Testing ---",
+"// --- Package Managers ---",
+"Bash(pip *)",
+"Bash(pip3 *)",
+"Bash(uv *)",
+"Bash(poetry *)",
+"Bash(pipx *)",
+"Bash(conda *)",
+
+"// --- Testing / Quality ---",
 "Bash(pytest *)",
-"Bash(mypy *)"
+"Bash(mypy *)",
+"Bash(ruff *)",
+"Bash(black *)",
+"Bash(flake8 *)",
+"Bash(isort *)",
+
+"// --- Dev Servers ---",
+"Bash(flask *)",
+"Bash(uvicorn *)",
+"Bash(gunicorn *)",
+"Bash(django-admin *)",
+
+"// --- Notebooks ---",
+"Bash(jupyter *)"
 ```
 
 ---
 
-## Ops / Admin
+## PHP
 
-For operational repos (like HQ, Anthro) that interact with many MCP services. Add to Universal Base.
+For PHP projects including WordPress and Laravel. Add to Universal Base.
 
 ```json
-"// --- Gmail ---",
-"mcp__claude_ai_google-gmail-jez__gmail_messages",
-"mcp__claude_ai_google-gmail-jez__gmail_threads",
-"mcp__claude_ai_google-gmail-jez__gmail_labels",
-"mcp__claude_ai_google-gmail-jez__gmail_drafts",
-"mcp__claude_ai_google-gmail-jez__gmail_contacts",
-"mcp__claude_ai_google-gmail-anthro__gmail_messages",
-"mcp__claude_ai_google-gmail-anthro__gmail_threads",
-"mcp__claude_ai_google-gmail-anthro__gmail_labels",
-"mcp__claude_ai_google-gmail-anthro__gmail_drafts",
-"mcp__claude_ai_google-gmail-anthro__gmail_contacts",
+"// --- PHP Runtime ---",
+"Bash(php *)",
+"Bash(composer *)",
 
-"// --- Google Chat ---",
-"mcp__claude_ai_google-chat-jez__chat_spaces",
-"mcp__claude_ai_google-chat-jez__chat_messages",
-"mcp__claude_ai_google-chat-jez__chat_members",
-"mcp__claude_ai_google-chat-anthro__chat_spaces",
-"mcp__claude_ai_google-chat-anthro__chat_messages",
-"mcp__claude_ai_google-chat-anthro__chat_members",
+"// --- WordPress ---",
+"Bash(wp *)",
 
-"// --- Google Docs ---",
-"mcp__claude_ai_google-docs-jez__docs_documents",
-"mcp__claude_ai_google-docs-jez__docs_content",
-"mcp__claude_ai_google-docs-jez__docs_format",
-"mcp__claude_ai_google-docs-jez__docs_collaborate",
-"mcp__claude_ai_google-docs-anthro__docs_documents",
-"mcp__claude_ai_google-docs-anthro__docs_content",
-"mcp__claude_ai_google-docs-anthro__docs_format",
-"mcp__claude_ai_google-docs-anthro__docs_collaborate",
+"// --- Testing / Quality ---",
+"Bash(phpunit *)",
+"Bash(phpstan *)",
+"Bash(phpcs *)",
+"Bash(phpcbf *)",
+"Bash(pest *)",
 
-"// --- Google Sheets ---",
-"mcp__claude_ai_google-sheets-jez__sheets_spreadsheets",
-"mcp__claude_ai_google-sheets-jez__sheets_values",
-"mcp__claude_ai_google-sheets-jez__sheets_data",
-"mcp__claude_ai_google-sheets-jez__sheets_format",
-"mcp__claude_ai_google-sheets-anthro__sheets_spreadsheets",
-"mcp__claude_ai_google-sheets-anthro__sheets_values",
-"mcp__claude_ai_google-sheets-anthro__sheets_data",
-"mcp__claude_ai_google-sheets-anthro__sheets_format",
+"// --- Laravel ---",
+"Bash(artisan *)",
+"Bash(sail *)"
+```
 
-"// --- Calendar ---",
-"mcp__claude_ai_calendar__calendar_calendars",
-"mcp__claude_ai_calendar__calendar_events",
+---
 
-"// --- Google Tasks ---",
-"mcp__claude_ai_google-tasks-jez__tasks_lists",
-"mcp__claude_ai_google-tasks-jez__tasks_tasks",
-"mcp__claude_ai_google-tasks-anthro__tasks_lists",
-"mcp__claude_ai_google-tasks-anthro__tasks_tasks",
+## Go
 
-"// --- Google Search Console ---",
-"mcp__claude_ai_google-search-console__search_console_analytics",
-"mcp__claude_ai_google-search-console__search_console_sitemaps",
-"mcp__claude_ai_google-search-console__search_console_sites",
+For Go projects. Add to Universal Base.
 
-"// --- Brain (CRM) ---",
-"mcp__claude_ai_brain__brain_clients",
-"mcp__claude_ai_brain__brain_sites",
-"mcp__claude_ai_brain__brain_contacts",
-"mcp__claude_ai_brain__brain_issues",
-"mcp__claude_ai_brain__brain_knowledge",
-"mcp__claude_ai_brain__brain_comms",
-"mcp__claude_ai_brain__brain_documents",
-"mcp__claude_ai_brain__brain_billing",
-"mcp__claude_ai_brain__brain_admin",
-"mcp__claude_ai_brain__brain_recall",
-"mcp__claude_ai_brain__brain_client_get",
-"mcp__claude_ai_brain__brain_site_get",
-"mcp__claude_ai_brain__brain_projects",
-"mcp__claude_ai_brain__brain_tasks",
+```json
+"// --- Go ---",
+"Bash(go *)",
+"Bash(golangci-lint *)"
+```
 
-"// --- Vault ---",
-"mcp__claude_ai_Vault__secret_get",
-"mcp__claude_ai_Vault__secret_set",
-"mcp__claude_ai_Vault__secret_list",
-"mcp__claude_ai_Vault__secret_delete",
-"mcp__claude_ai_Vault__remember",
-"mcp__claude_ai_Vault__recall",
-"mcp__claude_ai_Vault__knowledge_list",
-"mcp__claude_ai_Vault__forget",
-"mcp__claude_ai_Vault__update_knowledge",
+---
 
-"// --- Rocket.net ---",
-"mcp__claude_ai_rocket__rocketnet_sites",
-"mcp__claude_ai_rocket__rocketnet_performance",
-"mcp__claude_ai_rocket__rocketnet_backups",
-"mcp__claude_ai_rocket__rocketnet_domains",
-"mcp__claude_ai_rocket__rocketnet_wordpress",
-"mcp__claude_ai_rocket__rocketnet_credentials",
-"mcp__claude_ai_rocket__rocketnet_activity",
-"mcp__claude_ai_rocket__rocketnet_access",
+## Rust
 
-"// --- Synergy Wholesale ---",
-"mcp__claude_ai_synergy_wholesale__synergy_domains",
-"mcp__claude_ai_synergy_wholesale__synergy_dns",
-"mcp__claude_ai_synergy_wholesale__synergy_hosting",
-"mcp__claude_ai_synergy_wholesale__synergy_email",
-"mcp__claude_ai_synergy_wholesale__synergy_contacts",
-"mcp__claude_ai_synergy_wholesale__synergy_transfers",
-"mcp__claude_ai_synergy_wholesale__synergy_account",
-"mcp__claude_ai_synergy_wholesale__synergy_credentials",
-"mcp__claude_ai_synergy_wholesale__synergy_discovery",
+For Rust projects. Add to Universal Base.
 
-"// --- Network ---",
-"mcp__claude_ai_network__network_check",
-"mcp__claude_ai_network__network_lookup",
+```json
+"// --- Rust ---",
+"Bash(cargo *)",
+"Bash(rustc *)",
+"Bash(rustup *)"
+```
 
-"// --- Australian Business ---",
-"mcp__claude_ai_australian_business__australia_business",
-"mcp__claude_ai_australian_business__australia_datetime",
-"mcp__claude_ai_australian_business__australia_ip",
+---
 
-"// --- Cloudflare Docs ---",
-"mcp__claude_ai_cloudflare-docs__search_cloudflare_documentation",
+## Ruby
 
-"// --- GitHub MCP ---",
-"mcp__claude_ai_github__github_repos",
-"mcp__claude_ai_github__github_issues",
-"mcp__claude_ai_github__github_pulls",
-"mcp__claude_ai_github__get_user_info",
+For Ruby / Rails projects. Add to Universal Base.
 
-"// --- Scraper ---",
-"mcp__claude_ai_scraper__web_scraper",
-"mcp__claude_ai_scraper__web_crawler",
+```json
+"// --- Ruby ---",
+"Bash(ruby *)",
+"Bash(gem *)",
+"Bash(bundle *)",
+"Bash(bundler *)",
+"Bash(rails *)",
+"Bash(rake *)",
+"Bash(rspec *)"
+```
 
-"// --- YouTube ---",
-"mcp__claude_ai_youtube__youtube_video",
-"mcp__claude_ai_youtube__youtube_search",
-"mcp__claude_ai_youtube__youtube_channel",
-"mcp__claude_ai_youtube__youtube_playlist",
+---
 
-"// --- Weather ---",
-"mcp__claude_ai_weather__weather",
+## Cloudflare Worker
 
-"// --- Web ---",
-"WebFetch(domain:github.com)",
-"WebFetch(domain:developers.cloudflare.com)",
-"WebFetch(domain:rocket.net)",
+Deployment preset. Add to Universal Base + JavaScript/TypeScript.
 
-"// --- Bash ---",
-"Bash(curl *)",
-"Bash(playwright-cli *)",
-"Bash(pm2 *)",
-"Bash(claude *)",
-"Bash(dig *)",
-"Bash(node *)",
-"Bash(python3 *)"
+```json
+"// --- Wrangler ---",
+"Bash(wrangler *)",
+"Bash(npx wrangler *)"
+```
+
+---
+
+## Vercel
+
+Deployment preset. Add to Universal Base + JavaScript/TypeScript.
+
+```json
+"// --- Vercel ---",
+"Bash(vercel *)",
+"Bash(npx vercel *)",
+
+"// --- Prisma (common with Vercel) ---",
+"Bash(prisma *)",
+"Bash(npx prisma *)"
+```
+
+---
+
+## Docker / Containers
+
+For containerised projects. Add to any stack.
+
+```json
+"// --- Docker ---",
+"Bash(docker *)",
+"Bash(docker-compose *)",
+
+"// --- Kubernetes ---",
+"Bash(kubectl *)",
+"Bash(helm *)",
+
+"// --- IaC ---",
+"Bash(terraform *)",
+"Bash(pulumi *)"
+```
+
+---
+
+## Database
+
+For projects that interact with databases directly. Add to any stack.
+
+```json
+"// --- SQL ---",
+"Bash(psql *)",
+"Bash(mysql *)",
+"Bash(sqlite3 *)",
+
+"// --- NoSQL ---",
+"Bash(redis-cli *)",
+"Bash(mongosh *)"
+```
+
+---
+
+## Cloud CLIs
+
+For cloud-deployed projects. Add to any stack.
+
+```json
+"// --- AWS ---",
+"Bash(aws *)",
+
+"// --- Google Cloud ---",
+"Bash(gcloud *)",
+"Bash(gsutil *)",
+
+"// --- Azure ---",
+"Bash(az *)"
+```
+
+---
+
+## AI / GPU
+
+For AI/ML workloads. Add to any stack.
+
+```json
+"// --- Local LLM ---",
+"Bash(ollama *)",
+
+"// --- GPU ---",
+"Bash(nvidia-smi *)",
+"Bash(nvidia-smi)"
+```
+
+Note: `Bash(nvidia-smi)` (no wildcard) matches the bare command with no arguments, which is the most common usage.
+
+---
+
+## MCP Servers
+
+MCP (Model Context Protocol) servers provide tool access to external services. Permission patterns use the format `mcp__servername__toolname`.
+
+### Blanket Allow (Recommended)
+
+If you trust all your connected MCP servers, use a single wildcard:
+
+```json
+"// --- All MCP Servers ---",
+"mcp__*"
+```
+
+This covers every MCP server and tool. Since you control which servers are connected (via `.mcp.json` or Claude Desktop config), this is safe for most setups.
+
+### Per-Server Wildcards
+
+For granular control, allow all tools on specific servers:
+
+```json
+"mcp__brain__*",
+"mcp__playwright__*",
+"mcp__vault__*"
+```
+
+### Individual Tools
+
+For maximum control, allow specific tools only:
+
+```json
+"mcp__brain__brain_sites",
+"mcp__brain__brain_recall"
 ```
 
 ---
 
 ## Combining Presets
 
-Presets stack. A Cloudflare Worker project gets: Universal + Cloudflare Worker. An ops project gets: Universal + Ops/Admin.
+Presets stack. Examples:
+
+| Project Type | Presets to Combine |
+|-------------|-------------------|
+| Next.js on Vercel | Universal + JavaScript/TypeScript + Vercel |
+| Cloudflare Worker | Universal + JavaScript/TypeScript + Cloudflare Worker |
+| Django app | Universal + Python + Database + Docker |
+| WordPress plugin | Universal + PHP |
+| Rust CLI | Universal + Rust |
+| ML project | Universal + Python + AI/GPU |
+| Full-stack ops | Universal + JavaScript/TypeScript + Python + Docker + Database + MCP (blanket) |
 
 When merging, deduplicate and keep the grouped `//` comment structure. The final `settings.local.json` should look like:
 
@@ -304,11 +400,12 @@ When merging, deduplicate and keep the grouped `//` comment structure. The final
 {
   "permissions": {
     "allow": [
-      "// --- Git ---",
+      "// --- Version Control ---",
       "Bash(git *)",
-      "// --- GitHub CLI ---",
       "Bash(gh *)",
-      ...
+      "// --- Node.js ---",
+      "Bash(node *)",
+      "..."
     ],
     "deny": []
   }

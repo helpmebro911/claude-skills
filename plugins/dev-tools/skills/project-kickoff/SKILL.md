@@ -26,12 +26,19 @@ Bootstrap a new project or clean up an existing one so Claude Code has the right
    |-----------|------|
    | `wrangler.jsonc` or `wrangler.toml` | cloudflare-worker |
    | `vercel.json` or `next.config.*` | vercel-app |
-   | `package.json` (no deploy target) | node-generic |
-   | `pyproject.toml` or `setup.py` | python |
+   | `package.json` (no deploy target) | javascript-typescript |
+   | `pyproject.toml` or `setup.py` or `requirements.txt` | python |
+   | `Cargo.toml` | rust |
+   | `go.mod` | go |
+   | `Gemfile` or `Rakefile` | ruby |
+   | `composer.json` or `wp-config.php` | php |
+   | `Dockerfile` or `docker-compose.yml` | docker |
    | `.claude/agents/` or operational scripts | ops-admin |
    | Empty directory | Ask the user |
 
-   If ambiguous, ask. Types can stack (e.g. cloudflare-worker + node-generic).
+   If ambiguous, ask. Types can stack (e.g. cloudflare-worker + javascript-typescript).
+
+   Always include **Universal Base** preset. Add language and deployment presets based on detected type. Ask if the user wants MCP blanket (`mcp__*`) or per-server control.
 
 2. **Generate `.claude/settings.local.json`**:
    - Read [references/permission-presets.md](references/permission-presets.md) for the preset definitions
@@ -90,11 +97,18 @@ Bootstrap a new project or clean up an existing one so Claude Code has the right
 
 | Pattern | Meaning |
 |---------|---------|
-| `Bash(git *)` | Current syntax — space before `*` = word boundary |
-| `Bash(git:*)` | Deprecated colon syntax (still works) |
-| `WebFetch(domain:x.com)` | Domain-scoped web access |
+| `Bash(git *)` | Preferred — space before `*` = word boundary |
+| `Bash(nvidia-smi)` | Exact match, no arguments |
+| `WebFetch` | Blanket web fetch (all domains) |
+| `WebFetch(domain:x.com)` | Domain-scoped web fetch |
 | `WebSearch` | Blanket web search |
-| `mcp__server__tool` | Specific MCP tool |
+| `mcp__*` | All MCP servers and tools |
+| `mcp__brain__*` | All tools on one server |
+| `mcp__brain__brain_sites` | One specific MCP tool |
+
+**Deprecated**: `Bash(git:*)` colon syntax still works but prefer space syntax.
+
+**Not hot-reloaded**: Edits to `settings.local.json` require a session restart. The "don't ask again" prompt injects at runtime (no restart needed) using legacy colon format — this is expected and both formats are equivalent.
 
 **Critical**: Project `settings.local.json` **shadows** global settings. It does not merge. If a project has its own allow list, the global allow list is ignored entirely for that project.
 
