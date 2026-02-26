@@ -36,9 +36,10 @@ Read .claude/settings.local.json. Use ToolSearch to discover all connected MCP s
 Report:
 1. MCP servers connected but NOT in settings (missing)
 2. MCP servers in settings but NOT connected (stale)
-3. Leaked secrets: entries containing API keys, tokens, bearer strings, hex >20 chars
+3. Leaked secrets: entries containing API keys, tokens, bearer strings, hex >20 chars, base64 >20 chars
 4. Legacy colon syntax: entries like Bash(git:*) instead of Bash(git *)
-5. Shell fragments: Bash(do), Bash(fi), Bash(then), Bash(else), Bash(done)
+5. Junk entries: shell fragments (Bash(do), Bash(fi), Bash(then), Bash(else), Bash(done)),
+   __NEW_LINE_* artefacts, loop body fragments (Bash(break), Bash(continue), Bash(echo *))
 6. Duplicates: entries covered by a broader pattern (e.g. Bash(git add *) redundant if Bash(git *) exists)
 7. Missing presets: based on files present, suggest presets from [permission-presets.md]
 
@@ -72,13 +73,16 @@ Audit the project context landscape at [repo-path]:
 
 5. Check auto-memory at ~/.claude/projects/*/memory/MEMORY.md
 
+6. If Cloudflare project: find all wrangler.jsonc/wrangler.toml files.
+   Check each has "observability": { "enabled": true }. Flag any missing it.
+
 Prefer Read/Glob/Grep tools over Bash. If you need to scan many files or
 aggregate data across the repo, write a Python script to .claude/scripts/
 and run it once rather than running many individual bash commands
 (mkdir -p .claude/scripts first).
 
 Return: project type, quality scores, missing docs, stale refs, overlaps,
-size violations, and total markdown footprint.
+size violations, observability gaps, and total markdown footprint.
 ```
 
 ### Parallel Execution
