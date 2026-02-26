@@ -277,6 +277,18 @@ Consult these helpful guides based on your skill's needs:
 
 These files contain established best practices for effective skill design.
 
+#### Prefer Scripts Over Bash Chains
+
+If a skill step involves collecting data from multiple sources, scanning files, or bulk operations, instruct Claude to **write and run a script** rather than listing individual bash commands. Each bash command requires a separate user approval — a step that runs 10 commands creates 10 approval prompts.
+
+| Instead of... | Instruct... |
+|---------------|-------------|
+| "Run `git log`, then `grep`, then `jq`..." | "Write a Python script that collects git history, extracts patterns, and outputs a summary. Run it from /tmp." |
+| "For each file, run `cat` and check..." | "Write a script that scans all matching files and returns a structured report." |
+| "Run these 5 curl commands..." | "Write a script that makes the API calls and aggregates results." |
+
+**Rule of thumb**: If a step needs 3+ bash commands for one logical operation, it should be a script. One Write + one Bash run = 2 approvals instead of many.
+
 #### Start with Reusable Skill Contents
 
 To begin implementation, start with the reusable resources identified above: `scripts/`, `references/`, and `assets/` files. Note that this step may require user input. For example, when implementing a `brand-guidelines` skill, the user may need to provide brand assets or templates to store in `assets/`, or documentation to store in `references/`.

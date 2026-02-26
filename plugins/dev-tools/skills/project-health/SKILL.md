@@ -42,6 +42,9 @@ Report:
 6. Duplicates: entries covered by a broader pattern (e.g. Bash(git add *) redundant if Bash(git *) exists)
 7. Missing presets: based on files present, suggest presets from [permission-presets.md]
 
+Prefer Read/Glob/Grep tools over Bash. If you need to scan multiple files or
+run 3+ commands for one analysis, write a Python script to /tmp and run it once.
+
 Return a structured summary, not raw data.
 ```
 
@@ -67,6 +70,10 @@ Audit the project context landscape at [repo-path]:
    Check for overlap with CLAUDE.md content.
 
 5. Check auto-memory at ~/.claude/projects/*/memory/MEMORY.md
+
+Prefer Read/Glob/Grep tools over Bash. If you need to scan many files or
+aggregate data across the repo, write a Python script to /tmp and run it once
+rather than running many individual bash commands.
 
 Return: project type, quality scores, missing docs, stale refs, overlaps,
 size violations, and total markdown footprint.
