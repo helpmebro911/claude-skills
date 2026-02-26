@@ -15,7 +15,7 @@ Production workflow skills for Claude Code CLI. Each skill guides Claude through
 
 ```
 claude-skills/
-├── plugins/                                # 9 installable plugins (32 skills)
+├── plugins/                                # 9 installable plugins (34 skills)
 │   ├── cloudflare/                         # Cloudflare Workers, Hono, D1/Drizzle, Vite, TanStack Start
 │   │   └── skills/
 │   │       ├── cloudflare-worker-builder/
@@ -32,11 +32,13 @@ claude-skills/
 │   │   └── skills/
 │   │       ├── tailwind-theme-builder/
 │   │       └── shadcn-ui/
-│   ├── design-assets/                      # Colour palettes, favicons, icons
+│   ├── design-assets/                      # Colour palettes, favicons, icons, image gen/processing
 │   │   └── skills/
 │   │       ├── color-palette/
 │   │       ├── favicon-gen/
-│   │       └── icon-set-generator/
+│   │       ├── icon-set-generator/
+│   │       ├── gemini-image-gen/
+│   │       └── image-processing/
 │   ├── integrations/                       # Google, ElevenLabs, MCP
 │   │   └── skills/
 │   │       ├── google-chat-messages/

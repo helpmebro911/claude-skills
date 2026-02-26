@@ -27,7 +27,7 @@
     },
     {
       "name": "design-assets",
-      "description": "Generate colour palettes, favicon packages, and custom SVG icon sets from brand colours.",
+      "description": "Generate colour palettes, favicon packages, custom SVG icon sets, AI-generated images (Gemini), and image processing (resize, convert, optimise).",
       "source": "./plugins/design-assets",
       "category": "design"
     },

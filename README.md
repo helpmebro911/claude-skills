@@ -11,9 +11,9 @@ Workflow skills for [Claude Code](https://claude.com/claude-code) that produce t
 | **cloudflare** | cloudflare-worker-builder, vite-flare-starter, tanstack-start, hono-api-scaffolder, d1-drizzle-schema | Deployable Cloudflare Workers, full-stack apps, TanStack Start SSR dashboards, Hono APIs, D1 schemas |
 | **web-design** | web-design-methodology, web-design-patterns, seo-local-business | Production HTML/CSS, component patterns, local business SEO |
 | **frontend** | tailwind-theme-builder, shadcn-ui | Themed Tailwind v4 + shadcn/ui setup with dark mode |
-| **design-assets** | color-palette, favicon-gen, icon-set-generator | Colour palettes, favicon packages, custom SVG icon sets |
+| **design-assets** | color-palette, favicon-gen, icon-set-generator, gemini-image-gen, image-processing | Colour palettes, favicons, SVG icons, AI image generation, image processing |
 | **integrations** | google-chat-messages, google-apps-script, elevenlabs-agents, mcp-builder | Google Chat webhooks, Apps Script, ElevenLabs agents, MCP servers |
-| **dev-tools** | skill-creator, project-kickoff, context-manager, dev-session, github-release, gemini-peer-review, gemini-guide, claude-capabilities, ux-audit, responsiveness-check | Skill creation, project bootstrapping, context audits, session tracking, releases, Gemini peer review and API guide, UX audits, responsive layout testing |
+| **dev-tools** | skill-creator, project-health, dev-session, github-release, gemini-peer-review, gemini-guide, claude-capabilities, ux-audit, responsiveness-check | Skill creation, project health audits, session tracking, releases, Gemini peer review, API guide, UX audits, responsive testing |
 | **shopify** | shopify-setup, shopify-products, shopify-content | Shopify API setup, product management, content pages, blog posts |
 | **wordpress** | wordpress-setup, wordpress-content, wordpress-elementor | WordPress WP-CLI access, content management, Elementor page editing |
 | **writing** | aussie-business-english | Australian business English writing style |
