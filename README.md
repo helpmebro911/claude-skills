@@ -13,7 +13,7 @@ Workflow skills for [Claude Code](https://claude.com/claude-code) that produce t
 | **frontend** | tailwind-theme-builder, shadcn-ui | Themed Tailwind v4 + shadcn/ui setup with dark mode |
 | **design-assets** | color-palette, favicon-gen, icon-set-generator, gemini-image-gen, image-processing | Colour palettes, favicons, SVG icons, AI image generation, image processing |
 | **integrations** | google-chat-messages, google-apps-script, elevenlabs-agents, mcp-builder | Google Chat webhooks, Apps Script, ElevenLabs agents, MCP servers |
-| **dev-tools** | skill-creator, project-health, dev-session, github-release, gemini-peer-review, gemini-guide, claude-capabilities, ux-audit, responsiveness-check | Skill creation, project health audits, session tracking, releases, Gemini peer review, API guide, UX audits, responsive testing |
+| **dev-tools** | project-health, dev-session, github-release, gemini-peer-review, gemini-guide, claude-capabilities, ux-audit, responsiveness-check | Project health audits, session tracking, releases, Gemini peer review, API guide, UX audits, responsive testing |
 | **shopify** | shopify-setup, shopify-products, shopify-content | Shopify API setup, product management, content pages, blog posts |
 | **wordpress** | wordpress-setup, wordpress-content, wordpress-elementor | WordPress WP-CLI access, content management, Elementor page editing |
 | **writing** | aussie-business-english | Australian business English writing style |
@@ -38,9 +38,7 @@ Workflow skills for [Claude Code](https://claude.com/claude-code) that produce t
 
 ## Create Your Own
 
-```bash
-python3 plugins/dev-tools/skills/skill-creator/scripts/init_skill.py my-skill --path plugins/dev-tools/skills/
-```
+Use [Anthropic's official skill-creator](https://github.com/anthropics/skills) or ask Claude: "Create a new skill for [use case]"
 
 ## Philosophy
 

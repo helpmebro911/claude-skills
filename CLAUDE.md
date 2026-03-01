@@ -9,13 +9,14 @@ Production workflow skills for Claude Code CLI. Each skill guides Claude through
 
 - Every skill must produce visible output (files, configurations, deployable projects)
 - "The context window is a public good" — only include what Claude doesn't already know
+- **Teach patterns, not ship scripts** — skills teach Claude *what* to do, Claude generates scripts adapted to the user's environment. Pre-built scripts in `scripts/` are the rare exception, not the default. Put proven implementation patterns in `references/` for Claude to adapt.
 - Follows the official Claude Code plugin spec
 
 ## Directory Structure
 
 ```
 claude-skills/
-├── plugins/                                # 9 installable plugins (34 skills)
+├── plugins/                                # 9 installable plugins
 │   ├── cloudflare/                         # Cloudflare Workers, Hono, D1/Drizzle, Vite, TanStack Start
 │   │   └── skills/
 │   │       ├── cloudflare-worker-builder/
@@ -45,11 +46,9 @@ claude-skills/
 │   │       ├── google-apps-script/
 │   │       ├── elevenlabs-agents/
 │   │       └── mcp-builder/
-│   ├── dev-tools/                          # Skill creation, context, sessions, releases
+│   ├── dev-tools/                          # Context, sessions, releases, peer review
 │   │   └── skills/
-│   │       ├── skill-creator/
-│   │       ├── project-kickoff/
-│   │       ├── context-manager/
+│   │       ├── project-health/
 │   │       ├── dev-session/
 │   │       ├── github-release/
 │   │       ├── gemini-peer-review/
@@ -89,8 +88,7 @@ plugin-name/
 └── skills/
     └── skill-name/
         ├── SKILL.md       # Frontmatter + instructions, under 500 lines
-        ├── scripts/       # Executable code (run directly)
-        ├── references/    # Docs loaded on demand by Claude
+        ├── references/    # Docs and example code loaded on demand by Claude
         └── assets/        # Files used in output (templates, images)
 ```
 
@@ -123,15 +121,27 @@ plugin-name/
 
 ## Creating a Skill
 
-Use the skill-creator skill:
-
-```bash
-python3 plugins/dev-tools/skills/skill-creator/scripts/init_skill.py my-skill --path plugins/my-plugin/skills/
-```
-
-Or ask Claude: "Create a new skill for [use case]"
+Use [Anthropic's official skill-creator](https://github.com/anthropics/skills/blob/main/skills/skill-creator/SKILL.md) or ask Claude: "Create a new skill for [use case]"
 
 Key principle: **every skill must produce something.** If it's just reference material Claude already knows, it doesn't earn a place here.
+
+### Skill Design: Patterns Over Scripts
+
+Skills should teach Claude the pattern so it can generate scripts adapted to the user's environment. Don't ship pre-built scripts unless the operation is genuinely complex and error-prone.
+
+| Content type | Where it goes | Example |
+|-------------|--------------|---------|
+| Workflow steps (what to do) | SKILL.md body | "Resize the image, then convert to WebP" |
+| Implementation patterns with gotchas | `references/` | RGBA-to-JPG compositing, API response parsing |
+| Templates copied into user projects | `assets/` | React boilerplate, config files |
+
+**Rule of thumb**: If Claude could generate a script from a 20-line description faster than it can find, read, and run a pre-built one, the description wins.
+
+### Frontmatter Validation
+
+- `name`: kebab-case, lowercase letters/digits/hyphens, max 64 characters
+- `description`: max 1024 characters, no angle brackets. Include trigger phrases.
+- Optional: `license`, `compatibility`, `allowed-tools`, `metadata`
 
 ## Installing Plugins
 
@@ -153,11 +163,11 @@ After installing, restart Claude Code to load new plugins.
 ## Quality Bar
 
 Before committing a skill:
-- [ ] SKILL.md has valid YAML frontmatter (name + description)
+- [ ] SKILL.md has valid YAML frontmatter (name: kebab-case max 64 chars, description: max 1024 chars)
 - [ ] Under 500 lines
 - [ ] Produces tangible output (not just reference material)
-- [ ] Passes validation: `python3 plugins/dev-tools/skills/skill-creator/scripts/quick_validate.py plugins/category/skills/my-skill`
 - [ ] Tested by actually using it on a real task
+- [ ] No pre-built scripts where a pattern description would suffice
 
 ## Git History
 
