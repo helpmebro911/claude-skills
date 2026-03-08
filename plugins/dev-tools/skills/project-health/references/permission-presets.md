@@ -274,8 +274,36 @@ For any JS/TS project. Add to Universal Base.
 "Bash(changeset *)",
 
 "// --- Component Dev ---",
-"Bash(storybook *)"
+"Bash(storybook *)",
+
+"// --- npx Subcommands (workaround for broad wildcard bug) ---",
+"Bash(npx tsc *)",
+"Bash(npx tsx *)",
+"Bash(npx ts-node *)",
+"Bash(npx vite *)",
+"Bash(npx vitest *)",
+"Bash(npx esbuild *)",
+"Bash(npx eslint *)",
+"Bash(npx prettier *)",
+"Bash(npx playwright *)",
+"Bash(npx playwright-cli *)",
+"Bash(npx tailwindcss *)",
+"Bash(npx shadcn *)",
+"Bash(npx shadcn@latest *)",
+"Bash(npx @better-auth/cli *)",
+"Bash(npx @better-auth/cli@latest *)",
+"Bash(npx drizzle-kit *)",
+"Bash(npx create-cloudflare *)",
+"Bash(npx create-cloudflare@latest *)",
+"Bash(npx create-next-app *)",
+"Bash(npx create-next-app@latest *)",
+"Bash(npx astro *)",
+"Bash(npx storybook *)",
+"Bash(npx lighthouse *)",
+"Bash(npx repomix *)"
 ```
+
+Note: `Bash(npx *)` is included in the base preset but may miss subcommands due to the same wildcard bug that affects `gh`. Include explicit `npx <tool>` entries for commonly used tools.
 
 ---
 
@@ -399,6 +427,9 @@ Deployment preset. Add to Universal Base + JavaScript/TypeScript.
 "// --- Wrangler ---",
 "Bash(wrangler *)",
 "Bash(npx wrangler *)",
+"Bash(npx wrangler@latest *)",
+"Bash(npx create-cloudflare *)",
+"Bash(npx create-cloudflare@latest *)",
 "Bash(miniflare *)"
 ```
 
@@ -465,7 +496,11 @@ For projects that interact with databases directly. Add to any stack.
 
 "// --- Managed Database CLIs ---",
 "Bash(turso *)",
-"Bash(pscale *)"
+"Bash(pscale *)",
+
+"// --- ORM CLIs (via npx) ---",
+"Bash(npx drizzle-kit *)",
+"Bash(npx prisma *)"
 ```
 
 ---
