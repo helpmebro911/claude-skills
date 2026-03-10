@@ -46,7 +46,7 @@ claude-skills/
 │   │       ├── google-apps-script/
 │   │       ├── elevenlabs-agents/
 │   │       └── mcp-builder/
-│   ├── dev-tools/                          # Context, sessions, releases, brains trust
+│   ├── dev-tools/                          # Context, sessions, releases, brains trust, browser automation
 │   │   └── skills/
 │   │       ├── project-health/
 │   │       ├── dev-session/
@@ -56,7 +56,8 @@ claude-skills/
 │   │       ├── claude-capabilities/
 │   │       ├── team-update/
 │   │       ├── ux-audit/
-│   │       └── responsiveness-check/
+│   │       ├── responsiveness-check/
+│   │       └── agent-browser/
 │   ├── shopify/                            # Shopify store management
 │   │   └── skills/
 │   │       ├── shopify-setup/

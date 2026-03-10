@@ -39,7 +39,7 @@
     },
     {
       "name": "dev-tools",
-      "description": "Project health and permission management, dev sessions, team updates with feedback triage, GitHub releases, multi-model brains trust (second opinions from Gemini/GPT/Qwen/DeepSeek), Gemini API guide, capabilities reference, UX audits, and responsive layout testing.",
+      "description": "Project health and permission management, dev sessions, team updates with feedback triage, GitHub releases, multi-model brains trust (second opinions from Gemini/GPT/Qwen/DeepSeek), Gemini API guide, capabilities reference, UX audits, responsive layout testing, and browser automation.",
       "source": "./plugins/dev-tools",
       "category": "development"
     },

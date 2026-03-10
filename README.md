@@ -13,7 +13,7 @@ Workflow skills for [Claude Code](https://claude.com/claude-code) that produce t
 | **frontend** | tailwind-theme-builder, shadcn-ui | Themed Tailwind v4 + shadcn/ui setup with dark mode |
 | **design-assets** | color-palette, favicon-gen, icon-set-generator, gemini-image-gen, image-processing | Colour palettes, favicons, SVG icons, AI image generation, image processing |
 | **integrations** | google-chat-messages, google-apps-script, elevenlabs-agents, mcp-builder | Google Chat webhooks, Apps Script, ElevenLabs agents, MCP servers |
-| **dev-tools** | project-health, dev-session, team-update, github-release, brains-trust, gemini-guide, claude-capabilities, ux-audit, responsiveness-check | Project health audits, session tracking, team updates with feedback triage, releases, multi-model brains trust, API guide, UX audits, responsive testing |
+| **dev-tools** | project-health, dev-session, team-update, github-release, brains-trust, gemini-guide, claude-capabilities, ux-audit, responsiveness-check, agent-browser | Project health audits, session tracking, team updates with feedback triage, releases, multi-model brains trust, API guide, UX audits, responsive testing, browser automation |
 | **shopify** | shopify-setup, shopify-products, shopify-content | Shopify API setup, product management, content pages, blog posts |
 | **wordpress** | wordpress-setup, wordpress-content, wordpress-elementor | WordPress WP-CLI access, content management, Elementor page editing |
 | **writing** | aussie-business-english | Australian business English writing style |
@@ -50,7 +50,7 @@ See [CLAUDE.md](CLAUDE.md) for development details.
 
 This repo started as a collection of 105 skills — many were informational reference guides (CSS patterns, API docs, framework cheatsheets). With Claude's expanded training data and built-in capabilities, those reference skills became redundant.
 
-**v2** restructured into 7 installable plugins containing 24 skills that produce tangible output. Each one earns its place.
+**v2** restructured into 9 installable plugins containing 36 skills that produce tangible output. Each one earns its place.
 
 The full v1 collection is preserved and usable:
 
