@@ -177,6 +177,23 @@ except urllib.error.URLError as e:
     sys.exit(1)
 ```
 
+## Consultation Directory
+
+Each consultation saves to its own timestamped directory for history:
+
+```
+.claude/artifacts/brains-trust/
+├── 2026-03-10-1423-auth-architecture/
+│   ├── prompt.txt
+│   ├── gemini-2.5-pro.md
+│   └── qwen3.5-plus.md
+└── 2026-03-10-1545-db-schema-review/
+    ├── prompt.txt
+    └── gpt-5.4.md
+```
+
+The directory name uses `{YYYY-MM-DD-HHmm}-{topic-slug}` where the topic slug is a 2-3 word kebab-case summary of the consultation topic (e.g. `auth-architecture`, `db-schema-review`, `blind-spots`).
+
 ## Script Structure
 
 The generated `brains-trust.py` should follow this structure:
@@ -188,11 +205,12 @@ import os, sys, json, urllib.request
 from concurrent.futures import ThreadPoolExecutor, as_completed
 
 # 1. Check keys
-# 2. Read prompt from .claude/artifacts/brains-trust-prompt.txt
-# 3. Define call functions (from patterns above)
-# 4. Call model(s)
-# 5. Print results
-# 6. Save to .claude/artifacts/brains-trust-{model}.md
+# 2. Consultation dir passed as sys.argv[1]
+# 3. Read prompt from {consultation_dir}/prompt.txt
+# 4. Define call functions (from patterns above)
+# 5. Call model(s) — print progress to stderr
+# 6. Save each response to {consultation_dir}/{model-slug}.md
+# 7. Print results to stdout
 ```
 
 ## Critical Rules

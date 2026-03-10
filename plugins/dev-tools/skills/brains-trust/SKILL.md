@@ -114,13 +114,13 @@ For consensus, always pick models from different providers (e.g. one Google + on
 
 4. **Build prompt** using the AI-to-AI template from [references/prompt-templates.md](references/prompt-templates.md). Include file contents inline with `--- filename ---` separators. **Do not set output token limits** — let models reason fully.
 
-5. **Write prompt to file** at `.claude/artifacts/brains-trust-prompt.txt` — never pass code inline via bash arguments (shell escaping breaks it).
+5. **Create consultation directory** at `.claude/artifacts/brains-trust/{timestamp}-{topic}/` (e.g. `2026-03-10-1423-auth-architecture/`). Write the prompt to `prompt.txt` inside it — never pass code inline via bash arguments (shell escaping breaks it).
 
 6. **Generate and run Python script** at `.claude/scripts/brains-trust.py` using patterns from [references/provider-api-patterns.md](references/provider-api-patterns.md):
-   - Reads prompt from `.claude/artifacts/brains-trust-prompt.txt`
+   - Reads prompt from the consultation directory's `prompt.txt`
    - Calls the selected API(s)
    - For consensus mode: calls multiple APIs in parallel using `concurrent.futures`
-   - Saves each response to `.claude/artifacts/brains-trust-{model}.md`
+   - Saves each response to `{model}.md` in the consultation directory
    - Prints results to stdout
 
 7. **Synthesise** — read the responses, present findings to the user. Note where models agree and disagree. Add your own perspective (agree/disagree with reasoning). Let the user decide what to act on.
