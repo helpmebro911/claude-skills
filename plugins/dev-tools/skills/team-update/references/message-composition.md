@@ -119,11 +119,57 @@ stu5678 fix: dashboard null pointer on empty state
 
 If the update is unusually large (major release, sprint completion), consider a card format or a separate detailed post with a brief summary in the main channel.
 
-## Tone
+## Communication Style
 
-Follow the playbook's style guidelines. Default tone is:
+Team updates must read like a human teammate wrote them. Claude's default output voice — over-structured, hedging, emoji-laden, over-explaining — is immediately recognisable and erodes trust. The team should glance at the message and absorb it, not think "the AI posted again."
 
-- **Conversational but professional** — not a formal report, not a casual DM
+### Voice Rules
+
+**Keep it flat and factual.** State what changed. Don't narrate the journey.
+
+```
+# BAD — Claude voice
+✅ *Great news!* The authentication flow has been successfully reworked! 🎉
+We addressed the redirect loop issue that was causing problems for users
+attempting to log in. Additionally, we've implemented three new API endpoints
+for user profile management, which will enable more granular control over...
+
+# GOOD — teammate voice
+*Shipped*
+- Auth fixed — was a redirect loop on login
+- 3 new user profile endpoints (profile, avatar, settings)
+```
+
+### What to Avoid
+
+| Pattern | Why it's bad | Instead |
+|---------|-------------|---------|
+| Emoji on every line | Screams AI-generated | One emoji max per message, or none |
+| "I'm pleased to report..." | Nobody talks like this in chat | Just state the fact |
+| "It's worth noting that..." | Hedging filler | Drop it, state the thing |
+| "The React-based frontend application" | Team already knows the stack | "The frontend" or just the feature name |
+| Restating project context | They were here yesterday | Jump straight to what's new |
+| "Successfully completed" | Redundant — if it shipped, it succeeded | "Shipped" or "Done" |
+| Bullet points with sub-bullets with sub-sub-bullets | Over-structured, hard to skim | Flat list, one level deep |
+| Signing off with encouragement | "Keep up the great work, team!" | Just stop when you're done |
+
+### Assume Context
+
+The team has been reading these updates for weeks or months. They know:
+- What the project is
+- What stack it uses
+- What was being worked on last time
+- Who the team members are
+
+Don't re-establish any of this. If the last update said "starting dark mode", this update can just say "dark mode — 60% done, targeting Monday." No need to explain what dark mode is or why it matters.
+
+### Length
+
+Shorter is almost always better. A 5-line update that gets read beats a 20-line update that gets skimmed. If in doubt, cut it in half.
+
+### Tone
+
 - **Factual** — state what happened, not how hard it was
 - **Forward-looking** — end with what's next, not just what's done
 - **Team-aware** — mention people when their input is needed, not for credit
+- **Terse over thorough** — chat is not documentation

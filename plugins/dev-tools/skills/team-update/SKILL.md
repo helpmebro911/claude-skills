@@ -107,6 +107,7 @@ Follow the playbook's "Message Style" section. General principles:
 - Group related commits into themes
 - Mention specific people only when relevant
 - Keep it scannable (short paragraphs, bullet points)
+- **Write like a teammate, not an AI** — no emoji spam, no hedging, no over-explaining context the team already has. See the Communication Style section in [references/message-composition.md](references/message-composition.md).
 
 ### 2b. Preview and Approval
 
