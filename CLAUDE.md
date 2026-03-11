@@ -23,22 +23,20 @@ claude-skills/
 │   │       ├── vite-flare-starter/
 │   │       ├── tanstack-start/
 │   │       ├── hono-api-scaffolder/
-│   │       └── d1-drizzle-schema/
-│   ├── web-design/                         # Web design methodology, patterns, SEO
+│   │       ├── d1-drizzle-schema/
+│   │       └── d1-migration/
+│   ├── web-design/                         # Local business SEO
 │   │   └── skills/
-│   │       ├── web-design-methodology/
-│   │       ├── web-design-patterns/
 │   │       └── seo-local-business/
 │   ├── frontend/                           # Tailwind v4 + shadcn/ui
 │   │   └── skills/
 │   │       ├── tailwind-theme-builder/
 │   │       └── shadcn-ui/
-│   ├── design-assets/                      # Colour palettes, favicons, icons, image gen/processing
+│   ├── design-assets/                      # Colour palettes, favicons, icons, image processing
 │   │   └── skills/
 │   │       ├── color-palette/
 │   │       ├── favicon-gen/
 │   │       ├── icon-set-generator/
-│   │       ├── gemini-image-gen/
 │   │       └── image-processing/
 │   ├── integrations/                       # Google, ElevenLabs, MCP
 │   │   └── skills/
@@ -46,14 +44,13 @@ claude-skills/
 │   │       ├── google-apps-script/
 │   │       ├── elevenlabs-agents/
 │   │       └── mcp-builder/
-│   ├── dev-tools/                          # Context, sessions, releases, brains trust, browser automation
+│   ├── dev-tools/                          # Context, sessions, releases, brains trust, git, browser automation
 │   │   └── skills/
 │   │       ├── project-health/
 │   │       ├── dev-session/
 │   │       ├── github-release/
 │   │       ├── brains-trust/
-│   │       ├── gemini-guide/
-│   │       ├── claude-capabilities/
+│   │       ├── git-workflow/
 │   │       ├── team-update/
 │   │       ├── ux-audit/
 │   │       ├── responsiveness-check/

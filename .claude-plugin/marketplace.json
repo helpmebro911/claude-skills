@@ -9,13 +9,13 @@
   "plugins": [
     {
       "name": "cloudflare",
-      "description": "Scaffold Cloudflare Workers, Hono APIs, D1/Drizzle schemas, full-stack Vite+Workers apps, and TanStack Start SSR dashboards.",
+      "description": "Scaffold Cloudflare Workers, Hono APIs, D1/Drizzle schemas, D1 migration workflows, full-stack Vite+Workers apps, and TanStack Start SSR dashboards.",
       "source": "./plugins/cloudflare",
       "category": "development"
     },
     {
       "name": "web-design",
-      "description": "Web design methodology, component patterns (heroes, cards, CTAs), and local business SEO.",
+      "description": "Local business SEO setup with JSON-LD schema, meta tags, robots.txt, and sitemap.",
       "source": "./plugins/web-design",
       "category": "design"
     },
@@ -27,7 +27,7 @@
     },
     {
       "name": "design-assets",
-      "description": "Generate colour palettes, favicon packages, custom SVG icon sets, AI-generated images (Gemini), and image processing (resize, convert, optimise).",
+      "description": "Generate colour palettes, favicon packages, custom SVG icon sets, and image processing (resize, convert, optimise).",
       "source": "./plugins/design-assets",
       "category": "design"
     },
@@ -39,7 +39,7 @@
     },
     {
       "name": "dev-tools",
-      "description": "Project health and permission management, dev sessions, team updates with feedback triage, GitHub releases, multi-model brains trust (second opinions from Gemini/GPT/Qwen/DeepSeek), Gemini API guide, capabilities reference, UX audits, responsive layout testing, and browser automation.",
+      "description": "Project health and permission management, dev sessions, team updates with feedback triage, GitHub releases, multi-model brains trust, git workflows, UX audits, responsive layout testing, and browser automation.",
       "source": "./plugins/dev-tools",
       "category": "development"
     },

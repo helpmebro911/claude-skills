@@ -1,6 +1,6 @@
 {
   "name": "web-design",
-  "description": "Web design methodology, component patterns (heroes, cards, CTAs), and local business SEO.",
+  "description": "Local business SEO setup with JSON-LD schema, meta tags, robots.txt, and sitemap.",
   "author": {
     "name": "Jeremy Dawes / Jezweb",
     "email": "jeremy@jezweb.net"
