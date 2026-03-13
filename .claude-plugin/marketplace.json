@@ -45,7 +45,7 @@
     },
     {
       "name": "writing",
-      "description": "Australian business English writing style for professional communications.",
+      "description": "Business English writing styles (AU, US, UK, NZ) and professional document skills (resumes, proposals, awards, strategy).",
       "source": "./plugins/writing",
       "category": "productivity"
     },
@@ -59,6 +59,12 @@
       "name": "wordpress",
       "description": "Manage WordPress sites: content creation, blog posts, media, Elementor page editing, and WP-CLI workflows.",
       "source": "./plugins/wordpress",
+      "category": "productivity"
+    },
+    {
+      "name": "knowledge-cortex",
+      "description": "Mine Gmail history into portable flat files. Extracts contacts, clients, communications, and knowledge facts using AI extraction.",
+      "source": "./plugins/knowledge-cortex",
       "category": "productivity"
     }
   ]

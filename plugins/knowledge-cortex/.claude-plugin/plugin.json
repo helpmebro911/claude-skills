@@ -1,0 +1,8 @@
+{
+  "name": "knowledge-cortex",
+  "description": "Mine Gmail history into portable flat files (~/.cortex/). Extracts contacts, clients, communications, and knowledge facts using AI extraction.",
+  "author": {
+    "name": "Jeremy Dawes / Jezweb",
+    "email": "jeremy@jezweb.net"
+  }
+}

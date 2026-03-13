@@ -14,9 +14,10 @@ Workflow skills for [Claude Code](https://claude.com/claude-code) that produce t
 | **design-assets** | color-palette, favicon-gen, icon-set-generator, image-processing | Colour palettes, favicons, SVG icons, image processing |
 | **integrations** | google-chat-messages, google-apps-script, elevenlabs-agents, mcp-builder | Google Chat webhooks, Apps Script, ElevenLabs agents, MCP servers |
 | **dev-tools** | project-health, dev-session, team-update, github-release, brains-trust, git-workflow, ux-audit, responsiveness-check, agent-browser | Project health audits, session tracking, team updates, releases, multi-model brains trust, git workflows, UX audits, responsive testing, browser automation |
+| **knowledge-cortex** | cortex-mine, cortex-query | Mine Gmail into portable flat files — contacts, clients, communications, knowledge facts |
 | **shopify** | shopify-setup, shopify-products, shopify-content | Shopify API setup, product management, content pages, blog posts |
 | **wordpress** | wordpress-setup, wordpress-content, wordpress-elementor | WordPress WP-CLI access, content management, Elementor page editing |
-| **writing** | aussie-business-english | Australian business English writing style |
+| **writing** | aussie-business-english, us-business-english, uk-business-english, nz-business-english, resume-cover-letter, proposal-writer, award-application, strategy-document | Regional business English (AU/US/UK/NZ) + professional documents (resumes, proposals, awards, strategy) |
 
 ## Install
 
@@ -31,6 +32,7 @@ Workflow skills for [Claude Code](https://claude.com/claude-code) that produce t
 /plugin install web-design@jezweb-skills
 /plugin install design-assets@jezweb-skills
 /plugin install integrations@jezweb-skills
+/plugin install knowledge-cortex@jezweb-skills
 /plugin install shopify@jezweb-skills
 /plugin install wordpress@jezweb-skills
 /plugin install writing@jezweb-skills
@@ -50,7 +52,7 @@ See [CLAUDE.md](CLAUDE.md) for development details.
 
 This repo started as a collection of 105 skills — many were informational reference guides (CSS patterns, API docs, framework cheatsheets). With Claude's expanded training data and built-in capabilities, those reference skills became redundant.
 
-**v2** restructured into 9 installable plugins containing 33 skills that produce tangible output. Each one earns its place.
+**v2** restructured into 10 installable plugins containing 42 skills that produce tangible output. Each one earns its place.
 
 The full v1 collection is preserved and usable:
 
