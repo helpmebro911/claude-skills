@@ -54,8 +54,8 @@ Report:
 9. Missing presets: based on files present, suggest presets from [permission-presets.md]
 
 Prefer Read/Glob/Grep tools over Bash. If you need to scan multiple files or
-run 3+ commands for one analysis, write a Python script to .claude/scripts/
-and run it once (mkdir -p .claude/scripts first).
+run 3+ commands for one analysis, write a Python script to .jez/scripts/
+and run it once (mkdir -p .jez/scripts first).
 
 Return a structured summary, not raw data.
 ```
@@ -87,9 +87,9 @@ Audit the project context landscape at [repo-path]:
    Check each has "observability": { "enabled": true }. Flag any missing it.
 
 Prefer Read/Glob/Grep tools over Bash. If you need to scan many files or
-aggregate data across the repo, write a Python script to .claude/scripts/
+aggregate data across the repo, write a Python script to .jez/scripts/
 and run it once rather than running many individual bash commands
-(mkdir -p .claude/scripts first).
+(mkdir -p .jez/scripts first).
 
 Return: project type, quality scores, missing docs, stale refs, overlaps,
 size violations, observability gaps, and total markdown footprint.
@@ -191,8 +191,8 @@ Both return summaries. The main agent combines them into one report and proposes
 
 4. **Generate `.gitignore`**:
    - Read [references/templates.md](references/templates.md)
-   - Always include `.claude/settings.local.json`, `.claude/plans/`, `.claude/screenshots/`, `.claude/artifacts/`
-   - Do NOT gitignore `.claude/scripts/` — generated scripts are worth keeping
+   - Always include `.claude/settings.local.json`, `.claude/plans/`, `.jez/screenshots/`, `.jez/artifacts/`
+   - Do NOT gitignore `.jez/scripts/` — generated scripts are worth keeping
 
 5. **Optionally** (ask first): `git init` + `gh repo create`
 

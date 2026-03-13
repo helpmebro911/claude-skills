@@ -114,9 +114,9 @@ For consensus, always pick models from different providers (e.g. one Google + on
 
 4. **Build prompt** using the AI-to-AI template from [references/prompt-templates.md](references/prompt-templates.md). Include file contents inline with `--- filename ---` separators. **Do not set output token limits** — let models reason fully.
 
-5. **Create consultation directory** at `.claude/artifacts/brains-trust/{timestamp}-{topic}/` (e.g. `2026-03-10-1423-auth-architecture/`). Write the prompt to `prompt.txt` inside it — never pass code inline via bash arguments (shell escaping breaks it).
+5. **Create consultation directory** at `.jez/artifacts/brains-trust/{timestamp}-{topic}/` (e.g. `2026-03-10-1423-auth-architecture/`). Write the prompt to `prompt.txt` inside it — never pass code inline via bash arguments (shell escaping breaks it).
 
-6. **Generate and run Python script** at `.claude/scripts/brains-trust.py` using patterns from [references/provider-api-patterns.md](references/provider-api-patterns.md):
+6. **Generate and run Python script** at `.jez/scripts/brains-trust.py` using patterns from [references/provider-api-patterns.md](references/provider-api-patterns.md):
    - Reads prompt from the consultation directory's `prompt.txt`
    - Calls the selected API(s)
    - For consensus mode: calls multiple APIs in parallel using `concurrent.futures`

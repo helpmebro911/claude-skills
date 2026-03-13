@@ -182,7 +182,7 @@ except urllib.error.URLError as e:
 Each consultation saves to its own timestamped directory for history:
 
 ```
-.claude/artifacts/brains-trust/
+.jez/artifacts/brains-trust/
 ├── 2026-03-10-1423-auth-architecture/
 │   ├── prompt.txt
 │   ├── gemini-2.5-pro.md
