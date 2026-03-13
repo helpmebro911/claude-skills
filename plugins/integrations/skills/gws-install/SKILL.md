@@ -79,25 +79,33 @@ export GOOGLE_WORKSPACE_CLI_CLIENT_SECRET="your-client-secret"
 
 ### Step 4: Authenticate
 
-Ask which Google account to use, then run:
+**IMPORTANT**: This step is interactive — it prints a URL the user must open in their browser. Do NOT run this as a background task or sub-agent. Run in the foreground so the URL is visible.
+
+Ask which Google account to use, then:
+
+1. **Capture the auth URL** — run the login command and extract the URL:
+
+```bash
+gws auth login -s gmail,drive,calendar,sheets,docs,chat,tasks 2>&1 | head -5
+```
+
+2. **Present the URL to the user** — copy the full `https://accounts.google.com/...` URL from the output and paste it as text in your response so the user can click it. Terminal output may wrap or truncate long URLs, making them impossible to copy.
+
+3. **Wait for the user** to approve in their browser, then verify:
+
+```bash
+gws auth status
+```
+
+If the browser didn't open automatically, the user needs to manually copy the URL. The URL is very long (multiple OAuth scopes) so terminal wrapping can break it.
+
+**Alternative — `--full` for all scopes:**
 
 ```bash
 gws auth login --full
 ```
 
-Or with specific services to match the original setup:
-
-```bash
-gws auth login -s gmail,drive,calendar,sheets,docs,chat,tasks
-```
-
 The user can check their original machine's scopes with `gws auth status` to see what was granted.
-
-After browser approval, verify:
-
-```bash
-gws auth status
-```
 
 ### Step 5: Install Agent Skills
 

@@ -134,13 +134,19 @@ Recommend **full access** for power users. The OAuth consent screen shows all re
 
 ### Step 5: Authenticate
 
-Run the login command. This opens a browser — the user signs in with their chosen Google account and approves the scopes.
+**IMPORTANT**: This step is interactive — it prints a URL the user must open in their browser. Do NOT run as a background task or sub-agent. Run in foreground.
+
+1. Run the login command:
 
 ```bash
 gws auth login --full
 # Or with specific services:
 gws auth login -s gmail,drive,calendar,sheets,docs,chat,tasks
 ```
+
+2. The command prints a long OAuth URL. **Copy the full URL from the output and paste it in your response** so the user can click it — terminal wrapping can truncate it, making it impossible to copy from the terminal directly.
+
+3. Wait for the user to approve in their browser.
 
 After browser approval, gws stores encrypted credentials at `~/.config/gws/credentials.enc`.
 
