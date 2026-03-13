@@ -38,8 +38,10 @@ claude-skills/
 │   │       ├── favicon-gen/
 │   │       ├── icon-set-generator/
 │   │       └── image-processing/
-│   ├── integrations/                       # Google, ElevenLabs, MCP
+│   ├── integrations/                       # Google Workspace, ElevenLabs, MCP
 │   │   └── skills/
+│   │       ├── gws-setup/
+│   │       ├── gws-install/
 │   │       ├── google-chat-messages/
 │   │       ├── google-apps-script/
 │   │       ├── elevenlabs-agents/
@@ -65,9 +67,16 @@ claude-skills/
 │   │       ├── wordpress-setup/
 │   │       ├── wordpress-content/
 │   │       └── wordpress-elementor/
-│   └── writing/                            # Australian business English
+│   └── writing/                            # Business English + professional documents
 │       └── skills/
-│           └── aussie-business-english/
+│           ├── aussie-business-english/
+│           ├── us-business-english/
+│           ├── uk-business-english/
+│           ├── nz-business-english/
+│           ├── resume-cover-letter/
+│           ├── proposal-writer/
+│           ├── award-application/
+│           └── strategy-document/
 ├── .claude-plugin/                         # Marketplace + plugin config
 │   ├── marketplace.json
 │   └── plugin.json
