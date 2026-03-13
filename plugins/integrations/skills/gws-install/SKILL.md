@@ -79,33 +79,32 @@ export GOOGLE_WORKSPACE_CLI_CLIENT_SECRET="your-client-secret"
 
 ### Step 4: Authenticate
 
-**IMPORTANT**: This step is interactive — it prints a URL the user must open in their browser. Do NOT run this as a background task or sub-agent. Run in the foreground so the URL is visible.
+**IMPORTANT**: This step prints a very long OAuth URL (30+ scopes) that the user must open in their browser. The URL is too long to copy from terminal output — it wraps across lines and breaks. Always extract it to a file and open it programmatically.
 
 Ask which Google account to use, then:
 
-1. **Capture the auth URL** — run the login command, extract the URL, and save it to a file the user can open:
+1. **Run auth in the background** and capture output:
 
 ```bash
-gws auth login -s gmail,drive,calendar,sheets,docs,chat,tasks 2>&1 | tee /tmp/gws-auth-output.txt &
-sleep 2
-grep -o 'https://accounts.google.com[^ ]*' /tmp/gws-auth-output.txt > /tmp/gws-auth-url.txt
+gws auth login -s gmail,drive,calendar,sheets,docs,chat,tasks 2>&1 | tee /tmp/gws-auth-output.txt
 ```
 
-2. **Open or present the URL** — the OAuth URL is extremely long (30+ scopes). Terminal wrapping makes it impossible to copy. Save it and open it:
+Running as a background task is fine — it will complete once the user approves in browser.
+
+2. **Extract and open the URL** (run separately after output appears):
 
 ```bash
+grep -o 'https://accounts.google.com[^ ]*' /tmp/gws-auth-output.txt > /tmp/gws-auth-url.txt
 cat /tmp/gws-auth-url.txt | xargs open
 ```
 
-If `open` fails, tell the user: "The auth URL is saved at `/tmp/gws-auth-url.txt` — open that file and copy the URL from there."
+If `open` doesn't work, tell the user: "The auth URL is saved at `/tmp/gws-auth-url.txt` — open that file and copy the URL from there."
 
 3. **Wait for the user** to approve in their browser, then verify:
 
 ```bash
 gws auth status
 ```
-
-If the browser didn't open automatically, the user needs to manually copy the URL. The URL is very long (multiple OAuth scopes) so terminal wrapping can break it.
 
 **Alternative — `--full` for all scopes:**
 
