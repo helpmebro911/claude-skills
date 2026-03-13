@@ -65,14 +65,28 @@ Enable these APIs (search for each):
 - Google Calendar API
 - Google Sheets API
 - Google Docs API
-- Google Chat API
+- Google Chat API (requires extra Chat App config — see below)
 - Tasks API
 - People API
 - Google Slides API
 - Google Forms API
 - Admin SDK API (optional — for Workspace admin features)
 
-**3c. Configure OAuth consent screen:**
+**3c. Configure Google Chat App (required for Chat API):**
+
+Enabling the Chat API alone isn't enough — Google requires a Chat App configuration even for user-context OAuth access. Without this, all Chat API calls return errors.
+
+Direct the user to: `https://console.cloud.google.com/apis/api/chat.googleapis.com/hangouts-chat?project=PROJECT_ID`
+
+1. Click the **Configuration** tab
+2. Fill in app details (name, avatar, description — values don't matter for CLI use)
+3. Under "Functionality", check **Spaces and group conversations**
+4. Under "Connection settings", select **Apps Script** or **HTTP endpoint** (pick any — we just need the config to exist)
+5. Save
+
+This creates the app identity that the Chat API requires. Messages sent via `gws` still appear as coming from the authenticated user (OAuth user context), not from a bot.
+
+**3e. Configure OAuth consent screen:**
 
 Direct the user to: `https://console.cloud.google.com/apis/credentials/consent?project=PROJECT_ID`
 
@@ -85,7 +99,7 @@ Settings:
 - Add their Google account as a test user (required while app is in "Testing" status)
 - Save and continue through all screens
 
-**3d. Create OAuth client ID:**
+**3f. Create OAuth client ID:**
 
 Direct the user to: `https://console.cloud.google.com/apis/credentials?project=PROJECT_ID`
 
@@ -95,7 +109,7 @@ Direct the user to: `https://console.cloud.google.com/apis/credentials?project=P
 4. Click **Create**
 5. Copy the JSON or download the `client_secret_*.json` file
 
-**3e. Save the credentials:**
+**3g. Save the credentials:**
 
 Ask the user to provide the client_secret.json content (paste the JSON or provide the downloaded file path).
 
