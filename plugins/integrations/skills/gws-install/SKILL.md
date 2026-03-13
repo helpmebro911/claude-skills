@@ -83,13 +83,21 @@ export GOOGLE_WORKSPACE_CLI_CLIENT_SECRET="your-client-secret"
 
 Ask which Google account to use, then:
 
-1. **Capture the auth URL** — run the login command and extract the URL:
+1. **Capture the auth URL** — run the login command, extract the URL, and save it to a file the user can open:
 
 ```bash
-gws auth login -s gmail,drive,calendar,sheets,docs,chat,tasks 2>&1 | head -5
+gws auth login -s gmail,drive,calendar,sheets,docs,chat,tasks 2>&1 | tee /tmp/gws-auth-output.txt &
+sleep 2
+grep -o 'https://accounts.google.com[^ ]*' /tmp/gws-auth-output.txt > /tmp/gws-auth-url.txt
 ```
 
-2. **Present the URL to the user** — copy the full `https://accounts.google.com/...` URL from the output and paste it as text in your response so the user can click it. Terminal output may wrap or truncate long URLs, making them impossible to copy.
+2. **Open or present the URL** — the OAuth URL is extremely long (30+ scopes). Terminal wrapping makes it impossible to copy. Save it and open it:
+
+```bash
+cat /tmp/gws-auth-url.txt | xargs open
+```
+
+If `open` fails, tell the user: "The auth URL is saved at `/tmp/gws-auth-url.txt` — open that file and copy the URL from there."
 
 3. **Wait for the user** to approve in their browser, then verify:
 

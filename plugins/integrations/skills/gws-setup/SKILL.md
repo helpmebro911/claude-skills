@@ -136,15 +136,24 @@ Recommend **full access** for power users. The OAuth consent screen shows all re
 
 **IMPORTANT**: This step is interactive — it prints a URL the user must open in their browser. Do NOT run as a background task or sub-agent. Run in foreground.
 
-1. Run the login command:
+1. Run the login command and capture the output:
 
 ```bash
-gws auth login --full
+gws auth login --full 2>&1 | tee /tmp/gws-auth-output.txt &
+sleep 2
 # Or with specific services:
-gws auth login -s gmail,drive,calendar,sheets,docs,chat,tasks
+# gws auth login -s gmail,drive,calendar,sheets,docs,chat,tasks 2>&1 | tee /tmp/gws-auth-output.txt &
 ```
 
-2. The command prints a long OAuth URL. **Copy the full URL from the output and paste it in your response** so the user can click it — terminal wrapping can truncate it, making it impossible to copy from the terminal directly.
+2. The OAuth URL is extremely long (30+ scopes). Terminal wrapping makes it impossible to copy. Capture it and open directly:
+
+```bash
+# Extract URL from output and open in browser
+grep -o 'https://accounts.google.com[^ ]*' /tmp/gws-auth-output.txt > /tmp/gws-auth-url.txt
+cat /tmp/gws-auth-url.txt | xargs open
+```
+
+If `open` fails, tell the user: "The auth URL is saved at `/tmp/gws-auth-url.txt` — open that file and copy the URL."
 
 3. Wait for the user to approve in their browser.
 
