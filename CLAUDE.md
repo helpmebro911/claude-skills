@@ -16,7 +16,7 @@ Production workflow skills for Claude Code CLI. Each skill guides Claude through
 
 ```
 claude-skills/
-├── plugins/                                # 10 plugins, 44 skills
+├── plugins/                                # 11 plugins, 49 skills
 │   ├── cloudflare/                         # Cloudflare Workers, Hono, D1/Drizzle, Vite, TanStack Start
 │   │   └── skills/
 │   │       ├── cloudflare-worker-builder/
@@ -24,20 +24,23 @@ claude-skills/
 │   │       ├── tanstack-start/
 │   │       ├── hono-api-scaffolder/
 │   │       ├── d1-drizzle-schema/
-│   │       └── d1-migration/
+│   │       ├── d1-migration/
+│   │       └── db-seed/
 │   ├── web-design/                         # Local business SEO
 │   │   └── skills/
 │   │       └── seo-local-business/
-│   ├── frontend/                           # Tailwind v4 + shadcn/ui
+│   ├── frontend/                           # Tailwind v4 + shadcn/ui + landing pages
 │   │   └── skills/
 │   │       ├── tailwind-theme-builder/
-│   │       └── shadcn-ui/
-│   ├── design-assets/                      # Colour palettes, favicons, icons, image processing
+│   │       ├── shadcn-ui/
+│   │       └── landing-page/
+│   ├── design-assets/                      # Colour palettes, favicons, icons, image processing, AI images
 │   │   └── skills/
 │   │       ├── color-palette/
 │   │       ├── favicon-gen/
 │   │       ├── icon-set-generator/
-│   │       └── image-processing/
+│   │       ├── image-processing/
+│   │       └── ai-image-generator/
 │   ├── integrations/                       # Google Workspace, ElevenLabs, MCP
 │   │   └── skills/
 │   │       ├── gws-setup/
@@ -49,6 +52,7 @@ claude-skills/
 │   ├── dev-tools/                          # Context, sessions, releases, brains trust, git, browser automation
 │   │   └── skills/
 │   │       ├── project-health/
+│   │       ├── project-docs/
 │   │       ├── dev-session/
 │   │       ├── github-release/
 │   │       ├── brains-trust/
@@ -71,6 +75,9 @@ claude-skills/
 │   │       ├── wordpress-setup/
 │   │       ├── wordpress-content/
 │   │       └── wordpress-elementor/
+│   ├── social-media/                       # Social media content creation
+│   │   └── skills/
+│   │       └── social-media-posts/
 │   └── writing/                            # Business English + professional documents
 │       └── skills/
 │           ├── aussie-business-english/

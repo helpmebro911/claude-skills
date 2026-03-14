@@ -66,6 +66,12 @@
       "description": "Mine Gmail history into portable flat files. Extracts contacts, clients, communications, and knowledge facts using AI extraction.",
       "source": "./plugins/knowledge-cortex",
       "category": "productivity"
+    },
+    {
+      "name": "social-media",
+      "description": "Social media content creation — platform-formatted posts for LinkedIn, Facebook, Instagram, and Reddit with character limits, hashtag strategies, and image specs.",
+      "source": "./plugins/social-media",
+      "category": "productivity"
     }
   ]
 }
