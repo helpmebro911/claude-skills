@@ -598,6 +598,32 @@ macOS-specific commands. Add when developing on macOS.
 
 ---
 
+## Google Workspace CLI
+
+Google Workspace CLI (`gws`) for Gmail, Drive, Calendar, Sheets, Docs, Chat, Tasks, and more. Add when using `@googleworkspace/cli`.
+
+```json
+"// --- Google Workspace CLI ---",
+"Bash(gws *)",
+"Bash(gws auth *)",
+"Bash(gws gmail *)",
+"Bash(gws calendar *)",
+"Bash(gws drive *)",
+"Bash(gws sheets *)",
+"Bash(gws docs *)",
+"Bash(gws chat *)",
+"Bash(gws tasks *)",
+"Bash(gws slides *)",
+"Bash(gws forms *)",
+"Bash(gws people *)",
+"Bash(gws admin *)",
+"Bash(npx skills *)"
+```
+
+Note: `Bash(gws *)` should cover all subcommands, but explicit entries are included as workaround for the wildcard matching bug (same as `gh` and `npx`). `npx skills` is for installing/managing gws agent skills.
+
+---
+
 ## LLM CLIs
 
 AI/LLM command-line tools. Add when using AI assistants or review tools.
@@ -1156,6 +1182,7 @@ Presets stack. Examples:
 | Railway deployment | Universal + JavaScript/TypeScript + Hosting Platforms |
 | Stripe integration | Universal + JavaScript/TypeScript + SaaS CLIs |
 | Linux server ops | Universal + Linux System + Docker |
+| Google Workspace automation | Universal + JavaScript/TypeScript + Google Workspace CLI |
 | Full-stack ops | Universal + JavaScript/TypeScript + Python + Docker + Database + MCP (blanket) |
 
 When merging, deduplicate and keep the grouped `//` comment structure. The final `settings.local.json` should look like:
