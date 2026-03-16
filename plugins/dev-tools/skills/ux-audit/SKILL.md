@@ -20,6 +20,44 @@ If none are available, inform the user and suggest installing Chrome MCP or Play
 
 See [references/browser-tools.md](references/browser-tools.md) for tool-specific commands.
 
+## Depth Levels
+
+Control how thorough the audit is. Pass as an argument: `/ux-audit quick`, `/ux-audit thorough`, or default to standard.
+
+| Depth | Duration | Autonomy | What it covers |
+|-------|----------|----------|---------------|
+| **quick** | 5-10 min | Interactive | One user flow, happy path only. Spot check after a change. |
+| **standard** | 20-40 min | Semi-autonomous | Full walkthrough + QA sweep of main pages. Default. |
+| **thorough** | 1-3 hours | Fully autonomous | Multiple personas, all pages, all modes combined. Overnight mode. |
+
+### Thorough Mode: Overnight Workflow
+
+The thorough mode is designed to run unattended. Kick it off at end of day, review the report in the morning.
+
+1. **Discover all routes** — read router config, crawl navigation, build complete page inventory
+2. **Create a task list** — track progress so work survives context limits
+3. **UX Walkthrough x3 personas**:
+   - First-time user (non-technical, time-poor, first visit)
+   - Power user (daily user, knows the app, looking for efficiency)
+   - Mobile user (phone, touch targets, small viewport)
+4. **Full QA sweep** — every page, all CRUD, all states (empty, error, loading, populated)
+5. **Resilience testing** — every form: bad data, mid-navigation, back button, refresh, double-submit
+6. **Cross-cutting per page** — dark mode screenshot, mobile viewport (375px) screenshot, keyboard navigation
+7. **Screenshot everything** — save to `.jez/screenshots/ux-audit/` (numbered chronologically)
+8. **Comprehensive report** — `docs/ux-audit-thorough-YYYY-MM-DD.md` with issue counts by severity
+9. **Summary** — top 5 critical issues, overall health score, "one thing to fix first"
+
+### Autonomy by Depth
+
+| Action | quick | standard | thorough |
+|--------|-------|----------|----------|
+| Navigate pages | Just do it | Just do it | Just do it |
+| Take screenshots | Key moments | Friction points | Every page + every issue |
+| Fill forms with test data | Ask first | Ask first | Just do it (obviously fake data) |
+| Click delete/destructive | Ask first | Ask first | Ask first (only exception) |
+| Submit forms | Ask first | Brief confirmation | Just do it (test data only) |
+| Write report file | Just do it | Brief confirmation | Just do it |
+
 ## Operating Modes
 
 ### Mode 1: UX Walkthrough (Dogfooding)
@@ -131,17 +169,22 @@ Focused testing of a specific area.
 
 ## When to Use
 
-| Scenario | Mode |
-|----------|------|
-| After building a feature, before showing users | UX Walkthrough |
-| Before a release, verify nothing is broken | QA Sweep |
-| Quick check on a specific page after changes | Targeted Check |
-| Periodic UX health check | UX Walkthrough |
-| Client demo prep | QA Sweep + UX Walkthrough |
+| Scenario | Mode | Depth |
+|----------|------|-------|
+| Just changed a page, quick sanity check | Targeted Check | quick |
+| After building a feature, before showing users | UX Walkthrough | standard |
+| Before a release, verify nothing is broken | QA Sweep | standard |
+| Quick check on a specific page after changes | Targeted Check | quick |
+| Periodic UX health check | UX Walkthrough | standard |
+| Client demo prep | QA Sweep + UX Walkthrough | standard |
+| End-of-day comprehensive test, review in morning | All modes combined | thorough |
+| Pre-launch full audit with evidence | All modes combined | thorough |
 
 **Skip this skill for**: API-only services, CLI tools, unit/integration tests (use test frameworks), performance testing.
 
 ## Autonomy Rules
+
+Default rules (standard depth). See "Autonomy by Depth" table above for quick/thorough overrides.
 
 - **Just do it**: Navigate pages, take screenshots, read page content, evaluate usability
 - **Brief confirmation**: Before starting a full QA sweep (can be lengthy), before writing report files

@@ -4,7 +4,7 @@
 
 Production workflow skills for [Claude Code](https://claude.com/claude-code). Each skill guides Claude through a recipe to produce tangible output — scaffolded projects, generated assets, professional documents, deployed services.
 
-11 plugins. 49 skills. Every one produces something.
+11 plugins. 51 skills. Every one produces something.
 
 ## Quick Start
 
@@ -34,7 +34,7 @@ Then just ask Claude what you need — installed skills trigger automatically fr
 
 | Plugin | Skills | What it does |
 |--------|--------|-------------|
-| **frontend** | tailwind-theme-builder, shadcn-ui, landing-page | Tailwind v4 theming with CSS variables + dark mode, shadcn/ui component installation and customisation, single-file landing pages |
+| **frontend** | tailwind-theme-builder, shadcn-ui, landing-page, product-showcase | Tailwind v4 theming with CSS variables + dark mode, shadcn/ui component installation and customisation, single-file landing pages, app showcase sites from real screenshots |
 | **design-assets** | color-palette, favicon-gen, icon-set-generator, image-processing, ai-image-generator | Accessible colour palettes from a single hex, favicon packages, custom SVG icon sets, image resize/convert/optimise, AI image generation (Gemini/GPT) |
 | **web-design** | seo-local-business | Local business SEO: JSON-LD schema, meta tags, robots.txt, sitemap.xml |
 
@@ -49,11 +49,11 @@ Then just ask Claude what you need — installed skills trigger automatically fr
 
 | Plugin | Skills | What it does |
 |--------|--------|-------------|
-| **dev-tools** | project-health, project-docs, dev-session, team-update, github-release, brains-trust, git-workflow, ux-audit, responsiveness-check, agent-browser | Project config and permissions, doc generation (ARCHITECTURE/API/DB), session tracking, team chat updates, GitHub releases, multi-model second opinions, git workflows, UX dogfooding, responsive layout testing, browser automation |
+| **dev-tools** | project-health, project-docs, app-docs, dev-session, team-update, github-release, brains-trust, git-workflow, ux-audit, responsiveness-check, agent-browser | Project config and permissions, doc generation (ARCHITECTURE/API/DB), app user guides with screenshots, session tracking, team chat updates, GitHub releases, multi-model second opinions, git workflows, UX dogfooding (quick/standard/thorough), responsive layout testing, browser automation |
 | **integrations** | gws-setup, gws-install, google-chat-messages, google-apps-script, elevenlabs-agents, mcp-builder | Google Workspace MCP setup, Google Chat webhooks, Apps Script automation, ElevenLabs voice agents, MCP server building |
 | **knowledge-cortex** | cortex-mine, cortex-query | Mine Gmail history into portable flat files — contacts, clients, communications, knowledge facts |
 
-## All 49 Skills
+## All 51 Skills
 
 <details>
 <summary>Full skill list with trigger phrases</summary>
@@ -71,6 +71,7 @@ Then just ask Claude what you need — installed skills trigger automatically fr
 | `tailwind-theme-builder` | "tailwind theme", "set up tailwind" |
 | `shadcn-ui` | "shadcn", "install components" |
 | `landing-page` | "landing page", "marketing page", "one-page site" |
+| `product-showcase` | "showcase site", "product page", "show off the app" |
 | `color-palette` | "colour palette", "color palette from hex" |
 | `favicon-gen` | "favicon", "generate icons" |
 | `icon-set-generator` | "icon set", "svg icons" |
@@ -84,6 +85,7 @@ Then just ask Claude what you need — installed skills trigger automatically fr
 | `mcp-builder` | "build mcp server", "fastmcp" |
 | `project-health` | "project health", "audit permissions" |
 | `project-docs` | "generate docs", "document architecture", "api docs" |
+| `app-docs` | "document the app", "user guide", "screenshot docs" |
 | `dev-session` | "start session", "session checkpoint" |
 | `team-update` | "team update", "post to chat" |
 | `github-release` | "github release", "cut a release" |
@@ -131,7 +133,7 @@ Started as 105 skills — many were reference guides that Claude's training data
 - **v1** (tag: `v1-final`) — 105 skills, flat structure
 - **v2** — restructured into installable plugins, "every skill must produce something"
 - **v12** — 10 plugins, 44 skills
-- **v13** (current) — 11 plugins, 49 skills
+- **v13** (current) — 11 plugins, 51 skills
 
 ## License
 

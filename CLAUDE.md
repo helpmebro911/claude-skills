@@ -16,7 +16,7 @@ Production workflow skills for Claude Code CLI. Each skill guides Claude through
 
 ```
 claude-skills/
-├── plugins/                                # 11 plugins, 49 skills
+├── plugins/                                # 11 plugins, 51 skills
 │   ├── cloudflare/                         # Cloudflare Workers, Hono, D1/Drizzle, Vite, TanStack Start
 │   │   └── skills/
 │   │       ├── cloudflare-worker-builder/
@@ -29,11 +29,12 @@ claude-skills/
 │   ├── web-design/                         # Local business SEO
 │   │   └── skills/
 │   │       └── seo-local-business/
-│   ├── frontend/                           # Tailwind v4 + shadcn/ui + landing pages
+│   ├── frontend/                           # Tailwind v4 + shadcn/ui + landing pages + showcases
 │   │   └── skills/
 │   │       ├── tailwind-theme-builder/
 │   │       ├── shadcn-ui/
-│   │       └── landing-page/
+│   │       ├── landing-page/
+│   │       └── product-showcase/
 │   ├── design-assets/                      # Colour palettes, favicons, icons, image processing, AI images
 │   │   └── skills/
 │   │       ├── color-palette/
@@ -53,6 +54,7 @@ claude-skills/
 │   │   └── skills/
 │   │       ├── project-health/
 │   │       ├── project-docs/
+│   │       ├── app-docs/
 │   │       ├── dev-session/
 │   │       ├── github-release/
 │   │       ├── brains-trust/
