@@ -6,6 +6,7 @@ description: >
   "cortex contacts", "cortex export", "cortex prune",
   "search my knowledge base", or "what do I know about COMPANY".
   Queries portable JSONL/JSON files for contacts, clients, communications, and facts.
+compatibility: claude-code-only
 ---
 
 # Knowledge Cortex — Query

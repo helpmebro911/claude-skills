@@ -6,6 +6,7 @@ description: >
   "set up the cortex", "cortex from DATE", or "mine my inbox".
   Extracts contacts, clients, communications and knowledge facts into portable JSONL/JSON files.
   Requires gws CLI and ANTHROPIC_API_KEY.
+compatibility: claude-code-only
 ---
 
 # Knowledge Cortex — Mine

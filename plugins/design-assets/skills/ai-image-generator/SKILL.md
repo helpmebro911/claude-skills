@@ -7,6 +7,7 @@ allowed-tools:
   - Bash
   - Glob
   - Grep
+compatibility: claude-code-only
 ---
 
 # AI Image Generator
