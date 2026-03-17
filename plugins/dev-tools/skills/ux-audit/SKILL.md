@@ -32,20 +32,90 @@ Control how thorough the audit is. Pass as an argument: `/ux-audit quick`, `/ux-
 
 ### Thorough Mode: Overnight Workflow
 
-The thorough mode is designed to run unattended. Kick it off at end of day, review the report in the morning.
+The thorough mode is designed to run unattended. Kick it off at end of day, review the report in the morning. The user should NOT need to find issues themselves — this mode catches everything.
 
 1. **Discover all routes** — read router config, crawl navigation, build complete page inventory
 2. **Create a task list** — track progress so work survives context limits
-3. **UX Walkthrough x3 personas**:
+3. **Visual & layout sweep** (every page):
+   - Screenshot at 1280px, 1024px, 768px, 375px widths
+   - Screenshot in light mode and dark mode
+   - Run JS overflow detection on each page (see below)
+   - Check for clipped text, overlapping elements, broken grids
+   - Compare sidebar + content alignment across all pages
+4. **UX Walkthrough x3 personas**:
    - First-time user (non-technical, time-poor, first visit)
    - Power user (daily user, knows the app, looking for efficiency)
    - Mobile user (phone, touch targets, small viewport)
-4. **Full QA sweep** — every page, all CRUD, all states (empty, error, loading, populated)
-5. **Resilience testing** — every form: bad data, mid-navigation, back button, refresh, double-submit
-6. **Cross-cutting per page** — dark mode screenshot, mobile viewport (375px) screenshot, keyboard navigation
-7. **Screenshot everything** — save to `.jez/screenshots/ux-audit/` (numbered chronologically)
-8. **Comprehensive report** — `docs/ux-audit-thorough-YYYY-MM-DD.md` with issue counts by severity
-9. **Summary** — top 5 critical issues, overall health score, "one thing to fix first"
+5. **Full QA sweep** — every page, all CRUD, all states (empty, error, loading, populated)
+6. **Resilience testing** — every form: bad data, mid-navigation, back button, refresh, double-submit
+7. **Accessibility basics** — heading hierarchy, alt text, focus order, colour contrast
+8. **Console error sweep** — check browser console on every page for JS errors, failed network requests, deprecation warnings
+9. **Screenshot everything** — save to `.jez/screenshots/ux-audit/` (numbered chronologically)
+10. **Comprehensive report** — `docs/ux-audit-thorough-YYYY-MM-DD.md` with issue counts by severity
+11. **Summary** — top 5 critical issues, overall health score, "one thing to fix first"
+
+#### Automated Layout Detection (JS Injection)
+
+On each page, inject JavaScript via the browser tool to programmatically detect layout issues:
+
+```javascript
+// Detect elements overflowing their parent
+document.querySelectorAll('*').forEach(el => {
+  const r = el.getBoundingClientRect();
+  const p = el.parentElement?.getBoundingClientRect();
+  if (p && (r.left < p.left - 1 || r.right > p.right + 1)) {
+    console.warn('OVERFLOW:', el.tagName, el.className, 'extends beyond parent');
+  }
+});
+
+// Detect text clipped by containers
+document.querySelectorAll('h1,h2,h3,h4,p,span,a,button,label').forEach(el => {
+  if (el.scrollWidth > el.clientWidth + 2 || el.scrollHeight > el.clientHeight + 2) {
+    console.warn('CLIPPED:', el.tagName, el.textContent?.slice(0,50));
+  }
+});
+
+// Detect elements with zero or negative visibility
+document.querySelectorAll('*').forEach(el => {
+  const s = getComputedStyle(el);
+  const r = el.getBoundingClientRect();
+  if (r.width > 0 && r.height > 0 && r.left + r.width < 0) {
+    console.warn('OFF-SCREEN LEFT:', el.tagName, el.className);
+  }
+});
+
+// Detect low contrast text (rough check)
+document.querySelectorAll('h1,h2,h3,p,span,a,li,td,th,label,button').forEach(el => {
+  const s = getComputedStyle(el);
+  if (s.color === s.backgroundColor || s.opacity === '0') {
+    console.warn('INVISIBLE TEXT:', el.tagName, el.textContent?.slice(0,30));
+  }
+});
+```
+
+Read console output after injection. Each warning is a potential finding to screenshot and investigate.
+
+#### Responsive Breakpoint Sweep
+
+For each page, resize the viewport through standard breakpoints and screenshot:
+
+| Width | What it represents | Check for |
+|-------|-------------------|-----------|
+| 1280px | Desktop (standard) | Baseline layout, sidebar + content |
+| 1024px | Small desktop / tablet landscape | Nav collapse point, grid reflow |
+| 768px | Tablet portrait | Sidebar behaviour, stacked layout |
+| 375px | Mobile | Everything stacked, touch targets, no horizontal scroll |
+
+If the layout changes between breakpoints (sidebar collapses, grid reduces columns), screenshot the transition point too.
+
+#### Console Error Sweep
+
+On each page, read the browser console for:
+- **JS errors** (TypeError, ReferenceError, etc.) — severity: High
+- **Failed network requests** (404, 500, CORS) — severity: High
+- **React/framework warnings** (key props, deprecated APIs) — severity: Medium
+- **CSP violations** — severity: Medium
+- **Deprecation warnings** — severity: Low
 
 ### Autonomy by Depth
 

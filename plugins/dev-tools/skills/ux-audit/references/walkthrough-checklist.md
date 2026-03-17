@@ -143,6 +143,31 @@ When you find an issue, classify it:
 | **Medium** | User succeeds but with unnecessary effort | Required field not marked, have to scroll to find action |
 | **Low** | Minor polish issue | Inconsistent capitalisation, alignment off by a few pixels |
 
+## Data Edge Cases
+
+Test how the app handles unusual but realistic data:
+
+| Scenario | What to check |
+|----------|--------------|
+| **Very long text** | Paste a 500-char name, title, or description. Does it truncate, wrap, or overflow? |
+| **Special characters** | O'Brien, café, Müller, emoji 🎉, `<script>alert(1)</script>` — does it render or break? |
+| **Empty strings** | Submit forms with spaces-only input. Does validation catch it? |
+| **Large numbers** | Enter $999,999.99 or 100,000 items. Does formatting hold? |
+| **Many items** | If a list/table has 100+ rows, does pagination work? Does it lag? |
+| **No data** | What does the page look like with zero records? Helpful empty state or blank void? |
+| **Concurrent edits** | Open the same record in two tabs, edit both, save both. What happens? |
+| **Rapid clicks** | Click a submit/action button 5 times fast. Does it fire once or create duplicates? |
+
+## Navigation & Routing
+
+| Scenario | What to check |
+|----------|--------------|
+| **Direct URL access** | Paste a deep link (e.g. `/app/clients/123`). Does it load or redirect to login then back? |
+| **Browser back/forward** | After navigating 3 pages deep, does back button work correctly? |
+| **Bookmark-able** | Does the URL change when you navigate? Can you bookmark and return? |
+| **404 handling** | Navigate to a non-existent route (e.g. `/app/doesnotexist`). Graceful error or white screen? |
+| **Stale URLs** | If a record is deleted, what happens when you visit its URL? |
+
 ## The Big Questions
 
 Ask these after completing (or failing) the task. These are the dogfooding questions — they go beyond "does it work?" to "is it good?"
