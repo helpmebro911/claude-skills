@@ -31,6 +31,7 @@ Default persona if not specified: "First-time user, moderate tech comfort, sligh
 | **Error Recovery** | Can I undo mistakes? Is there a back button? Are destructive actions guarded? |
 | **Consistency** | Same patterns used for similar features? Same terminology throughout? |
 | **Data Display** | Tables sorted sensibly? Pagination? Empty states helpful? Long text truncated? |
+| **Layout & Visual** | All text visible? Nothing clipped by sidebar or container? Spacing consistent? No overlapping elements? |
 
 ## Emotional Friction (Dogfooding Focus)
 
@@ -88,6 +89,38 @@ What happens when things go wrong or the user behaves unexpectedly?
 | Double-click a submit button | No duplicate submission |
 | Slow/no network | Graceful degradation, not a white screen |
 | Very long text input | Handled gracefully (truncated, scrolled, not overflowing) |
+
+## Visual & Layout Inspection
+
+Catch layout bugs that break the visual presentation. These are easy to miss because the app still "works" — but it looks broken.
+
+**On every page, actively look for:**
+
+| Issue | What to look for | Common cause |
+|-------|-----------------|--------------|
+| **Clipped/truncated text** | Headings, labels, or descriptions cut off by a container edge. First characters missing. | Content area missing left margin/padding, or sidebar overlapping main content |
+| **Overlapping elements** | Sidebar covering main content. Modals under nav bars. Floating buttons over text. | Z-index conflicts, missing margin on main content, fixed positioning errors |
+| **Overflow / scrollbars** | Unexpected horizontal scroll. Content wider than viewport. Rogue scrollbar on a container. | Element with fixed width exceeding parent, uncontained images or tables |
+| **Broken grid/alignment** | Cards or columns not aligned. Uneven spacing. Items jumping when data loads. | CSS grid/flex issues, missing min-width constraints, layout shift from async data |
+| **Text contrast** | Text hard to read against background. Light grey on white. Dark text on dark background. | Missing dark mode styles, low-contrast colour choices, text over images without overlay |
+| **Misaligned sidebar/content** | Main content starts behind or underneath the sidebar. Content pushed too far right with gap. | Sidebar width not accounted for in main content margin/padding |
+| **Broken responsive transitions** | Layout looks fine at desktop and mobile but breaks at tablet widths. Nav items wrapping oddly. | Missing breakpoint styles for mid-range widths |
+| **Image issues** | Broken image icons. Images stretched or squished. Oversized images causing slow load. | Missing src, no aspect-ratio/object-fit, unoptimised originals |
+| **Invisible elements** | Buttons or links that exist but can't be seen (same colour as background). | Dark mode missing styles, transparent text, hidden by z-index |
+| **Spacing inconsistency** | Some sections have generous padding, others are cramped. Cards with different internal spacing. | Inconsistent use of spacing utilities, missing design tokens |
+
+**How to check**: On each page, before evaluating usability, do a quick visual scan:
+1. Does all text render fully? No clipped first/last characters?
+2. Does the sidebar and main content sit side by side cleanly?
+3. Are all elements inside their containers?
+4. Is spacing consistent between similar elements?
+5. In dark mode: can you read everything? Any elements disappear?
+
+**Severity guide for visual issues**:
+- **Critical**: Content is unreadable or unreachable (text fully hidden behind sidebar)
+- **High**: Content is partially clipped or overlapping (first letters cut off, as in the screenshot issue)
+- **Medium**: Visual inconsistency that doesn't block usage (uneven spacing, slight misalignment)
+- **Low**: Minor polish (1-2px alignment, subtle colour inconsistency)
 
 ## Cross-Cutting Checks
 

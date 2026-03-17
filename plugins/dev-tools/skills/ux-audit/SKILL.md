@@ -86,6 +86,7 @@ Navigate to the app's entry point. From here, attempt the task with **no prior k
 
 At each screen, evaluate against the walkthrough checklist (see [references/walkthrough-checklist.md](references/walkthrough-checklist.md)). Key questions to hold in mind:
 
+**Layout**: Is all text fully visible? Nothing clipped by sidebar or container? Spacing consistent?
 **Clarity**: Is the next step obvious without thinking?
 **Trust**: Do I feel confident this will do what I expect? Am I afraid I'll break something?
 **Efficiency**: How many clicks/steps is this taking? Is there a shorter path?
