@@ -4,7 +4,7 @@
 
 Production workflow skills for [Claude Code](https://claude.com/claude-code). Each skill guides Claude through a recipe to produce tangible output — scaffolded projects, generated assets, professional documents, deployed services.
 
-11 plugins. 51 skills. Every one produces something.
+11 plugins. 52 skills. Every one produces something.
 
 ## Quick Start
 
@@ -50,10 +50,10 @@ Then just ask Claude what you need — installed skills trigger automatically fr
 | Plugin | Skills | What it does |
 |--------|--------|-------------|
 | **dev-tools** | project-health, project-docs, app-docs, dev-session, team-update, github-release, brains-trust, git-workflow, ux-audit, responsiveness-check, agent-browser | Project config and permissions, doc generation (ARCHITECTURE/API/DB), app user guides with screenshots, session tracking, team chat updates, GitHub releases, multi-model second opinions, git workflows, UX dogfooding (quick/standard/thorough), responsive layout testing, browser automation |
-| **integrations** | gws-setup, gws-install, google-chat-messages, google-apps-script, elevenlabs-agents, mcp-builder | Google Workspace MCP setup, Google Chat webhooks, Apps Script automation, ElevenLabs voice agents, MCP server building |
+| **integrations** | gws-setup, gws-install, google-chat-messages, google-apps-script, elevenlabs-agents, mcp-builder, parcel-tracking | Google Workspace MCP setup, Google Chat webhooks, Apps Script automation, ElevenLabs voice agents, MCP server building, Australian parcel tracking via Gmail |
 | **knowledge-cortex** | cortex-mine, cortex-query | Mine Gmail history into portable flat files — contacts, clients, communications, knowledge facts |
 
-## All 51 Skills
+## All 52 Skills
 
 <details>
 <summary>Full skill list with trigger phrases</summary>
@@ -83,6 +83,7 @@ Then just ask Claude what you need — installed skills trigger automatically fr
 | `google-apps-script` | "apps script", "google sheets automation" |
 | `elevenlabs-agents` | "elevenlabs agent", "voice agent" |
 | `mcp-builder` | "build mcp server", "fastmcp" |
+| `parcel-tracking` | "where's my parcel", "track my order", "tracking number" |
 | `project-health` | "project health", "audit permissions" |
 | `project-docs` | "generate docs", "document architecture", "api docs" |
 | `app-docs` | "document the app", "user guide", "screenshot docs" |
@@ -133,7 +134,7 @@ Started as 105 skills — many were reference guides that Claude's training data
 - **v1** (tag: `v1-final`) — 105 skills, flat structure
 - **v2** — restructured into installable plugins, "every skill must produce something"
 - **v12** — 10 plugins, 44 skills
-- **v13** (current) — 11 plugins, 51 skills
+- **v13** (current) — 11 plugins, 52 skills
 
 ## License
 

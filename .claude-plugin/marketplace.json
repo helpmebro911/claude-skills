@@ -33,7 +33,7 @@
     },
     {
       "name": "integrations",
-      "description": "Google Chat webhooks, Google Apps Script automation, ElevenLabs voice agents, and MCP server building.",
+      "description": "Google Chat webhooks, Google Apps Script automation, ElevenLabs voice agents, MCP server building, and Australian parcel tracking.",
       "source": "./plugins/integrations",
       "category": "productivity"
     },
