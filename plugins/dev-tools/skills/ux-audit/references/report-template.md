@@ -53,6 +53,26 @@ Use this template when writing audit reports to `docs/`.
 
 - **[Short title]**: [description]
 
+## Workflow Comprehension
+
+How well the app supports the user's real work:
+
+### Threads Tested
+- **[Thread name]**: [e.g. "Client calls about renewal → find policy → send renewal email"]
+  - Completable end-to-end? [Yes/No/Partially — detail]
+  - Steps where the user would get lost: [list]
+  - Missing connections between pages: [list]
+
+### Wayfinding
+- Can the user always tell where they are? [Yes/No — specifics]
+- Do nav labels match user language? [Yes/No — mismatches]
+- Post-action destinations logical? [Yes/No — worst offenders]
+
+### Visual Cues
+- Does the page guide the eye to the right action? [assessment]
+- Status indicators clear? (What needs attention, what's done, what's pending)
+- Empty states helpful? [Yes/No — which pages]
+
 ## Emotional Friction
 
 Moments where the user felt uncertain, anxious, or frustrated:

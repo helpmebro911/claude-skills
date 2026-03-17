@@ -34,25 +34,35 @@ Control how thorough the audit is. Pass as an argument: `/ux-audit quick`, `/ux-
 
 The thorough mode is designed to run unattended. Kick it off at end of day, review the report in the morning. The user should NOT need to find issues themselves — this mode catches everything.
 
+**Mindset**: Don't run through a checklist. Think about the real person who will use this app every day. What are the threads of their workday? How will they move through the system? Will they understand what they're looking at? Will the app teach them how to use it through its design, or will they be guessing? Read [references/workflow-comprehension.md](references/workflow-comprehension.md) before starting.
+
 1. **Discover all routes** — read router config, crawl navigation, build complete page inventory
-2. **Create a task list** — track progress so work survives context limits
-3. **Visual & layout sweep** (every page):
+2. **Identify workflow threads** — what are the 3-5 real tasks a user does in a day? Map them before testing individual pages. See [references/workflow-comprehension.md](references/workflow-comprehension.md).
+3. **Create a task list** — track progress so work survives context limits
+4. **Visual & layout sweep** (every page):
    - Screenshot at 1280px, 1024px, 768px, 375px widths
    - Screenshot in light mode and dark mode
    - Run JS overflow detection on each page (see below)
    - Check for clipped text, overlapping elements, broken grids
    - Compare sidebar + content alignment across all pages
-4. **UX Walkthrough x3 personas**:
+4. **Workflow thread testing** — follow each identified thread end to end:
+   - Does the next step suggest itself at every point?
+   - Can the user leave and come back without losing their place?
+   - Do transitions between pages preserve context (filters, selections)?
+   - Do nav labels match how a user would describe their work?
+   - After creating/saving/deleting, does the app take them somewhere logical?
+5. **UX Walkthrough x3 personas**:
    - First-time user (non-technical, time-poor, first visit)
    - Power user (daily user, knows the app, looking for efficiency)
    - Mobile user (phone, touch targets, small viewport)
-5. **Full QA sweep** — every page, all CRUD, all states (empty, error, loading, populated)
-6. **Resilience testing** — every form: bad data, mid-navigation, back button, refresh, double-submit
-7. **Accessibility basics** — heading hierarchy, alt text, focus order, colour contrast
-8. **Console error sweep** — check browser console on every page for JS errors, failed network requests, deprecation warnings
-9. **Screenshot everything** — save to `.jez/screenshots/ux-audit/` (numbered chronologically)
-10. **Comprehensive report** — `docs/ux-audit-thorough-YYYY-MM-DD.md` with issue counts by severity
-11. **Summary** — top 5 critical issues, overall health score, "one thing to fix first"
+6. **Full QA sweep** — every page, all CRUD, all states (empty, error, loading, populated)
+7. **Resilience testing** — every form: bad data, mid-navigation, back button, refresh, double-submit
+8. **Accessibility basics** — heading hierarchy, alt text, focus order, colour contrast
+9. **Console error sweep** — check browser console on every page for JS errors, failed network requests, deprecation warnings
+10. **Wayfinding & comprehension check** — on each page: do I know where I am? Can I get back? Does the heading tell me what I can do here? Are visual cues guiding me to the right action?
+11. **Screenshot everything** — save to `.jez/screenshots/ux-audit/` (numbered chronologically)
+12. **Comprehensive report** — `docs/ux-audit-thorough-YYYY-MM-DD.md` with issue counts by severity
+13. **Summary** — top 5 critical issues, workflow gaps, overall health score, "one thing to fix first"
 
 #### Automated Layout Detection (JS Injection)
 
@@ -156,12 +166,13 @@ Navigate to the app's entry point. From here, attempt the task with **no prior k
 
 At each screen, evaluate against the walkthrough checklist (see [references/walkthrough-checklist.md](references/walkthrough-checklist.md)). Key questions to hold in mind:
 
-**Layout**: Is all text fully visible? Nothing clipped by sidebar or container? Spacing consistent?
-**Clarity**: Is the next step obvious without thinking?
+**Layout**: Is all text fully visible? Nothing clipped or overlapping? Spacing consistent?
+**Comprehension**: Do I understand what this page is for and what I can do here? Do the labels make sense to a non-developer?
+**Wayfinding**: Do I know where I am in the app? Can I get back to where I came from? Does the nav show my location?
+**Flow**: Does this page connect naturally to the last one? Is the next step obvious without thinking?
 **Trust**: Do I feel confident this will do what I expect? Am I afraid I'll break something?
 **Efficiency**: How many clicks/steps is this taking? Is there a shorter path?
 **Recovery**: If I make a mistake right now, can I get back?
-**Delight vs frustration**: Would I sigh, smile, or swear at this moment?
 
 #### Step 4: Count the Cost
 
@@ -275,6 +286,7 @@ Default rules (standard depth). See "Autonomy by Depth" table above for quick/th
 
 | When | Read |
 |------|------|
+| Before starting thorough mode — understand the user's world | [references/workflow-comprehension.md](references/workflow-comprehension.md) |
 | Evaluating each screen during walkthrough | [references/walkthrough-checklist.md](references/walkthrough-checklist.md) |
 | Writing the audit report | [references/report-template.md](references/report-template.md) |
 | Browser tool commands and selection | [references/browser-tools.md](references/browser-tools.md) |
