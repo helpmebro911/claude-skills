@@ -73,6 +73,39 @@ How well the app supports the user's real work:
 - Status indicators clear? (What needs attention, what's done, what's pending)
 - Empty states helpful? [Yes/No — which pages]
 
+## Scenario Test Results
+
+### New Hire Onboarding
+- Time to first value: [clicks/pages]
+- Self-explanatory score: [1-5]
+- Terminology barriers: [list]
+
+### Interrupted Workflow
+| Interruption | Data preserved? | Could resume? |
+|-------------|----------------|---------------|
+| Navigate away mid-form | | |
+| Close tab + reopen | | |
+| Page refresh | | |
+
+### Wrong Turn Recovery
+| Wrong turn | Steps to recover | Context lost? |
+|-----------|-----------------|---------------|
+| Wrong nav section | | |
+| Wrong record | | |
+
+### Day Two Efficiency
+| Thread | First time | Second time | Shortcuts found |
+|--------|-----------|-------------|-----------------|
+| | | | |
+
+### Explain It (2-minute guides)
+[Include the actual plain-English explanations — they double as documentation]
+
+### What Changed?
+- Awareness score: [1-5]
+- Notification quality: [assessment]
+- Missing signals: [list]
+
 ## Emotional Friction
 
 Moments where the user felt uncertain, anxious, or frustrated:

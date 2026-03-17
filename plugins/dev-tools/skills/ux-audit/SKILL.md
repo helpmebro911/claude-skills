@@ -60,9 +60,16 @@ The thorough mode is designed to run unattended. Kick it off at end of day, revi
 8. **Accessibility basics** — heading hierarchy, alt text, focus order, colour contrast
 9. **Console error sweep** — check browser console on every page for JS errors, failed network requests, deprecation warnings
 10. **Wayfinding & comprehension check** — on each page: do I know where I am? Can I get back? Does the heading tell me what I can do here? Are visual cues guiding me to the right action?
-11. **Screenshot everything** — save to `.jez/screenshots/ux-audit/` (numbered chronologically)
-12. **Comprehensive report** — `docs/ux-audit-thorough-YYYY-MM-DD.md` with issue counts by severity
-13. **Summary** — top 5 critical issues, workflow gaps, overall health score, "one thing to fix first"
+11. **Scenario tests** — run all six from [references/scenario-tests.md](references/scenario-tests.md):
+    - New hire onboarding (can you figure out the app with zero guidance?)
+    - Interrupted workflow (start a task, close the tab, come back — what survived?)
+    - Wrong turn recovery (go to the wrong page, how many clicks to get back on track?)
+    - Day two (repeat the same tasks — is it faster? are there shortcuts?)
+    - Explain it to a colleague (write a 2-min guide for each workflow — gaps = UX failures)
+    - What changed? (log in after creating data — can you tell what needs attention?)
+12. **Screenshot everything** — save to `.jez/screenshots/ux-audit/` (numbered chronologically)
+13. **Comprehensive report** — `docs/ux-audit-thorough-YYYY-MM-DD.md` with issue counts by severity
+14. **Summary** — top 5 critical issues, workflow gaps, scenario test results, "one thing to fix first"
 
 #### Automated Layout Detection (JS Injection)
 
@@ -288,5 +295,6 @@ Default rules (standard depth). See "Autonomy by Depth" table above for quick/th
 |------|------|
 | Before starting thorough mode — understand the user's world | [references/workflow-comprehension.md](references/workflow-comprehension.md) |
 | Evaluating each screen during walkthrough | [references/walkthrough-checklist.md](references/walkthrough-checklist.md) |
+| Running the six scenario tests | [references/scenario-tests.md](references/scenario-tests.md) |
 | Writing the audit report | [references/report-template.md](references/report-template.md) |
 | Browser tool commands and selection | [references/browser-tools.md](references/browser-tools.md) |
