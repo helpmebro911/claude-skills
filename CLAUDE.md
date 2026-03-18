@@ -42,7 +42,7 @@ claude-skills/
 │   │       ├── icon-set-generator/
 │   │       ├── image-processing/
 │   │       └── ai-image-generator/
-│   ├── integrations/                       # Google Workspace, ElevenLabs, MCP
+│   ├── integrations/                       # Google Workspace, ElevenLabs, MCP, NemoClaw
 │   │   └── skills/
 │   │       ├── gws-setup/
 │   │       ├── gws-install/
@@ -50,6 +50,7 @@ claude-skills/
 │   │       ├── google-apps-script/
 │   │       ├── elevenlabs-agents/
 │   │       ├── mcp-builder/
+│   │       ├── nemoclaw-setup/
 │   │       └── parcel-tracking/
 │   ├── dev-tools/                          # Context, sessions, releases, brains trust, git, browser automation
 │   │   └── skills/
