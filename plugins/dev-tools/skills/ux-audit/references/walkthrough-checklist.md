@@ -108,6 +108,11 @@ Catch layout bugs that break the visual presentation. These are easy to miss bec
 | **Image issues** | Broken image icons. Images stretched or squished. Oversized images causing slow load. | Missing src, no aspect-ratio/object-fit, unoptimised originals |
 | **Invisible elements** | Buttons or links that exist but can't be seen (same colour as background). | Dark mode missing styles, transparent text, hidden by z-index |
 | **Spacing inconsistency** | Some sections have generous padding, others are cramped. Cards with different internal spacing. | Inconsistent use of spacing utilities, missing design tokens |
+| **Form input/button mismatch** | Input fields and their submit buttons are different heights, or misaligned horizontally. Search bar taller than its search button. Inline form elements not vertically centred. | Missing matching height utilities, inconsistent padding on inputs vs buttons |
+| **Proportional imbalance** | A tiny action button next to a huge empty area. A narrow sidebar with a vast unused content zone. Header taking up half the viewport. | Missing max-width constraints, fixed sizes not scaling, poor use of available space |
+| **Collapsible section issues** | Accordion/collapsible panels that don't indicate they're expandable. Sections that collapse and lose the user's scroll position. Nested collapsibles that fight each other. | Missing expand/collapse indicators (chevrons), broken state management |
+| **Alignment across components** | Labels don't align with their inputs. Left edges of cards in a grid don't line up. Table columns have inconsistent text alignment (left vs centre vs right). | Mixed alignment rules, inconsistent text-align, grid items not aligned to baseline |
+| **Touch target sizing** | Buttons, links, or checkboxes too small to tap on mobile. Icon-only buttons without adequate padding. Close/dismiss buttons that are tiny. | Missing min-height/min-width (44px minimum), padding too tight on interactive elements |
 
 **How to check**: On each page, before evaluating usability, do a quick visual scan:
 1. Does all text render fully? No clipped first/last characters?
@@ -142,6 +147,59 @@ When you find an issue, classify it:
 | **High** | User is confused or takes wrong path | Unclear labels cause wrong selection, no undo on delete |
 | **Medium** | User succeeds but with unnecessary effort | Required field not marked, have to scroll to find action |
 | **Low** | Minor polish issue | Inconsistent capitalisation, alignment off by a few pixels |
+
+## Performance Perception
+
+Not benchmarks — how fast does the app *feel*?
+
+| What to check | Good | Bad |
+|--------------|------|-----|
+| **Button response** | Instant visual feedback on click (colour change, loading state) | Button does nothing for 1-2 seconds, user clicks again |
+| **Page transitions** | Content appears within 300ms, skeleton if longer | Blank white screen while loading, layout jumps when data arrives |
+| **List/table loading** | Skeleton rows, then data fills in smoothly | Empty table → sudden appearance of all rows (layout shift) |
+| **Form submission** | Button shows spinner, disables, then confirms | "Submitting..." for 5 seconds with no progress indication |
+| **Search** | Results appear as you type or within 500ms of pressing enter | Full page reload, or results take 3+ seconds with no feedback |
+| **Saving** | Auto-save indicator or instant "Saved" confirmation | No indication whether changes are saved or lost |
+| **Navigation** | Feels instant between pages (client-side routing) | Full page reload on every nav click, flash of white |
+| **Optimistic UI** | Action appears to succeed immediately, rolls back if fails | Everything waits for server confirmation before showing the change |
+
+**Key question**: At any point, did you wonder "did that work?" or "is it still loading?" — that's a perception problem.
+
+## Copy and Microcopy
+
+The words in the UI matter as much as the layout.
+
+| What to check | Example of good | Example of bad |
+|--------------|----------------|---------------|
+| **Button labels** | "Save Client" — specific, tells you what happens | "Submit" — submit to where? "Process" — process what? |
+| **Error messages** | "Email address is required" on the email field | "Validation error" at the top of the page with no field highlighted |
+| **Empty states** | "No policies yet. Create your first policy." with a button | Blank white space, or just a table with column headers and zero rows |
+| **Confirmation messages** | "Jenny O'Brien's policy has been saved" — names the thing | "Success" — success at what? "Done" — done with what? |
+| **Tooltips and help text** | Short, specific, answers "what is this?" or "why is this here?" | Missing entirely, or repeating the label ("Email: Enter your email") |
+| **Placeholder text** | "e.g. smith@company.com" — shows the expected format | "Enter value here" — tells you nothing useful |
+| **Destructive action warnings** | "Delete Jenny O'Brien? This cannot be undone. 3 policies will also be removed." | "Are you sure?" — sure about what? What happens if I click yes? |
+| **Loading/progress text** | "Sending email to 12 recipients..." — specific, shows progress | "Please wait..." — wait for what? How long? |
+| **Navigation labels** | "Clients", "Policies", "Email Outbox" — matches the user's vocabulary | "Entities", "Records", "Queue" — developer vocabulary |
+| **Tone consistency** | All messages use the same voice (friendly, professional, casual) | Mix of "Oops! Something went wrong!" and "Error: HTTP 500" |
+
+**Spelling and grammar**: Check every page for typos, especially in error messages, empty states, and tooltips. These are often written once and never reviewed.
+
+## Feedback Completeness
+
+After every user action, the app should confirm what happened. Check the full action lifecycle:
+
+| Action | Expected feedback | Common failure |
+|--------|------------------|----------------|
+| **Create** | "Created [thing]" + navigate to the new item or show it in the list | Silent success — thing is created but user doesn't know where it went |
+| **Save/Update** | "Saved" indicator near the save button, or auto-save badge | No indication — user saves, nothing changes visually, they're unsure |
+| **Delete** | Confirmation dialog with specifics, then "Deleted" toast, item removed from view | Item disappears with no confirmation or toast |
+| **Send** (email, message) | "Sent to [recipient]" with details | "Message sent" — sent to whom? Did it really send? |
+| **Bulk action** | "Updated 12 of 12 items" with count | "Done" — how many? Did they all succeed? |
+| **Error** | Specific error on the specific field, form state preserved | Page-level error banner, form cleared, user has to re-enter everything |
+| **Long-running action** | Progress bar or step indicator, estimated time | Spinner for 30 seconds with no indication of progress |
+| **Background action** | Toast "Processing in background, we'll notify you when done" | Nothing — user doesn't know if it's still running or failed silently |
+
+**The test**: After every action you take during the walkthrough, ask: "Do I know what just happened? Am I confident it worked? Do I know what to do next?"
 
 ## Data Edge Cases
 
