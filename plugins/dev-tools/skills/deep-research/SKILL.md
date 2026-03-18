@@ -10,11 +10,13 @@ Comprehensive research and discovery before building something new. Instead of j
 
 ## Depth Levels
 
-| Depth | Duration | What it covers |
-|-------|----------|---------------|
-| **focused** | 15-30 min | Targeted research on one question. 3-5 web searches, local scan, one competitor deep-dive. 1-page brief. |
-| **wide** | 1-2 hours | Broad exploration of a product space. 10-15 searches, scan local machine, 3-5 competitors, architecture options. Multi-section brief. |
-| **deep** | 3-6 hours | Exhaustive research for a major build. Crawl competitors, read docs, explore open-source, scan all local projects, research every technical decision. Complete project brief. |
+The difference is **scope of ambition**, not just time.
+
+| Depth | Purpose | Scope |
+|-------|---------|-------|
+| **focused** | Answer a specific question | One decision: "CodeMirror vs ProseMirror?" — targeted search, local scan, 1-2 comparisons. Produces a 1-page recommendation. |
+| **wide** | Understand the space | Landscape for a new product or feature. Competitors, ecosystem, user needs, architecture options. Enough to write a spec. |
+| **deep** | Plan a major build | Leave no stone unturned. Everything in wide PLUS library/component research, plugin ecosystems, GitHub issues mining, community sentiment, future-casting, technical deep-dives on every decision. Enough to drive weeks of coding. |
 
 Default: **wide**
 
@@ -109,7 +111,46 @@ For each major competitor (3-5 for wide, 5-10 for deep):
 | What they do well | 5-star reviews, product demos |
 | What they do poorly | 1-star reviews, forum complaints, migration guides FROM the product |
 
-### 6. Future-Casting (deep mode)
+### 6. Library and Component Research (deep mode)
+
+Research the building blocks — what already exists that you can use or learn from:
+
+**React / UI libraries**:
+- Search npm for category-specific packages ("react markdown editor", "react kanban", "react data table")
+- Check weekly downloads, last publish date, GitHub stars, open issues count
+- Read the README and examples — what patterns do they use?
+- Check bundle size (bundlephobia.com) — does it fit the project constraints?
+- Look at the source code of the best ones — their architecture is proven by real usage
+
+**Headless / unstyled libraries**:
+- Headless UI, Radix, React Aria, Downshift — what primitives exist for the features you need?
+- These are often better than full component libraries because you control the styling
+- Check if shadcn/ui already wraps what you need
+
+**Hooks and utilities**:
+- TanStack (Query, Table, Virtual, Router) — what's relevant?
+- React Hook Form, Zod, date-fns, Zustand — proven solutions for common problems
+- Search "awesome-react" lists and curated collections
+
+**Platform-specific libraries**:
+- For Cloudflare: what works on Workers? (No Node.js APIs, no native modules)
+- Check Cloudflare's own examples and starter templates
+- Search for "cloudflare workers" + the feature you need
+
+**What to capture for each library**:
+
+| Question | Why it matters |
+|----------|---------------|
+| Does it solve our problem? | Feature match |
+| Bundle size | Performance budget |
+| Last publish date | Is it maintained? |
+| Open issues / PRs | Community health |
+| Works on our platform? | Cloudflare Workers has restrictions |
+| What patterns does it use? | Even if we don't use the library, its patterns are valuable |
+
+**The insight**: Even if you decide to build something custom, researching existing libraries shows you the patterns that survived contact with real users. A library with 10K stars has had its API refined by thousands of developers — steal their design decisions.
+
+### 7. Future-Casting (deep mode)
 
 Think beyond what exists today:
 
@@ -172,6 +213,10 @@ Produce a research brief saved to `.jez/artifacts/research-brief-{topic}.md`:
 
 ## Technical Landscape
 | Decision | Options | Recommendation | Why |
+
+## Libraries and Components
+| Need | Library | Stars | Size | Fits platform? | Notes |
+[Key libraries evaluated for each major feature]
 
 ## Reusable From Existing Projects
 | Project | What to reuse | Location |
