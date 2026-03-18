@@ -49,9 +49,9 @@ Then just ask Claude what you need — installed skills trigger automatically fr
 
 | Plugin | Skills | What it does |
 |--------|--------|-------------|
-| **dev-tools** | project-health, project-docs, app-docs, dev-session, team-update, github-release, brains-trust, git-workflow, ux-audit, responsiveness-check, agent-browser | Project config and permissions, doc generation (ARCHITECTURE/API/DB), app user guides with screenshots, session tracking, team chat updates, GitHub releases, multi-model second opinions, git workflows, UX dogfooding (quick/standard/thorough), responsive layout testing, browser automation |
+| **dev-tools** | project-health, project-docs, app-docs, dev-session, team-update, github-release, brains-trust, git-workflow, ux-audit, responsiveness-check, agent-browser, deep-research | Project config and permissions, doc generation, app user guides with screenshots, session tracking, team chat updates, GitHub releases, multi-model second opinions, git workflows, UX dogfooding (quick/standard/thorough), responsive layout testing, browser automation, deep research and discovery |
 | **integrations** | gws-setup, gws-install, google-chat-messages, google-apps-script, elevenlabs-agents, mcp-builder, nemoclaw-setup, parcel-tracking | Google Workspace MCP setup, Google Chat webhooks, Apps Script automation, ElevenLabs voice agents, MCP server building, NVIDIA NemoClaw agent platform setup, Australian parcel tracking via Gmail |
-| **knowledge-cortex** | cortex-mine, cortex-query | Mine Gmail history into portable flat files — contacts, clients, communications, knowledge facts |
+| **basalt** | basalt-cortex | Mine knowledge from Gmail, Chat, Slack, Drive, local files, MCP, web into an Obsidian-compatible vault (~/.cortex/) |
 
 ## All 53 Skills
 
@@ -96,8 +96,8 @@ Then just ask Claude what you need — installed skills trigger automatically fr
 | `ux-audit` | "ux audit", "dogfood the app" |
 | `responsiveness-check` | "check responsiveness", "test viewports" |
 | `agent-browser` | "browser automation", "navigate to" |
-| `cortex-mine` | "mine gmail", "extract contacts from email" |
-| `cortex-query` | "query cortex", "search mined data" |
+| `basalt-cortex` | "run the cortex", "mine emails", "mine slack", "cortex search" |
+| `deep-research` | "research this", "deep research", "explore the space" |
 | `shopify-setup` | "shopify setup", "connect shopify" |
 | `shopify-products` | "shopify products", "add products" |
 | `shopify-content` | "shopify pages", "shopify blog" |

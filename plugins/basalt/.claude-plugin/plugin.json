@@ -1,0 +1,5 @@
+{
+  "name": "basalt",
+  "description": "Mine knowledge from Gmail, Google Chat, Slack, Drive, local files, MCP servers, and web into an Obsidian-compatible vault. Basalt format: markdown files with YAML frontmatter.",
+  "author": { "name": "Jeremy Dawes / Jezweb", "email": "jeremy@jezweb.net" }
+}

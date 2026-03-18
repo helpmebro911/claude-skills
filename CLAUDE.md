@@ -64,16 +64,16 @@ claude-skills/
 │   │       ├── team-update/
 │   │       ├── ux-audit/
 │   │       ├── responsiveness-check/
-│   │       └── agent-browser/
+│   │       ├── agent-browser/
+│   │       └── deep-research/
 │   ├── shopify/                            # Shopify store management
 │   │   └── skills/
 │   │       ├── shopify-setup/
 │   │       ├── shopify-products/
 │   │       └── shopify-content/
-│   ├── knowledge-cortex/                   # Gmail knowledge mining
+│   ├── basalt/                              # Multi-source knowledge mining (Obsidian-compatible)
 │   │   └── skills/
-│   │       ├── cortex-mine/
-│   │       └── cortex-query/
+│   │       └── basalt-cortex/
 │   ├── wordpress/                          # WordPress content & Elementor
 │   │   └── skills/
 │   │       ├── wordpress-setup/

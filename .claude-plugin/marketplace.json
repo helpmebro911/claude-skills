@@ -62,9 +62,9 @@
       "category": "productivity"
     },
     {
-      "name": "knowledge-cortex",
-      "description": "Mine Gmail history into portable flat files. Extracts contacts, clients, communications, and knowledge facts using AI extraction.",
-      "source": "./plugins/knowledge-cortex",
+      "name": "basalt",
+      "description": "Mine knowledge from Gmail, Google Chat, Slack, Drive, local files, MCP servers, and web into an Obsidian-compatible vault. Basalt format: markdown with YAML frontmatter.",
+      "source": "./plugins/basalt",
       "category": "productivity"
     },
     {
