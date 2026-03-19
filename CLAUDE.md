@@ -16,7 +16,7 @@ Production workflow skills for Claude Code CLI. Each skill guides Claude through
 
 ```
 claude-skills/
-├── plugins/                                # 11 plugins, 54 skills
+├── plugins/                                # 11 plugins, 55 skills
 │   ├── cloudflare/                         # Cloudflare Workers, Hono, D1/Drizzle, Vite, TanStack Start
 │   │   └── skills/
 │   │       ├── cloudflare-worker-builder/
@@ -66,7 +66,8 @@ claude-skills/
 │   │       ├── responsiveness-check/
 │   │       ├── agent-browser/
 │   │       ├── deep-research/
-│   │       └── onboarding-ux/
+│   │       ├── onboarding-ux/
+│   │       └── fork-discipline/
 │   ├── shopify/                            # Shopify store management
 │   │   └── skills/
 │   │       ├── shopify-setup/

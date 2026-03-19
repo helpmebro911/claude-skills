@@ -4,7 +4,7 @@
 
 Production workflow skills for [Claude Code](https://claude.com/claude-code). Each skill guides Claude through a recipe to produce tangible output — scaffolded projects, generated assets, professional documents, deployed services.
 
-11 plugins. 54 skills. Every one produces something.
+11 plugins. 55 skills. Every one produces something.
 
 ## Quick Start
 
@@ -49,11 +49,11 @@ Then just ask Claude what you need — installed skills trigger automatically fr
 
 | Plugin | Skills | What it does |
 |--------|--------|-------------|
-| **dev-tools** | project-health, project-docs, app-docs, dev-session, team-update, github-release, brains-trust, git-workflow, ux-audit, responsiveness-check, agent-browser, deep-research, onboarding-ux | Project config and permissions, doc generation, app user guides, session tracking, team chat updates, GitHub releases, multi-model second opinions, git workflows, UX dogfooding, responsive testing, browser automation, deep research, in-app onboarding and guidance |
+| **dev-tools** | project-health, project-docs, app-docs, dev-session, team-update, github-release, brains-trust, git-workflow, ux-audit, responsiveness-check, agent-browser, deep-research, onboarding-ux, fork-discipline | Project config and permissions, doc generation, app user guides, session tracking, team chat updates, GitHub releases, multi-model second opinions, git workflows, UX dogfooding, responsive testing, browser automation, deep research, in-app onboarding, core/client boundary audit |
 | **integrations** | gws-setup, gws-install, google-chat-messages, google-apps-script, elevenlabs-agents, mcp-builder, nemoclaw-setup, parcel-tracking | Google Workspace MCP setup, Google Chat webhooks, Apps Script automation, ElevenLabs voice agents, MCP server building, NVIDIA NemoClaw agent platform setup, Australian parcel tracking via Gmail |
 | **basalt** | basalt-cortex | Mine knowledge from Gmail, Chat, Slack, Drive, local files, MCP, web into an Obsidian-compatible vault (~/.cortex/) |
 
-## All 54 Skills
+## All 55 Skills
 
 <details>
 <summary>Full skill list with trigger phrases</summary>
@@ -99,6 +99,7 @@ Then just ask Claude what you need — installed skills trigger automatically fr
 | `basalt-cortex` | "run the cortex", "mine emails", "mine slack", "cortex search" |
 | `deep-research` | "research this", "deep research", "explore the space" |
 | `onboarding-ux` | "onboarding", "empty states", "new user experience" |
+| `fork-discipline` | "fork discipline", "check the boundary", "core or client" |
 | `shopify-setup` | "shopify setup", "connect shopify" |
 | `shopify-products` | "shopify products", "add products" |
 | `shopify-content` | "shopify pages", "shopify blog" |
