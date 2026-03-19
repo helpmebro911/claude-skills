@@ -20,7 +20,7 @@ Files are the source of truth. D1, Vectorize, and Frond are projections.
 ## Folder Structure
 
 ```
-~/.cortex/                        # vault root — open in Obsidian directly
+~/Documents/basalt-cortex/        # vault root — syncs to basaltcortex.com via CLI daemon
 ├── .obsidian/                    # Obsidian config (can be empty or gitignored)
 ├── clients/
 │   └── smithholdings.com.au.md
@@ -28,9 +28,9 @@ Files are the source of truth. D1, Vectorize, and Frond are projections.
 │   └── jane-smith.md
 ├── communications/
 │   └── 2026/03/
-│       └── comm_1741824000_a3f2.md
+│       └── 2026-03-10-website-redesign-quote.md
 ├── knowledge/
-│   └── know_1741824000_b7c1.md
+│   └── smith-holdings-prefers-phone.md
 ├── projects/                     # future
 ├── notes/                        # manual notes, not mined
 └── state.json                    # cursor + run history (not a note)
@@ -70,13 +70,33 @@ visibility: private                    # private | team | public
 
 ### `id` generation rules
 
-| Type | Pattern | Example |
+The `id` field is for machine dedup/sync. It stays deterministic and unique.
+
+| Type | ID Pattern | Example |
 |------|---------|---------|
 | client | `client_{domain}` | `client_smithholdings.com.au` |
 | contact | `contact_{email_slug}` | `contact_jane-smith-smithholdings.com.au` |
 | communication | `comm_{unix_ts}_{4char_hash}` | `comm_1741824000_a3f2` |
 | knowledge | `know_{unix_ts}_{4char_hash}` | `know_1741824000_b7c1` |
 | project | `project_{slug}` | `project_smith-redesign-2025` |
+
+### Filename conventions (human-readable)
+
+Filenames are what users see in the sidebar. They should be scannable and descriptive. The `id` in frontmatter handles dedup — the filename is for humans.
+
+| Type | Filename Pattern | Example |
+|------|-----------------|---------|
+| client | `{domain}.md` | `smithholdings.com.au.md` |
+| contact | `{first-last}.md` | `jane-smith.md` |
+| communication | `{YYYY-MM-DD}-{subject-slug}.md` | `2026-03-10-website-redesign-quote.md` |
+| knowledge | `{topic-slug}.md` | `smith-holdings-prefers-phone.md` |
+| project | `{project-slug}.md` | `smith-redesign-2025.md` |
+
+**Rules:**
+- Slugify: lowercase, hyphens, no special characters
+- Communications: always lead with ISO date for chronological sorting
+- Knowledge: lead with the subject/client, describe the fact
+- Keep slugs under ~60 chars — long enough to be descriptive, short enough to scan
 
 ---
 
@@ -162,43 +182,106 @@ related: ["[[clients/smithholdings.com.au]]"]
 
 ## Type: `communication`
 
-File: `communications/{YYYY}/{MM}/{id}.md`
+File: `communications/{YYYY}/{MM}/{YYYY-MM-DD}-{subject-slug}.md`
+
+Communications use a **universal header + freeform semantic fields** pattern. The universal fields are always present. Freeform fields are added only when evidenced by the thread content — see [field-catalog.md](field-catalog.md) for the full vocabulary.
+
+### Simple thread (2 messages):
 
 ```yaml
 ---
-id: comm_1741824000_a3f2
+id: comm_1742352831_nova
 type: communication
-created: 2026-03-10T11:30:00+11:00
-updated: 2026-03-10T11:30:00+11:00
-tags: [communication, email, quote]
+channel: email
+subject: "Re: Nova tinting website"
+date: 2026-03-19T14:53:51+11:00
+direction: inbound
+participants:
+  - name: Brad Kendall
+    email: novapitstop@gmail.com
+  - name: Jeremy Dawes
+    email: jeremy@jezweb.au
+message_count: 2
+summary: "Brad Kendall from Nova Pitstop confirmed 1pm meeting at Jezweb office to discuss tinting website. Also trades as Hi-Tech Autoglass Solutions."
+tags: [meeting, website-project, automotive]
 source: gmail
-source_id: 18e2a3b4c5d6e7f8
-source_url: https://mail.google.com/mail/u/0/#all/18e2a3b4c5d6e7f8
-summary: "Client requested full website redesign quote. Agreed to send by end of week."
-visibility: private
+source_id: 19cade5e9cf2fbc6
 
-channel: email                         # email | google_chat | calendar | phone | note
-subject: Website redesign quote
-participants: [client@smithholdings.com.au, jeremy@jezweb.net]
-communication_type: quote              # quote | support | onboarding | billing | general
-significance: 4
-client_domain: smithholdings.com.au
-project: ~
-thread_date: 2026-03-10T11:30:00+11:00
-
-related: ["[[clients/smithholdings.com.au]]"]
+# Freeform — only what's in the content
+companies: [Nova Pitstop, Hi-Tech Autoglass Solutions]
+phone: "02 4954 6828"
+website: www.novapitstop.com.au/book-online
+meeting_time: "1pm"
+meeting_location: "Jeremy's office"
+primary_intent: scheduling
 ---
 
-# Website redesign quote — 10 Mar 2026
+# Nova tinting website — 19 Mar 2026
 
-Client asked about full redesign. Discussed timeline and budget. Agreed to send formal quote by Friday.
+Brad Kendall confirmed 1pm meeting at Jezweb office to discuss the tinting website project. Also trades as Hi-Tech Autoglass Solutions.
+```
+
+### Complex thread (8 messages):
+
+```yaml
+---
+id: comm_1740182400_skin
+type: communication
+channel: email
+subject: Micro Skin Website
+date: 2026-02-19T00:00:00+10:00
+direction: bidirectional
+participants:
+  - name: Justin
+    email: Justin@bigcolour.com.au
+    company: Big Colour
+  - name: Belinda
+    email: Belinda@bigcolour.com.au
+    company: Big Colour
+  - name: Jeremy Dawes
+    email: jeremy@jezweb.au
+    company: Jezweb
+  - name: Marianne Boughton
+    email: marianne@jezweb.net
+    company: Jezweb
+    role: accounts
+  - name: Karen Irvine
+    email: karen@jezweb.net
+    company: Jezweb
+message_count: 8
+summary: "Big Colour commissioning Micro Skin product website. Justin requesting design iterations including darker grey and white outline changes. Multi-week back-and-forth."
+tags: [website-design, design-feedback, micro-skin]
+source: gmail
+source_id: 19c972f9c508ab2f
+
+# Freeform — richer because thread is richer
+companies: [Big Colour, Jezweb]
+project: micro-skin-website
+product: Micro Skin
+primary_intent: project_feedback
+client_lifecycle_stage: active_project
+design_changes: [darker grey, white outline adjustment]
+business_relationship: client-vendor
+---
+
+# Micro Skin Website — 19 Feb to 3 Mar 2026
+
+Big Colour (signage company) working with Jezweb on a website for the Micro Skin product line. Justin from Big Colour drove the design feedback, requesting specific changes including making the grey darker and adjusting the white outline. Jeremy forwarded feedback internally to Marianne and Karen. Multiple rounds of iteration over two weeks as the design was refined to Big Colour's requirements.
+```
+
+### Key principles:
+
+- **Summary length is proportional** to thread complexity
+- **Freeform fields vary** per thread — a bug report looks different from a pricing dispute
+- **No empty fields** — if it's not in the content, don't add it
+- See [field-catalog.md](field-catalog.md) for the full vocabulary of discoverable fields
 ```
 
 ---
 
 ## Type: `knowledge`
 
-File: `knowledge/{id}.md`
+File: `knowledge/{topic-slug}.md`
 
 ```yaml
 ---

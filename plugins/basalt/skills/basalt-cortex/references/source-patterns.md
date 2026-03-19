@@ -6,56 +6,90 @@ Per-source patterns for fetching, pre-filtering, and extracting knowledge into B
 
 ## Gmail
 
-**Prerequisites**: `gws` CLI authenticated (`gws auth login -s gmail`)
+**Prerequisites**: Gmail MCP connected (`google-gmail-jez` or `google-gmail`)
 
-**Fetch pattern**:
-```bash
-# List threads (newest first, batch of 50)
-gws gmail messages list --query "newer_than:30d" --max-results 50 --format json
+**Fetch pattern (MCP — preferred)**:
 
-# Get full thread content
-gws gmail messages get MESSAGE_ID --format json
+```
+# Phase 1a: Extract contacts (quick scan, 100 emails)
+gmail_messages({ action: "extract_contacts", query: "in:inbox after:YYYY/MM/DD", field: "from",
+  excludeDomains: ["jezweb.net", "google.com", "github.com", "cloudflare.com", ...], maxResults: 100 })
+
+# Phase 1a (sent): Who Jez emails
+gmail_messages({ action: "extract_contacts", query: "in:sent after:YYYY/MM/DD", field: "to",
+  excludeDomains: [...], maxResults: 100 })
+
+# Phase 1b: List emails in monthly batches
+gmail_messages({ action: "list",
+  query: "in:inbox -category:promotions -category:social -category:updates -category:forums after:YYYY/MM/DD before:YYYY/MM/DD",
+  maxResults: 50, format: "compact", bodyPreview: 1000 })
+
+# Phase 1c: Get full content for significant threads
+gmail_messages({ action: "get", messageId: "...", bodyFormat: "text" })
 ```
 
-**Pre-filter**: See prefilter-patterns.md. Skip automated senders, marketing emails, notifications.
+**Pre-filter**: See prefilter-patterns.md. From the `list` results, skip:
+- Synergy Wholesale 2FA, eligibility reports, transaction statements
+- CrazyTel auto top-ups
+- Domain expiry/transfer/registration notifications
+- Wordfence login alerts
+- L2Chat/Bot notification emails
+- Payment receipts from automated systems
 
-**Extract**: Send thread body to LLM. Extract contacts, client info, communication summary, knowledge facts.
+**Extract**: Claude does AI extraction in-context while scanning list results. No external LLM call needed. Identify clients, contacts, communications, and knowledge facts from snippets + full bodies.
 
 **Basalt mapping**:
-- Each unique sender domain → `clients/{domain}.md`
-- Each unique email address → `contacts/{slug}.md`
-- Each thread → `communications/{YYYY}/{MM}/comm_{ts}_{hash}.md`
-- Each extracted fact → `knowledge/know_{ts}_{hash}.md`
+- Each unique business domain → `clients/{domain}.md`
+- Each unique person → `contacts/{first-last}.md`
+- Each significant thread → `communications/{YYYY}/{MM}/{YYYY-MM-DD}-{subject-slug}.md`
+- Each extracted fact → `knowledge/{topic-slug}.md`
 
 **Idempotency**: Use Gmail thread ID as `source_id`. Check `state.json` processed list before processing.
 
-**Cursor**: Store the newest thread timestamp in `state.json` cursors.gmail. Next run starts from there.
+**Cursor**: Store the newest thread timestamp in `state.json` cursors.gmail.
+
+**Batch strategy**: Process one month at a time. For large mines (full year), fetch 50 emails per month-batch, process, then move to the next month. Generate a single Python script with all extracted entities at the end.
 
 ---
 
 ## Google Chat
 
-**Prerequisites**: `gws` CLI authenticated with chat scope (`gws auth login -s chat`)
+**Prerequisites**: Google Chat MCP connected (`google-chat`)
 
-**Fetch pattern**:
-```bash
-# List spaces
-gws chat spaces list --format json
+**Fetch pattern (MCP)**:
 
-# List messages in a space (newest first)
-gws chat messages list SPACE_NAME --max-results 50 --format json
+```
+# List all spaces
+chat_spaces({ action: "list", filter: "all", limit: 50 })
+
+# Categorise spaces — skip bot-only spaces:
+# SKIP: Email Copilot, Coffee, Chat Copilot, Flux Copilot, Paste Bin
+# MINE: Client spaces, business ops, team discussions
+
+# Fetch messages ONE SPACE AT A TIME
+chat_messages({ action: "list", spaceId: "ABC123", range: "month", limit: 50 })
+
+# NEVER use search_active for mining — it fires all spaces in parallel
+# and times out on accounts with 50+ spaces (Jezweb has 57)
 ```
 
-**Pre-filter**: Skip bot messages, join/leave events, reactions.
+**Pre-filter**: Skip bot messages (`senderType: "BOT"`), join/leave events, webhook posts, reactions-only messages, messages under 20 chars.
 
-**Extract**: Group messages into conversation threads (by time proximity or explicit threads). Extract decisions, action items, knowledge.
+**Extract**: Group messages into conversation threads (by `threadId`). Extract decisions, action items, knowledge. Claude does extraction in-context.
 
 **Basalt mapping**:
-- Each conversation thread → `communications/{YYYY}/{MM}/comm_{ts}_{hash}.md` with `channel: google_chat`
-- Decisions and facts → `knowledge/know_{ts}_{hash}.md`
-- New participants → `contacts/{slug}.md`
+- Each conversation thread → `communications/{YYYY}/{MM}/{YYYY-MM-DD}-{subject-slug}.md` with `channel: google_chat`
+- Decisions and facts → `knowledge/{topic-slug}.md`
+- New participants → `contacts/{first-last}.md`
 
 **Idempotency**: Use message ID as `source_id`.
+
+**Space-by-space iteration**: Process spaces in order of business value:
+1. Client spaces (Verge, ACPS, Procool, etc.)
+2. Business ops (Help Desk, Website Sales, Accounts Receivable)
+3. Team/internal (Team Jezweb, HR, Finances)
+4. Dev/AI (Claude Code, MCP Servers, AI Agents)
+Save progress after each space so failures are resumable.
 
 ---
 

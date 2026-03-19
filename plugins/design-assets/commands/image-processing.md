@@ -1,6 +1,6 @@
 ---
 description: Resize, convert, or optimise images for web
-argument-hint: "[image-path] [operation]"
+argument-hint: "[resize|convert|trim|optimise] [path-or-description]"
 ---
 
 Load the `image-processing` skill.

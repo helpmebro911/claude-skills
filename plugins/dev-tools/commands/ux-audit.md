@@ -1,6 +1,6 @@
 ---
 description: Run a UX walkthrough and QA sweep on a live web app
-argument-hint: "[quick|standard|thorough] [url]"
+argument-hint: "[quick: spot check | standard: full walkthrough | thorough: overnight]"
 allowed-tools: "*"
 ---
 

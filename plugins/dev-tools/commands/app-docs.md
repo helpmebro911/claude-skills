@@ -1,6 +1,6 @@
 ---
 description: Generate a user guide with screenshots from a running app
-argument-hint: "[quick|standard|thorough] [url]"
+argument-hint: "[quick: key screens | standard: all pages | thorough: every state]"
 ---
 
 Load the `app-docs` skill.

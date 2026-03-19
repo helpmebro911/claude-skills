@@ -1,6 +1,6 @@
 ---
 description: Browser automation for web interaction and testing
-argument-hint: "[url]"
+argument-hint: "[navigate|screenshot|fill|click|test] [target]"
 ---
 
 Load the `agent-browser` skill.

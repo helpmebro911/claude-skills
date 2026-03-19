@@ -4,7 +4,7 @@
 
 Production workflow skills for [Claude Code](https://claude.com/claude-code). Each skill guides Claude through a recipe to produce tangible output — scaffolded projects, generated assets, professional documents, deployed services.
 
-11 plugins. 59 skills. Every one produces something.
+11 plugins. 60 skills. Every one produces something.
 
 ## Quick Start
 
@@ -50,10 +50,10 @@ Then just ask Claude what you need — installed skills trigger automatically fr
 | Plugin | Skills | What it does |
 |--------|--------|-------------|
 | **dev-tools** | project-health, project-docs, app-docs, team-update, github-release, brains-trust, git-workflow, ux-audit, responsiveness-check, agent-browser, deep-research, onboarding-ux, fork-discipline, roadmap | Project config, doc generation, app user guides, team updates, releases, multi-model second opinions, git workflows, UX dogfooding, responsive testing, browser automation, deep research, in-app onboarding, core/client boundary audit, autonomous phased app delivery |
-| **integrations** | gws-setup, gws-install, google-chat-messages, google-apps-script, elevenlabs-agents, mcp-builder, nemoclaw-setup, parcel-tracking | Google Workspace MCP setup, Google Chat webhooks, Apps Script automation, ElevenLabs voice agents, MCP server building, NVIDIA NemoClaw agent platform setup, Australian parcel tracking via Gmail |
+| **integrations** | gws-setup, gws-install, google-chat-messages, google-apps-script, elevenlabs-agents, mcp-builder, nemoclaw-setup, parcel-tracking, stripe-payments | Google Workspace setup, Google Chat webhooks, Apps Script, ElevenLabs voice agents, MCP servers, NemoClaw, parcel tracking, Stripe payments (checkout, subscriptions, webhooks, billing portal) |
 | **basalt** | basalt-cortex | Mine knowledge from Gmail, Chat, Slack, Drive, local files, MCP, web into an Obsidian-compatible vault (~/.cortex/) |
 
-## All 59 Skills
+## All 60 Skills
 
 <details>
 <summary>Full skill list with trigger phrases</summary>
@@ -89,6 +89,7 @@ Then just ask Claude what you need — installed skills trigger automatically fr
 | `mcp-builder` | "build mcp server", "fastmcp" |
 | `nemoclaw-setup` | "install nemoclaw", "setup nemoclaw", "nvidia nemoclaw" |
 | `parcel-tracking` | "where's my parcel", "track my order", "tracking number" |
+| `stripe-payments` | "add payments", "stripe checkout", "subscription billing" |
 | `project-health` | "project health", "audit permissions" |
 | `project-docs` | "generate docs", "document architecture", "api docs" |
 | `app-docs` | "document the app", "user guide", "screenshot docs" |

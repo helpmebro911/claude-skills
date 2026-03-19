@@ -1,6 +1,6 @@
 ---
 description: Review visual design quality — layout, typography, spacing, colour, consistency
-argument-hint: "[url]"
+argument-hint: "[layout|typography|colour|consistency|all]"
 ---
 
 Load the `design-review` skill.

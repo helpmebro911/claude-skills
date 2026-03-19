@@ -1,6 +1,6 @@
 ---
 description: Audit and generate in-app user guidance — onboarding, empty states, tours, help content
-argument-hint: "[audit|generate|both] [url]"
+argument-hint: "[audit: find gaps | generate: produce code | both: audit then generate]"
 ---
 
 Load the `onboarding-ux` skill.

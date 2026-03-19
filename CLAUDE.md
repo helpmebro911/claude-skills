@@ -16,7 +16,7 @@ Production workflow skills for Claude Code CLI. Each skill guides Claude through
 
 ```
 claude-skills/
-├── plugins/                                # 11 plugins, 59 skills
+├── plugins/                                # 11 plugins, 60 skills
 │   ├── cloudflare/                         # Cloudflare Workers, Hono, D1/Drizzle, Vite, TanStack Start
 │   │   └── skills/
 │   │       ├── cloudflare-worker-builder/
@@ -55,7 +55,8 @@ claude-skills/
 │   │       ├── elevenlabs-agents/
 │   │       ├── mcp-builder/
 │   │       ├── nemoclaw-setup/
-│   │       └── parcel-tracking/
+│   │       ├── parcel-tracking/
+│   │       └── stripe-payments/
 │   ├── dev-tools/                          # Context, sessions, releases, brains trust, git, browser automation
 │   │   └── skills/
 │   │       ├── project-health/
