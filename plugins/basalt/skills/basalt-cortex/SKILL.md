@@ -84,7 +84,7 @@ Ask or detect which source to mine:
 | **slack** | Slack MCP or API token | MCP tools or `curl` with token |
 | **google-drive** | Drive MCP or `gws` CLI | Metadata + summaries, don't copy full docs |
 | **local** | Read tool + Glob | `find` + `cat` on local directories |
-| **mcp** | MCP tool calls | brain_recall, vault recall, etc. |
+| **mcp** | MCP tool calls | Any connected MCP server with searchable data |
 | **web** | WebFetch or browser | Firecrawl, Playwright, or WebFetch |
 | **calendar** | Calendar MCP or `gws` CLI | Events, attendees, meeting notes |
 

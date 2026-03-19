@@ -38,7 +38,7 @@ If true, git is available. Capture the repo name from the directory or `git remo
 | `mcp__*github*__github_issues` | GitHub | Issues and PRs, labels |
 | `mcp__*linear*__*issue*` | Linear | Issues, projects, labels |
 | `mcp__*jira*__*issue*` | Jira | Issues, projects |
-| `mcp__*brain*__brain_issues` | Jezweb Brain | Issues with client/site scoping |
+| `mcp__*erpnext*__erpnext_issues` | ERPNext | Issues with client scoping |
 
 **What to capture**: Tool name, whether it supports creating issues, available label schemes.
 
@@ -46,20 +46,18 @@ If true, git is available. Capture the repo name from the directory or `git remo
 
 | Pattern | Server | Notes |
 |---|---|---|
-| `mcp__*brain*__brain_tasks` | Jezweb Brain | Persistent cross-session tasks |
 | `mcp__*asana*__*task*` | Asana | Tasks, projects |
 | `mcp__*linear*__*issue*` | Linear | Also serves as task tracker |
 | `mcp__*todoist*__*task*` | Todoist | Tasks, projects |
+| `mcp__*tuesday*__*task*` | Tuesday | Workspaces, boards, items |
 
-## Knowledge Stores
+## Knowledge
 
-| Pattern | Server | Notes |
+| Source | Location | Notes |
 |---|---|---|
-| `mcp__*vault*__remember` | Vault | Personal knowledge, semantic search |
-| `mcp__*vault*__recall` | Vault | Retrieve stored knowledge |
-| `mcp__*brain*__brain_knowledge` | Jezweb Brain | Team-visible knowledge |
+| Basalt Cortex | `~/Documents/basalt-cortex/` | Clients, contacts, knowledge — grep to search |
 
-**What to capture**: Tool name, whether it supports tagging/categorisation.
+**What to capture**: Whether Basalt Cortex vault exists and has relevant data.
 
 ## Discovery Output
 

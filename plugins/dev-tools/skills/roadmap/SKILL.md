@@ -45,7 +45,7 @@ Before any technical planning, nail down:
 
 - **One sentence**: What is this? ("A cloud-native markdown knowledge workspace for teams and AI agents")
 - **Who**: Primary users, secondary users, agents? ("Jez first, then Jezweb team, then clients")
-- **Why**: What existing tools fail at? What's the gap? ("Brain and Vault are headless black holes — you can't browse them")
+- **Why**: What existing tools fail at? What's the gap? ("Existing tools are headless — you can't browse them or stumble across things")
 - **Constraint**: Stack, budget, timeline, must-haves? ("Cloudflare, must have MCP, needs to be a PWA")
 - **Not building**: What's explicitly out of scope? ("No real-time CRDT collab, no plugin ecosystem")
 

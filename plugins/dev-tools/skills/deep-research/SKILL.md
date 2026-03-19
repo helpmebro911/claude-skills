@@ -53,8 +53,8 @@ For each related project found:
 - Note what worked well and what didn't (from git history, TODO comments)
 
 Also check:
-- Brain MCP for related client/project knowledge (if available)
-- Vault MCP for technical decisions and gotchas (if available)
+- Basalt Cortex (`~/Documents/basalt-cortex/`) for related clients, contacts, knowledge facts
+- `grep -rl "KEYWORD" ~/Documents/basalt-cortex/ --include="*.md"`
 
 ### 3. Web Research
 

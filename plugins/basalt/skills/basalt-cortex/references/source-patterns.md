@@ -169,27 +169,27 @@ cat /path/to/file.md
 
 ## MCP Servers
 
-**Prerequisites**: MCP server connected (Brain, Vault, or any custom server)
+**Prerequisites**: Any MCP server connected that has searchable data (ERPNext, custom servers, etc.)
 
 **Fetch pattern**:
 ```
-# Brain MCP
-brain_recall query="all knowledge" limit=100
-brain_knowledge list limit=100
+# ERPNext MCP
+erpnext_customers list limit=100
+erpnext_contacts list limit=100
+erpnext_issues list limit=100
 
-# Vault MCP
-vault recall query="all items"
-vault knowledge_list
+# Any MCP with search/list tools
+mcp_tool list/search → extract structured data
 ```
 
-**Pre-filter**: Skip items already in `~/.cortex/` by checking `source_id`.
+**Pre-filter**: Skip items already in Basalt Cortex by checking `source_id`.
 
 **Extract**: MCP items often already have structured fields. Map directly to Basalt frontmatter.
 
 **Basalt mapping**:
-- Brain knowledge → `knowledge/know_{ts}_{hash}.md` with `source: brain`
-- Brain clients → `clients/{domain}.md` with `source: brain`
-- Vault items → `knowledge/know_{ts}_{hash}.md` with `source: vault`
+- Customers → `clients/{domain}.md` with `source: erpnext`
+- Contacts → `contacts/{name}.md` with `source: erpnext`
+- Knowledge items → `knowledge/{topic}.md` with `source: mcp`
 
 ---
 
