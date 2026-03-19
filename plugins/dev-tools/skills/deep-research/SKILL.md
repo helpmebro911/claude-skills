@@ -242,7 +242,7 @@ Produce a research brief saved to `.jez/artifacts/research-brief-{topic}.md`:
 
 ## Tips
 
-- Start the brief early and add to it as you research — don't try to hold everything in context
+- Start the brief early and add to it as you research — the artifact is the deliverable
 - For deep mode, use sub-agents to parallelise web research and local exploration
 - The "Reusable From Existing Projects" section often saves weeks of work
 - Ecosystem signals (plugins, issues, reviews) are often more valuable than competitor feature lists

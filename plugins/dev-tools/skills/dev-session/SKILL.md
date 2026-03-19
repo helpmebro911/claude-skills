@@ -1,12 +1,12 @@
 ---
 name: dev-session
-description: "Manage long development sessions with structured progress tracking. Creates SESSION.md files for multi-session handoff, checkpoints progress with WIP commits, and captures learnings to CLAUDE.md. Trigger with 'start session', 'checkpoint', 'wrap session', 'resume session', or 'context getting full'."
+description: "Manage multi-session development work with structured progress tracking. Creates SESSION.md files for cross-session handoff, checkpoints progress with WIP commits, and captures learnings to CLAUDE.md. Trigger with 'start session', 'checkpoint', 'wrap session', or 'resume session'."
 compatibility: claude-code-only
 ---
 
 # Dev Session
 
-Manage multi-session development work with structured progress files, checkpoint commits, and durable learnings. Produces SESSION.md files that survive context compaction and enable clean handoff between sessions.
+Manage development work that spans multiple Claude Code sessions. Produces SESSION.md files for clean handoff — so a new session can pick up exactly where the last one left off.
 
 ## Operating Modes
 
@@ -27,7 +27,7 @@ Manage multi-session development work with structured progress files, checkpoint
 
 ### Mode 2: Checkpoint
 
-**When**: "checkpoint", major milestone reached, before risky changes, context getting large
+**When**: "checkpoint", major milestone reached, before risky changes, before ending a session
 
 1. Update SESSION.md:
    - Add completed items to **What Works**
@@ -80,10 +80,9 @@ Manage multi-session development work with structured progress files, checkpoint
 | Scenario | Use this skill? |
 |----------|----------------|
 | Multi-phase feature spanning 2+ sessions | Yes |
-| Work that might hit context compaction | Yes |
 | Before making risky or destructive changes | Yes (checkpoint first) |
 | Quick bug fix or single-file edit | No |
-| Single-session task with clear scope | No |
+| Single-session task with clear scope | No — the 1M context holds most features end-to-end |
 
 ## SESSION.md Principles
 
@@ -103,4 +102,3 @@ Manage multi-session development work with structured progress files, checkpoint
 | When | Read |
 |------|------|
 | Creating a new SESSION.md | [references/session-template.md](references/session-template.md) |
-| Context compaction tips, what survives | [references/compaction-survival.md](references/compaction-survival.md) |

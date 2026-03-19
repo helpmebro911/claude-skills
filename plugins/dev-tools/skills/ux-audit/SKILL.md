@@ -62,7 +62,7 @@ The thorough mode is designed to run unattended. Kick it off at end of day, revi
 
 1. **Discover all routes** — read router config, crawl navigation, build complete page inventory
 2. **Identify workflow threads** — what are the 3-5 real tasks a user does in a day? Map them before testing individual pages. See [references/workflow-comprehension.md](references/workflow-comprehension.md).
-3. **Create a task list** — track progress so work survives context limits
+3. **Create a task list** — track progress across the audit
 4. **Visual & layout sweep** (every page):
    - Screenshot at 1280px, 1024px, 768px, 375px widths
    - Screenshot in light mode and dark mode
