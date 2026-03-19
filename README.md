@@ -4,7 +4,7 @@
 
 Production workflow skills for [Claude Code](https://claude.com/claude-code). Each skill guides Claude through a recipe to produce tangible output — scaffolded projects, generated assets, professional documents, deployed services.
 
-11 plugins. 55 skills. Every one produces something.
+11 plugins. 56 skills. Every one produces something.
 
 ## Quick Start
 
@@ -26,7 +26,7 @@ Then just ask Claude what you need — installed skills trigger automatically fr
 
 | Plugin | Skills | What it does |
 |--------|--------|-------------|
-| **cloudflare** | cloudflare-worker-builder, vite-flare-starter, tanstack-start, hono-api-scaffolder, d1-drizzle-schema, d1-migration, db-seed | Scaffold and deploy Cloudflare Workers, full-stack Vite+React apps, TanStack Start SSR dashboards, Hono APIs, D1/Drizzle schemas, migration workflows, database seeding |
+| **cloudflare** | cloudflare-worker-builder, vite-flare-starter, tanstack-start, hono-api-scaffolder, d1-drizzle-schema, d1-migration, db-seed, cloudflare-api | Scaffold and deploy Workers, full-stack Vite+React apps, TanStack Start, Hono APIs, D1/Drizzle schemas, migrations, database seeding, direct REST API for bulk/fleet operations |
 | **shopify** | shopify-setup, shopify-products, shopify-content | Shopify API setup, product creation (single + bulk CSV), content pages, blog posts, SEO metadata |
 | **wordpress** | wordpress-setup, wordpress-content, wordpress-elementor | WordPress WP-CLI/REST API access, content management, Elementor page editing |
 
@@ -53,7 +53,7 @@ Then just ask Claude what you need — installed skills trigger automatically fr
 | **integrations** | gws-setup, gws-install, google-chat-messages, google-apps-script, elevenlabs-agents, mcp-builder, nemoclaw-setup, parcel-tracking | Google Workspace MCP setup, Google Chat webhooks, Apps Script automation, ElevenLabs voice agents, MCP server building, NVIDIA NemoClaw agent platform setup, Australian parcel tracking via Gmail |
 | **basalt** | basalt-cortex | Mine knowledge from Gmail, Chat, Slack, Drive, local files, MCP, web into an Obsidian-compatible vault (~/.cortex/) |
 
-## All 55 Skills
+## All 56 Skills
 
 <details>
 <summary>Full skill list with trigger phrases</summary>
@@ -67,6 +67,7 @@ Then just ask Claude what you need — installed skills trigger automatically fr
 | `d1-drizzle-schema` | "d1 schema", "drizzle schema" |
 | `d1-migration` | "d1 migration", "migrate database" |
 | `db-seed` | "seed database", "sample data", "demo data" |
+| `cloudflare-api` | "cloudflare api", "bulk dns", "custom hostname", "email routing" |
 | `seo-local-business` | "local seo", "json-ld schema" |
 | `tailwind-theme-builder` | "tailwind theme", "set up tailwind" |
 | `shadcn-ui` | "shadcn", "install components" |
