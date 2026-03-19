@@ -1,6 +1,6 @@
 ---
 name: roadmap
-description: "Generate a comprehensive technical roadmap for building an entire application. Produces a phased delivery plan detailed enough for Claude Code to execute end-to-end: vision, data model, stack decisions, 4-8 phases with feature breakdowns, task checklists, build order, schema evolution, API surface per phase, and 'deliberately not building' scope control. Use after deep-research or when starting a major build. Triggers: 'roadmap', 'plan the build', 'project roadmap', 'delivery plan', 'build plan', 'phase plan', 'plan the whole app', 'end to end plan'."
+description: "Plan and execute entire application builds. Generates phased delivery roadmaps, then executes them autonomously — phase by phase, committing at milestones, deploying, testing, and continuing until done or stuck. Modes: plan (generate roadmap), start (begin executing), resume (continue from where you left off), status (show progress). Triggers: 'roadmap', 'plan the build', 'start building', 'resume the build', 'keep going', 'build the whole thing', 'execute the roadmap', 'what phase are we on'."
 compatibility: claude-code-only
 allowed-tools:
   - Read
@@ -278,29 +278,111 @@ After generating, also update:
 7. **Each phase has a definition of done** — specific things to test and verify.
 8. **Include the stack table** — don't make Claude guess the tech choices per phase.
 
-## Pairing With Other Skills
+---
 
-| Run first | Then this skill | Then |
-|-----------|----------------|------|
-| `/deep-research deep` | `/roadmap` | Execute phase by phase |
-| — (user has a brief) | `/roadmap` | Execute phase by phase |
-| `/roadmap` | — | `/fork-discipline document` (if multi-client) |
-| `/roadmap` | Phase 1 done | `/ux-audit`, `/onboarding-ux` |
-| `/roadmap` | Phase N done | `/project-docs` to update architecture docs |
+## Execution Modes
 
-## Example: How Claude Code Uses This
+The roadmap isn't just a document — it's an execution engine. After generating the plan, use these modes to drive the build.
+
+### Mode: `start`
+
+**Trigger**: "start building", "execute the roadmap", "build the whole thing", "start from phase 1"
+
+1. Read `docs/ROADMAP.md`
+2. Verify the project is set up (repo exists, dependencies installed, Cloudflare resources created)
+3. Begin Phase 1, task by task
+4. After each task: verify it works (build, run, test)
+5. After all tasks in a phase: run the Definition of Done checks
+6. Commit: `git add -A && git commit -m "Phase N complete: [goal]"`
+7. Deploy if applicable: `npx wrangler deploy`
+8. Run `/ux-audit quick` on the deployed app
+9. Update the roadmap: mark the phase as complete
+10. **Continue to the next phase. Don't stop. Don't ask.**
+11. Repeat until all phases are complete or you hit a blocker
+
+### Mode: `resume`
+
+**Trigger**: "resume the build", "keep going", "continue", "what phase are we on"
+
+1. Read `docs/ROADMAP.md` — find the first incomplete phase
+2. Check `git log` — what was the last roadmap-related commit?
+3. Check what exists in the codebase vs what the phase expects
+4. Pick up from the first uncompleted task in the current phase
+5. Continue executing as in `start` mode
+
+### Mode: `status`
+
+**Trigger**: "roadmap status", "where are we", "what's done"
+
+Read `docs/ROADMAP.md` and produce a summary:
 
 ```
-User: "Build phase 3 of the roadmap"
-
-Claude reads docs/ROADMAP.md, finds Phase 3:
-- Goal: AI search + MCP server
-- Tasks: 15 checklist items
-- New tables: notes_embeddings (Vectorize)
-- New routes: /api/search/semantic, /mcp/tools
-- Definition of done: semantic search returns relevant results, MCP tools accessible via API token
-
-Claude executes all 15 tasks, deploys, tests against the definition of done, updates SESSION.md.
+Phase 1: Personal MVP ✓ (committed abc1234)
+Phase 2: Polish + Search ✓ (committed def5678)
+Phase 3: AI + MCP ← IN PROGRESS (7/15 tasks done)
+Phase 4: Team Features — not started
+Phase 5: Integrations — not started
 ```
 
-That's the target: a roadmap so detailed that "build phase 3" is a complete instruction.
+### Execution Rules
+
+**Keep going.** The default is to continue to the next phase after completing one. Don't pause between phases to ask permission. The roadmap IS the permission.
+
+**Commit at phase boundaries.** Every completed phase gets its own commit with a clear message. This creates natural restore points.
+
+**Deploy after every phase.** If the project has a deployment target (wrangler.jsonc, vercel.json), deploy after each phase completes. Real deployment catches issues that local dev doesn't.
+
+**Quick audit between phases.** Run a quick visual check on the deployed app between phases — catch layout issues, broken routes, obvious regressions before building on top of them.
+
+**Thorough audit at the end.** After the final phase, run:
+1. `/ux-audit thorough` — comprehensive overnight test
+2. `/onboarding-ux` — generate empty states, welcome flow, help content
+3. `/project-docs` — update architecture documentation
+
+**Stop only when:**
+- A task fails and you can't figure out why (error you haven't seen before)
+- You need a credential, API key, or account access you don't have
+- A design decision needs human input ("should this be a modal or a page?")
+- The build is complete
+
+**Don't stop for:**
+- "Should I continue?" — yes, always
+- "Should I deploy?" — yes, if there's a deployment target
+- "Should I commit?" — yes, at phase boundaries
+- Minor issues that don't block the next task — log them as GitHub issues and keep going
+
+### Progress Tracking
+
+Mark completed phases directly in `docs/ROADMAP.md`:
+
+```markdown
+## Phase 1 — Personal MVP ✅
+*Completed: 2026-03-19, commit abc1234*
+*Goal: Replace Apple Notes for one user.*
+```
+
+And for the current phase, mark completed tasks:
+
+```markdown
+### Task Checklist
+- [x] D1 schema — notes, folders tables
+- [x] Hono API routes: CRUD for notes
+- [ ] CodeMirror 6 integration  ← CURRENT
+- [ ] Quick switcher (Cmd+K)
+```
+
+This means `resume` can read the roadmap and know exactly where to pick up.
+
+### How This Replaces dev-session
+
+The old `dev-session` skill managed SESSION.md files for cross-session handoff. The roadmap's progress tracking replaces that:
+
+| dev-session had | roadmap has |
+|----------------|-------------|
+| SESSION.md with "Current Position" | Checked tasks in ROADMAP.md |
+| "Resume Instructions" | The next unchecked task IS the instruction |
+| "What Works" section | Completed phases with commit hashes |
+| Checkpoint commits | Phase boundary commits |
+| Wrap session | Final phase + thorough audit |
+
+The roadmap is the session file. No separate tracking document needed.
