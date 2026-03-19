@@ -110,6 +110,11 @@ For each major competitor (3-5 for wide, 5-10 for deep):
 | Tech stack | Wappalyzer, view-source, job postings, blog posts |
 | What they do well | 5-star reviews, product demos |
 | What they do poorly | 1-star reviews, forum complaints, migration guides FROM the product |
+| Documentation quality | Read their docs site — is it comprehensive? What topics need the most explanation? (Complex topics = things users struggle with) |
+| Help/support content | Help centre, FAQ, knowledge base, support forums — what questions do users ask most? |
+| Onboarding/tutorials | Getting started guides, video tutorials, interactive walkthroughs — how do they teach their product? What do they assume the user already knows? |
+| API documentation | If they have an API — how well documented? What patterns do they use? What SDKs do they provide? |
+| Migration guides | Do they have "switch from X" guides? These reveal what they consider their advantages AND what users find hard to switch from |
 
 ### 6. Library and Component Research (deep mode)
 
