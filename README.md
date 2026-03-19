@@ -4,7 +4,7 @@
 
 Production workflow skills for [Claude Code](https://claude.com/claude-code). Each skill guides Claude through a recipe to produce tangible output — scaffolded projects, generated assets, professional documents, deployed services.
 
-11 plugins. 56 skills. Every one produces something.
+11 plugins. 59 skills. Every one produces something.
 
 ## Quick Start
 
@@ -34,7 +34,7 @@ Then just ask Claude what you need — installed skills trigger automatically fr
 
 | Plugin | Skills | What it does |
 |--------|--------|-------------|
-| **frontend** | tailwind-theme-builder, shadcn-ui, landing-page, product-showcase | Tailwind v4 theming with CSS variables + dark mode, shadcn/ui component installation and customisation, single-file landing pages, app showcase sites from real screenshots |
+| **frontend** | tailwind-theme-builder, shadcn-ui, landing-page, product-showcase, react-patterns, design-review, react-native | Tailwind v4 theming, shadcn/ui, landing pages, app showcases, React 19 performance/composition patterns, visual design quality review, React Native + Expo mobile patterns |
 | **design-assets** | color-palette, favicon-gen, icon-set-generator, image-processing, ai-image-generator | Accessible colour palettes from a single hex, favicon packages, custom SVG icon sets, image resize/convert/optimise, AI image generation (Gemini/GPT) |
 | **web-design** | seo-local-business | Local business SEO: JSON-LD schema, meta tags, robots.txt, sitemap.xml |
 
@@ -53,7 +53,7 @@ Then just ask Claude what you need — installed skills trigger automatically fr
 | **integrations** | gws-setup, gws-install, google-chat-messages, google-apps-script, elevenlabs-agents, mcp-builder, nemoclaw-setup, parcel-tracking | Google Workspace MCP setup, Google Chat webhooks, Apps Script automation, ElevenLabs voice agents, MCP server building, NVIDIA NemoClaw agent platform setup, Australian parcel tracking via Gmail |
 | **basalt** | basalt-cortex | Mine knowledge from Gmail, Chat, Slack, Drive, local files, MCP, web into an Obsidian-compatible vault (~/.cortex/) |
 
-## All 56 Skills
+## All 59 Skills
 
 <details>
 <summary>Full skill list with trigger phrases</summary>
@@ -73,6 +73,9 @@ Then just ask Claude what you need — installed skills trigger automatically fr
 | `shadcn-ui` | "shadcn", "install components" |
 | `landing-page` | "landing page", "marketing page", "one-page site" |
 | `product-showcase` | "showcase site", "product page", "show off the app" |
+| `react-patterns` | "react patterns", "react performance", "reduce re-renders" |
+| `design-review` | "design review", "does this look good", "visual review" |
+| `react-native` | "react native", "expo", "mobile app" |
 | `color-palette` | "colour palette", "color palette from hex" |
 | `favicon-gen` | "favicon", "generate icons" |
 | `icon-set-generator` | "icon set", "svg icons" |
