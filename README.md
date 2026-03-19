@@ -4,7 +4,7 @@
 
 Production workflow skills for [Claude Code](https://claude.com/claude-code). Each skill guides Claude through a recipe to produce tangible output — scaffolded projects, generated assets, professional documents, deployed services.
 
-11 plugins. 56 skills. Every one produces something.
+11 plugins. 57 skills. Every one produces something.
 
 ## Quick Start
 
@@ -53,7 +53,7 @@ Then just ask Claude what you need — installed skills trigger automatically fr
 | **integrations** | gws-setup, gws-install, google-chat-messages, google-apps-script, elevenlabs-agents, mcp-builder, nemoclaw-setup, parcel-tracking | Google Workspace MCP setup, Google Chat webhooks, Apps Script automation, ElevenLabs voice agents, MCP server building, NVIDIA NemoClaw agent platform setup, Australian parcel tracking via Gmail |
 | **basalt** | basalt-cortex | Mine knowledge from Gmail, Chat, Slack, Drive, local files, MCP, web into an Obsidian-compatible vault (~/.cortex/) |
 
-## All 56 Skills
+## All 57 Skills
 
 <details>
 <summary>Full skill list with trigger phrases</summary>
@@ -101,6 +101,7 @@ Then just ask Claude what you need — installed skills trigger automatically fr
 | `deep-research` | "research this", "deep research", "explore the space" |
 | `onboarding-ux` | "onboarding", "empty states", "new user experience" |
 | `fork-discipline` | "fork discipline", "check the boundary", "core or client" |
+| `roadmap` | "roadmap", "plan the build", "delivery plan", "phase plan" |
 | `shopify-setup` | "shopify setup", "connect shopify" |
 | `shopify-products` | "shopify products", "add products" |
 | `shopify-content` | "shopify pages", "shopify blog" |
