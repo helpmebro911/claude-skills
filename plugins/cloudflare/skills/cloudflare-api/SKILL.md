@@ -1,6 +1,6 @@
 ---
 name: cloudflare-api
-description: "Hit the Cloudflare REST API directly for operations that wrangler and MCP can't handle well. Bulk DNS, custom hostnames, email routing, cache purge, WAF rules, redirect rules, zone settings, Worker routes, and fleet-wide operations. Produces curl commands or TypeScript/Python scripts. Triggers: 'cloudflare api', 'bulk dns', 'custom hostname', 'email routing rules', 'cache purge', 'waf rule', 'redirect rule', 'zone settings', 'worker routes', 'fleet operation', 'cloudflare curl'."
+description: "Hit the Cloudflare REST API directly for operations that wrangler and MCP can't handle well. Bulk DNS, custom hostnames, email routing, cache purge, WAF rules, redirect rules, zone settings, Worker routes, D1 cross-database queries, R2 bulk operations, KV bulk read/write, Vectorize queries, Queues, and fleet-wide resource audits. Produces curl commands or scripts. Triggers: 'cloudflare api', 'bulk dns', 'custom hostname', 'email routing', 'cache purge', 'waf rule', 'd1 query', 'r2 bucket', 'kv bulk', 'vectorize query', 'audit resources', 'fleet operation'."
 compatibility: claude-code-only
 allowed-tools:
   - Read
@@ -30,6 +30,12 @@ Hit the Cloudflare REST API directly when wrangler CLI or MCP servers aren't the
 | Cache purge by tag/prefix | No | Yes | Yes (when scripting) |
 | Worker route management | Limited | Yes | Yes (when bulk) |
 | Analytics/logs query | No | Partial | Yes — GraphQL |
+| D1 query/export across databases | One DB at a time | One DB at a time | Yes — cross-DB scripts |
+| R2 bulk object operations | No | One at a time | Yes — S3 API + batch |
+| KV bulk read/write/delete | One at a time | One at a time | Yes — bulk endpoints |
+| Vectorize query/delete | No | Via Worker only | Yes — direct API |
+| Queue message injection | No | Via Worker only | Yes — direct API |
+| Audit all resources in account | No | Tedious | Yes — inventory script |
 
 **Rule of thumb**: Single operations → MCP or wrangler. Bulk/fleet/scripted → API directly.
 
@@ -384,3 +390,9 @@ The API follows a consistent pattern:
 - `PUT /zones/:id/settings/:name` — update setting
 
 Every response has `{ success: bool, errors: [], messages: [], result: {} }`.
+
+## Reference Files
+
+| When | Read |
+|------|------|
+| D1, R2, KV, Workers, Vectorize, Queues API patterns | [references/developer-platform-api.md](references/developer-platform-api.md) |
