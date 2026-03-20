@@ -226,6 +226,32 @@ After generating, tell the user:
 - **Progressive reveal**: Hero shows the big picture, how-it-works shows the flow, features show the details
 - **End with the payoff**: The final section before the CTA should show the result — a report generated, a task completed, a client managed
 
+### Mix Screenshots with Mockups
+Real screenshots show the product is real. Mockups show the product is polished. Use both:
+- **Hero**: Real screenshot in a browser-frame mockup — proves the app exists and looks good
+- **How It Works**: Can use simplified mockup illustrations (CSS shapes, icons, arrows) for the flow steps, with real screenshots for the detail
+- **Feature grid**: Real screenshots — users want to see the actual UI
+- **Mobile showcase**: CSS device frame mockup (phone outline) around a mobile screenshot
+- **Dashboard/overview**: Real screenshot — this is the money shot
+
+**Phone mockup frame** (CSS):
+```css
+.phone-frame {
+  border: 8px solid #1f2937;
+  border-radius: 32px;
+  overflow: hidden;
+  max-width: 280px;
+  box-shadow: 0 25px 50px -12px rgba(0,0,0,0.3);
+}
+.phone-frame-notch {
+  background: #1f2937;
+  height: 24px;
+  border-radius: 0 0 16px 16px;
+  width: 120px;
+  margin: 0 auto;
+}
+```
+
 ### Animation (CSS-only, no JS required)
 ```css
 /* Fade in sections as user scrolls (intersection observer via CSS) */
