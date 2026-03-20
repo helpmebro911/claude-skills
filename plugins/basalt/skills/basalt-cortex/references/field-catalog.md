@@ -75,6 +75,8 @@ When extracting metadata from an email thread or chat conversation:
 
 ### People & Identity
 
+These fields appear on **communication** notes when identity details are discovered in a thread. They should ALSO trigger an update to the corresponding **contact** file's `identifiers` block — see basalt-format.md for the contact identity schema.
+
 | Field | Type | When to add | Examples |
 |-------|------|------------|---------|
 | `real_name` | string | When display name differs from real name | "George Petridis" (display: "George Fuel") |
@@ -82,6 +84,9 @@ When extracting metadata from an email thread or chat conversation:
 | `phone` | string | When phone numbers appear in content | "02 4954 6828", "+61 414 232 794" |
 | `companies` | array | When multiple companies are involved | `["Verge Safety Barriers", "Uni-Fit", "Adenium"]` |
 | `role_title` | string | When job title is mentioned | "Events & Placement Coordinator", "Director" |
+| `google_chat_id` | string | When a Google Chat user ID is present | "users/105776807049217487682" |
+| `additional_emails` | array | When signature reveals extra emails | `["info@pumpingrecords.com"]` |
+| `website` | string | When a personal/business URL is shared | "www.novapitstop.com.au/book-online" |
 
 ### Community & Networking
 

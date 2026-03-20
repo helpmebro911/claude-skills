@@ -148,6 +148,10 @@ related: ["[[contacts/jane-smith]]"]
 
 File: `contacts/{slug}.md`
 
+Contacts are the **identity resolution layer** — any system that needs to know "who is this person?" queries Basalt by any identifier (email, phone, chat ID, name) and gets the full profile. A single person may have multiple emails, phone numbers, businesses, and platform identities.
+
+### Simple contact (one email, one company):
+
 ```yaml
 ---
 id: contact_jane-smith-smithholdings.com.au
@@ -163,8 +167,9 @@ summary: "Director at Smith Holdings. Primary contact for all web projects. Pref
 visibility: private
 
 name: Jane Smith
-email: person@smithholdings.com.au
-phone: ~
+identifiers:
+  emails: [person@smithholdings.com.au]
+  phones: []
 role: Director
 company: Smith Holdings Pty Ltd
 company_domain: smithholdings.com.au
@@ -177,6 +182,64 @@ related: ["[[clients/smithholdings.com.au]]"]
 
 # Jane Smith
 ```
+
+### Complex contact (multiple identities, businesses, platforms):
+
+```yaml
+---
+id: contact_george-petridis
+type: contact
+created: 2026-03-09T11:49:00+11:00
+updated: 2026-03-09T11:49:00+11:00
+tags: [contact, multi-entity]
+aliases: [George Petridis, George Fuel]
+source: gmail
+source_id: ~
+source_url: ~
+summary: "Director of Pumping Records, Pumping Management, and Pumping Entertainment. Goes by 'George Fuel' as brand name. L2Chat chatbot deployed. Reported wrong phone number in chatbot."
+visibility: private
+
+name: George Petridis
+also_known_as: [George Fuel]
+identifiers:
+  google_chat: "users/105776807049217487682"
+  emails:
+    - imddj@hotmail.com
+    - george@pumpingmanagement.com
+    - info@pumpingrecords.com
+    - events@pumpingentertainment.com
+  phones:
+    - "+61 414 232 794"
+  websites:
+    - pumpingrecords.com
+    - pumpingmanagement.com
+    - pumpingentertainment.com
+role: Director
+companies:
+  - name: Pumping Records
+    domain: pumpingrecords.com
+  - name: Pumping Management
+    domain: pumpingmanagement.com
+  - name: Pumping Entertainment
+    domain: pumpingentertainment.com
+first_seen: 2026-03-09
+last_seen: 2026-03-09
+thread_count: 1
+
+related: ["[[clients/pumpingrecords.com]]"]
+---
+
+# George Petridis
+```
+
+### Identity resolution rules
+
+- **`identifiers`** is the structured lookup block. Any system can query by email, phone, Google Chat ID, or website to find this person.
+- **`also_known_as`** captures brand names, nicknames, maiden names — anything someone might be known as that differs from `name`.
+- **`aliases`** (Obsidian-native) should include both `name` and `also_known_as` values for Obsidian search.
+- **`companies`** can be a single `company` + `company_domain` (simple) or an array of `{name, domain}` objects (multi-entity).
+- **Google Chat ID** (`identifiers.google_chat`) enables direct mapping from chat messages to contact profiles without needing the People API.
+- When mining, if you encounter a new email/phone for an existing contact, **update the existing file** rather than creating a duplicate.
 
 ---
 
