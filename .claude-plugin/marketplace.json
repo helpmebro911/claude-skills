@@ -62,12 +62,6 @@
       "category": "productivity"
     },
     {
-      "name": "basalt",
-      "description": "Mine knowledge from Gmail, Google Chat, Slack, Drive, local files, MCP servers, and web into an Obsidian-compatible vault. Basalt format: markdown with YAML frontmatter.",
-      "source": "./plugins/basalt",
-      "category": "productivity"
-    },
-    {
       "name": "social-media",
       "description": "Social media content creation — platform-formatted posts for LinkedIn, Facebook, Instagram, and Reddit with character limits, hashtag strategies, and image specs.",
       "source": "./plugins/social-media",

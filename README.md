@@ -4,7 +4,7 @@
 
 Production workflow skills for [Claude Code](https://claude.com/claude-code). Each skill guides Claude through a recipe to produce tangible output — scaffolded projects, generated assets, professional documents, deployed services.
 
-11 plugins. 60 skills. Every one produces something.
+10 plugins. 59 skills. Every one produces something.
 
 ## Quick Start
 
@@ -51,9 +51,8 @@ Then just ask Claude what you need — installed skills trigger automatically fr
 |--------|--------|-------------|
 | **dev-tools** | project-health, project-docs, app-docs, team-update, github-release, brains-trust, git-workflow, ux-audit, responsiveness-check, agent-browser, deep-research, onboarding-ux, fork-discipline, roadmap | Project config, doc generation, app user guides, team updates, releases, multi-model second opinions, git workflows, UX dogfooding, responsive testing, browser automation, deep research, in-app onboarding, core/client boundary audit, autonomous phased app delivery |
 | **integrations** | gws-setup, gws-install, google-chat-messages, google-apps-script, elevenlabs-agents, mcp-builder, nemoclaw-setup, parcel-tracking, stripe-payments | Google Workspace setup, Google Chat webhooks, Apps Script, ElevenLabs voice agents, MCP servers, NemoClaw, parcel tracking, Stripe payments (checkout, subscriptions, webhooks, billing portal) |
-| **basalt** | basalt-cortex | Mine knowledge from Gmail, Chat, Slack, Drive, local files, MCP, web into an Obsidian-compatible vault (~/.cortex/) |
 
-## All 60 Skills
+## All 59 Skills
 
 <details>
 <summary>Full skill list with trigger phrases</summary>
@@ -100,7 +99,6 @@ Then just ask Claude what you need — installed skills trigger automatically fr
 | `ux-audit` | "ux audit", "dogfood the app" |
 | `responsiveness-check` | "check responsiveness", "test viewports" |
 | `agent-browser` | "browser automation", "navigate to" |
-| `basalt-cortex` | "run the cortex", "mine emails", "mine slack", "cortex search" |
 | `deep-research` | "research this", "deep research", "explore the space" |
 | `onboarding-ux` | "onboarding", "empty states", "new user experience" |
 | `fork-discipline` | "fork discipline", "check the boundary", "core or client" |
