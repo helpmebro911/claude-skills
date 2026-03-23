@@ -121,6 +121,12 @@ Moments where the user felt uncertain, anxious, or frustrated:
 | Back button behaviour | [Pass/Fail — detail] |
 | Page refresh | [Pass/Fail — detail] |
 
+## Network Errors (detected during browsing)
+
+| Endpoint | Status | Page | Severity | Notes |
+|----------|--------|------|----------|-------|
+| [URL] | [status] | [page you were on] | [Critical/High/Medium/Low] | [likely cause] |
+
 ## What Works Well
 
 - [Positive findings — patterns to preserve and replicate]
