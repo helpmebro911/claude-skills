@@ -1,30 +1,22 @@
 ---
 name: product-showcase
-description: "Generate a marketing website that shows off a web app using real screenshots. Browses the running app, captures key screens, extracts features, and produces a single deployable HTML showcase page with hero, how-it-works, feature grid, and CTAs. Like a landing page but built FROM the actual product. Triggers: 'showcase site', 'product page', 'show off the app', 'marketing site from app', 'demo page', 'product showcase', 'app showcase'."
+description: "Generate a comprehensive marketing website for a web app — multi-page with real screenshots, animated GIF walkthroughs, feature deep-dives, and workflow demonstrations. Browses the running app, captures screens and sequences, and produces a deployable site that actually teaches people what the product does. Especially useful for complex or agentic apps that are hard to explain. Triggers: 'showcase site', 'product page', 'show off the app', 'marketing site', 'demo site', 'product showcase', 'explain the app', 'how do I market this'."
 compatibility: claude-code-only
 ---
 
 # Product Showcase Generator
 
-Generate a marketing website that shows off a running web app. Unlike the `landing-page` skill (which works from a brief), this skill **explores the actual app** via browser automation, captures real screenshots, discovers features, and builds a showcase page from what the product actually does.
+Generate a marketing website that actually teaches people what a web app does. Not just a hero and feature grid — a multi-page site with real screenshots, animated GIF walkthroughs of workflows, feature deep-dives, and progressive depth from "what is this" to "here's exactly how it works."
 
-## How It Differs from `landing-page`
-
-| `landing-page` | `product-showcase` |
-|---------------|--------------------|
-| Works from a text brief | Works from a running app |
-| Placeholder images | Real screenshots from the app |
-| User describes features | Features discovered by browsing |
-| No browser automation | Requires browser automation |
-| Generic marketing structure | Structured around app's actual workflows |
+Especially valuable for complex apps, agentic AI tools, and anything where a static screenshot doesn't convey the value.
 
 ## Depth Levels
 
-| Depth | Sections | Screenshots | Duration |
-|-------|----------|------------|----------|
-| **quick** | Hero + feature grid (3-4 features) | 5-6 screenshots | 15-20 min |
-| **standard** | Hero + how-it-works + feature grid + CTA | 10-15 screenshots | 30-45 min |
-| **thorough** | All sections including dark mode, keyboard shortcuts, before/after, integrations | 20-30 screenshots, both light/dark | 1-2 hours |
+| Depth | Output | Duration |
+|-------|--------|----------|
+| **quick** | Single page — hero, features, CTA. Same as before. | 15-20 min |
+| **standard** | Multi-page site — home, features page, how-it-works with screenshots. | 1-2 hours |
+| **thorough** | Comprehensive site — home, per-feature pages, animated GIF walkthroughs, use cases, comparison page, docs-style demo. | 3-6 hours |
 
 Default: **standard**
 
@@ -88,66 +80,142 @@ Don't just list features. For each one, answer: **why does the user care?**
 - BAD: "Search functionality"
 - GOOD: "Find anything in seconds — semantic search understands what you mean, not just what you type"
 
-### 3. Generate the Showcase
+### 3. Generate the Site
 
-Produce a **single HTML file** with Tailwind CDN (same pattern as `landing-page`):
+#### Quick Mode: Single Page (same as before)
+One HTML file: hero + feature grid + CTA. Use for MVPs and quick marketing.
 
-#### Sections
+#### Standard Mode: Multi-Page Site
 
-**Hero**
-- App name + tagline
-- Primary screenshot in a browser-frame mockup
-- Primary CTA button
-- Optional: secondary CTA ("Watch Demo", "View Pricing")
+```
+showcase/
+├── index.html              # Home — hero, overview, feature highlights, CTA
+├── features.html           # All features with screenshots and descriptions
+├── how-it-works.html       # Step-by-step workflow walkthrough with screenshots
+├── screenshots/            # All captured images
+│   ├── hero.png
+│   ├── feature-*.png
+│   ├── workflow-step-*.png
+│   └── *.gif               # Animated walkthroughs
+└── styles.css              # Shared styles (or inline Tailwind CDN)
+```
 
-**How It Works**
-- 3-4 steps with screenshots
-- Numbered or arrowed flow
-- Brief description under each step
-- Shows the main user journey
+**Home page**: Hero with animated GIF or key screenshot, 3-4 feature highlights (not all features — just the best), "How It Works" summary (3 steps), CTA.
 
-**Feature Grid**
-- 4-6 features in a responsive grid
-- Each: screenshot + heading + 1-2 sentence description
-- Screenshots in browser-frame mockups (smaller than hero)
-- Features extracted from actual app exploration
+**Features page**: Every feature with a real screenshot and benefit-focused description. Group by category if there are 6+. Each feature gets enough space to actually explain what it does.
 
-**Social Proof** (if testimonials provided)
-- 2-3 testimonial cards
-- Or skip this section entirely if no testimonials
+**How It Works page**: The primary workflow as a step-by-step visual guide. Each step has a screenshot (or animated GIF), a heading, and 2-3 sentences. This page answers "ok but what does using it actually look like?"
 
-**Pricing** (if provided)
-- 2-3 tier cards
-- Or skip if not provided
+#### Thorough Mode: Comprehensive Site
 
-**Before & After** (optional — if the app replaces a manual process)
-- Side-by-side comparison: "The old way" (spreadsheet, email, paper) vs "The new way" (your app)
-- Use a real screenshot of the app next to a stock representation of the old workflow
-- This is the most persuasive section for apps that replace existing tools
+```
+showcase/
+├── index.html              # Home — hero, overview, value proposition
+├── features/
+│   ├── index.html          # Feature overview grid
+│   ├── [feature-1].html    # Deep-dive: one page per major feature
+│   ├── [feature-2].html    # Each with screenshots, GIFs, use cases
+│   └── [feature-n].html
+├── how-it-works.html       # Full workflow walkthrough
+├── use-cases/
+│   ├── [use-case-1].html   # Scenario: "A day in the life of..."
+│   └── [use-case-2].html   # Scenario: "When a new client calls..."
+├── compare.html            # "Why [app] vs alternatives" (optional)
+├── screenshots/
+│   ├── hero.png
+│   ├── feature-*/           # Per-feature screenshot sets
+│   └── workflows/           # Animated GIFs
+└── styles.css
+```
 
-**Dark Mode Showcase** (optional — if the app has it)
-- Full-width screenshot in dark mode with a brief note: "Easy on the eyes. Dark mode built in."
-- Or side-by-side light/dark comparison
+**Per-feature deep-dive pages**: Each major feature gets its own page with:
+- Hero screenshot of the feature in action
+- "What it does" — 1-2 paragraphs explaining the value
+- "How it works" — step-by-step with screenshots or GIF
+- "Why it matters" — the problem this solves
+- Edge cases or power-user tips
+- Link to next feature (flow between pages)
 
-**Keyboard Shortcuts / Power Features** (optional — if the app has them)
-- Clean grid of shortcuts: Cmd+K search, Cmd+N new, etc.
-- Shows the app is built for productivity, not just looks
+**Use case pages**: Story-driven pages that show the app in a real scenario:
+- "It's Monday morning. You open the dashboard and see..."
+- Walk through a realistic workflow with screenshots at each step
+- Show the outcome — what's different because the user used this app
+- These are the most persuasive pages for apps that are hard to explain
 
-**Integration / Ecosystem** (optional — if the app connects to things)
-- Logo grid of connected services (Google, Slack, Stripe, etc.)
-- Or "Works with your existing tools" section
+**Comparison page** (optional): "Why [app] vs [alternatives]" — honest comparison, not marketing fluff. Feature table, key differentiators, who it's best for.
 
-**Open Source / Self-Hosted** (optional — if applicable)
-- GitHub stars badge, MIT license, deploy-your-own instructions
-- Trust signal for technical audiences
+### 4. Animated GIF Walkthroughs
 
-**CTA Banner**
-- Full-width call-to-action
-- Repeat the primary CTA
-- Urgency or benefit statement
+Static screenshots don't convey workflow. For key features, capture animated GIFs that show the actual interaction:
 
-**Footer**
-- App name, links, legal placeholders
+**How to capture** (using Playwright or Chrome MCP):
+1. Navigate to the starting state
+2. Start recording screenshots at ~2fps
+3. Perform the workflow (click, type, navigate)
+4. Stop recording
+5. Combine frames into a GIF
+
+**Generating the GIF** (Python script):
+```python
+from PIL import Image
+import glob
+
+frames = []
+for f in sorted(glob.glob('.jez/screenshots/workflow-*.png')):
+    frames.append(Image.open(f))
+
+frames[0].save('showcase/screenshots/workflows/create-client.gif',
+    save_all=True, append_images=frames[1:],
+    duration=500, loop=0)  # 500ms per frame
+```
+
+**What to animate**:
+- The primary "create something" flow (2-4 seconds)
+- A search/filter interaction (show results appearing)
+- A drag-and-drop or reorder operation
+- Dark mode toggle (satisfying visual)
+- Any "magic moment" where the app does something impressive (AI classification, instant search, real-time update)
+
+**GIF guidelines**:
+- Max 10 seconds / 20 frames — shorter is better
+- Capture at 1280x720, display at 640x360 (half size for file size)
+- Add a brief pause (3 frames) on the final state so viewers see the result
+- Loop continuously — no "click to play"
+- If the GIF would be >5MB, use fewer frames or crop to the relevant area
+
+**Display in HTML**:
+```html
+<div class="browser-frame">
+  <div class="browser-frame-bar">
+    <span class="browser-frame-dot"></span>
+    <span class="browser-frame-dot"></span>
+    <span class="browser-frame-dot"></span>
+  </div>
+  <img src="screenshots/workflows/create-client.gif"
+       alt="Creating a new client in 3 clicks"
+       loading="lazy" width="640" height="360">
+</div>
+```
+
+### 5. Explaining Agentic / AI Apps
+
+Agentic apps are especially hard to market because the value is invisible — the AI does work the user never sees. Standard screenshots show a chat interface. That's not compelling.
+
+**Patterns that work for agentic apps**:
+
+| Pattern | What it shows | Example |
+|---------|-------------|---------|
+| **Before/after** | What the user used to do manually vs what the agent does | "Used to: copy-paste from 3 systems. Now: agent does it in background." |
+| **Timeline** | What happens over time — show the agent working across hours/days | "8am: agent checks inbox. 9am: classifies 47 emails. 10am: flags 3 urgent." |
+| **Result showcase** | Skip the process, show the output | "Agent mined 1,200 emails → 89 clients, 340 contacts, 2,100 knowledge facts" |
+| **Side-by-side** | Show the agent's work next to what a human would have done | Split screen: left is the raw email, right is the extracted structured data |
+| **Magic moment GIF** | One animation of the most impressive thing | User asks a question → agent searches knowledge → returns answer with sources |
+
+**Copy tips for agentic apps**:
+- Lead with the outcome, not the technology ("Know every client's history" not "AI-powered CRM")
+- Show volume ("Processed 1,200 emails" is more impressive than "Processes your emails")
+- Use time comparisons ("What took 2 hours now takes 30 seconds")
+- Avoid jargon ("Finds connections in your data" not "Semantic vector search with RAG")
 
 ### 4. Screenshot Presentation
 
@@ -176,29 +244,33 @@ Screenshots are shown in browser-frame mockups using CSS:
 
 This gives screenshots a polished "app in a browser" look without needing to edit the images.
 
-### 5. Output
+### 6. Site Navigation
 
-Save to a `showcase/` directory:
+Multi-page sites need consistent navigation:
 
-```
-showcase/
-├── index.html          # The showcase page
-└── screenshots/        # All captured screenshots
-    ├── hero.png
-    ├── step-1.png
-    ├── step-2.png
-    ├── step-3.png
-    ├── feature-contacts.png
-    ├── feature-reports.png
-    └── ...
+```html
+<nav>
+  <a href="/">Home</a>
+  <a href="/features/">Features</a>
+  <a href="/how-it-works.html">How It Works</a>
+  <a href="/use-cases/">Use Cases</a>  <!-- thorough only -->
+  <a href="#pricing">Pricing</a>
+  <button>Get Started</button>
+</nav>
 ```
 
-The HTML references screenshots with relative paths (`screenshots/hero.png`).
+- Sticky nav on all pages
+- Current page highlighted
+- Mobile hamburger menu
+- CTA button always visible in nav
+
+### 7. Output
 
 After generating, tell the user:
-- Preview: `open showcase/index.html` or `python3 -m http.server -d showcase`
+- Preview: `python3 -m http.server -d showcase` then open `http://localhost:8000`
 - Deploy: drag the `showcase/` folder to Cloudflare Pages, Netlify, or any static host
 - List any placeholder content that needs replacing
+- Note which GIFs were generated and their file sizes
 
 ## Design Patterns
 

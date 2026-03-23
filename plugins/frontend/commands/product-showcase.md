@@ -1,12 +1,15 @@
 ---
-description: Generate a marketing site from a running app with real screenshots
-argument-hint: "[quick: hero + features | standard: full showcase | thorough: every screen] [url]"
+description: Generate a marketing website for a web app — multi-page with real screenshots and animated GIF walkthroughs
+argument-hint: "[quick: single page | standard: multi-page site | thorough: comprehensive with GIFs + use cases]"
 ---
 
 Load the `product-showcase` skill.
 
-Parse $ARGUMENTS for:
-- **Depth**: `quick` (hero + 3-4 feature screenshots, single page), `standard` (full showcase with how-it-works, feature grid, CTAs), `thorough` (every screen captured, comprehensive multi-section site). Default: standard
-- **URL**: app to showcase. If not provided, check wrangler.jsonc for deployed URL, then running dev server, then ask.
+Parse $ARGUMENTS for depth:
+- `quick` — single page, hero + features + CTA (15-20 min)
+- `standard` — multi-page: home, features, how-it-works with screenshots (1-2 hours)
+- `thorough` — comprehensive: per-feature pages, animated GIF walkthroughs, use case scenarios, comparison page (3-6 hours)
 
-Examples: `/product-showcase thorough https://app.example.com`, `/product-showcase quick`, `/product-showcase`
+URL auto-detected from wrangler.jsonc or running dev server.
+
+Examples: `/product-showcase thorough`, `/product-showcase standard`, `/product-showcase quick`
