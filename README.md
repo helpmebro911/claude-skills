@@ -4,7 +4,7 @@
 
 Production workflow skills for [Claude Code](https://claude.com/claude-code). Each skill guides Claude through a recipe to produce tangible output — scaffolded projects, generated assets, professional documents, deployed services.
 
-10 plugins. 59 skills. Every one produces something.
+10 plugins. 60 skills. Every one produces something.
 
 ## Quick Start
 
@@ -49,10 +49,10 @@ Then just ask Claude what you need — installed skills trigger automatically fr
 
 | Plugin | Skills | What it does |
 |--------|--------|-------------|
-| **dev-tools** | project-health, project-docs, app-docs, team-update, github-release, brains-trust, git-workflow, ux-audit, responsiveness-check, agent-browser, deep-research, onboarding-ux, fork-discipline, roadmap | Project config, doc generation, app user guides, team updates, releases, multi-model second opinions, git workflows, UX dogfooding, responsive testing, browser automation, deep research, in-app onboarding, core/client boundary audit, autonomous phased app delivery |
+| **dev-tools** | project-health, project-docs, app-docs, team-update, github-release, brains-trust, git-workflow, ux-audit, responsiveness-check, agent-browser, deep-research, onboarding-ux, fork-discipline, roadmap, vitest | Project config, doc generation, app user guides, team updates, releases, multi-model second opinions, git workflows, UX dogfooding, responsive testing, browser automation, deep research, in-app onboarding, core/client boundary audit, autonomous phased app delivery, Vitest test setup |
 | **integrations** | gws-setup, gws-install, google-chat-messages, google-apps-script, elevenlabs-agents, mcp-builder, nemoclaw-setup, parcel-tracking, stripe-payments | Google Workspace setup, Google Chat webhooks, Apps Script, ElevenLabs voice agents, MCP servers, NemoClaw, parcel tracking, Stripe payments (checkout, subscriptions, webhooks, billing portal) |
 
-## All 59 Skills
+## All 60 Skills
 
 <details>
 <summary>Full skill list with trigger phrases</summary>
@@ -103,6 +103,7 @@ Then just ask Claude what you need — installed skills trigger automatically fr
 | `onboarding-ux` | "onboarding", "empty states", "new user experience" |
 | `fork-discipline` | "fork discipline", "check the boundary", "core or client" |
 | `roadmap` | "roadmap", "plan the build", "delivery plan", "phase plan" |
+| `vitest` | "set up vitest", "add tests", "configure vitest", "migrate from jest" |
 | `shopify-setup` | "shopify setup", "connect shopify" |
 | `shopify-products` | "shopify products", "add products" |
 | `shopify-content` | "shopify pages", "shopify blog" |
