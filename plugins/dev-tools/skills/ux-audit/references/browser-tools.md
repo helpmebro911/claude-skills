@@ -2,13 +2,27 @@
 
 ## Tool Selection
 
-| Tool | Best For | Auth Support | Setup |
-|------|----------|-------------|-------|
-| **Chrome MCP** | Authenticated apps | Full — uses your logged-in Chrome session | Claude Code extension in Chrome |
-| **Playwright MCP** | Public apps, parallel sessions | Manual login required | MCP plugin |
+| Tool | Use for | Auth | Setup |
+|------|---------|------|-------|
+| **Chrome MCP** | Authenticated apps — **required** for anything requiring login | Full — uses your logged-in Chrome session | Claude Code extension in Chrome |
+| **Playwright MCP** | Public / unauthenticated sites | None | MCP plugin |
 | **playwright-cli** | Scripted flows, sub-agent tasks | Persistent session state | npm package |
 
-**Default**: Use Chrome MCP when available. It uses your real browser session — OAuth, cookies, and all auth state just work. For unauthenticated or public apps, Playwright is fine.
+**Rule**: For authenticated apps, Chrome MCP is the only viable tool — Playwright opens a fresh unauthed browser and the audit becomes meaningless. If Chrome MCP isn't connected, **stop and ask the user to open Chrome and click Connect in the Claude extension**. Do not silently fall back.
+
+For public sites with no login, Playwright MCP is fine (and can run in parallel sessions if needed).
+
+## Viewport
+
+Pin the window at the start of every audit:
+
+```
+width: 1440, height: 900
+```
+
+This is the baseline (standard MacBook resolution). Responsive sweeps then test 1280, 1024, 768, 375.
+
+**Do not resize above 2000px wide** — it breaks the harness. If the user asks to test ultra-wide layouts, screenshot at 1920 max.
 
 ## Chrome MCP Commands
 

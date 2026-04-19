@@ -1,17 +1,16 @@
 ---
-description: Run a UX walkthrough and QA sweep on a live web app
-argument-hint: "[quick: spot check | standard: walkthrough | thorough: overnight | exhaustive: every element]"
+description: Exhaustively audit a web app — threads, elements, 8 scenarios, fix-and-verify loop
+argument-hint: "[optional: persona or scope, e.g. 'as a busy broker' or 'the dashboard only']"
 allowed-tools: "*"
 ---
 
 Load the `ux-audit` skill and run the audit.
 
-Parse $ARGUMENTS for depth:
-- `quick` — 5-10 min spot check, one user flow
-- `standard` — 20-40 min walkthrough + QA sweep (default)
-- `thorough` — 1-3 hours, multiple personas, all pages, scenario tests, overnight mode
-- `exhaustive` — 4-8+ hours, every interactive element on every page clicked/tested/screenshotted
+Single exhaustive mode. If $ARGUMENTS describes a persona ("as a busy broker", "first-time user"), adopt it. If $ARGUMENTS scopes the audit ("the dashboard", "just the settings flow"), scope to that area — still exhaustive within the scope.
 
 URL is auto-detected from wrangler.jsonc or running dev server.
 
-Examples: `/ux-audit exhaustive`, `/ux-audit thorough`, `/ux-audit quick`
+Examples:
+- `/ux-audit`
+- `/ux-audit as a time-poor client logging in for the first time`
+- `/ux-audit the billing flow`
