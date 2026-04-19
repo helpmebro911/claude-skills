@@ -62,6 +62,18 @@ The audit needs a persona. Without one, findings drift toward generic "looks fin
 
 Capture: role, tech comfort, time pressure, emotional state, device context. A good persona predicts what they'd miss ("A receptionist between phone calls won't scroll below the fold").
 
+### 5. Screenshot post-processing
+
+On Retina Macs, Chrome captures screenshots at 2× the logical viewport — a 1440×900 window produces a 2880×1800 PNG. That's larger than the vision pipeline needs and wastes context. Downsize screenshots after each capture phase:
+
+```bash
+img-process batch ./screenshots --action optimise --max-width 1440
+```
+
+The `optimise` action is idempotent — no-op if already ≤ 1440px, downsize otherwise. Safe to run unconditionally, on every folder, at any point. At minimum, run it after each thread traversal and after the responsive sweep.
+
+Playwright MCP users can set `deviceScaleFactor: 1` in the browser context to sidestep this entirely — screenshots match viewport 1:1. Chrome MCP has no equivalent flag, so post-process instead.
+
 ## Discovery
 
 ### Sitemap crawl

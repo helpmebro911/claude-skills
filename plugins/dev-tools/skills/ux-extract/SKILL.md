@@ -49,6 +49,16 @@ See [../ux-audit/references/browser-tools.md](../ux-audit/references/browser-too
 
 Pin 1440×900 as baseline (MacBook standard). Also capture 768 and 375 for responsive patterns. Don't exceed 2000px wide.
 
+### 2b. Screenshot post-processing
+
+On Retina Macs, Chrome captures at 2× the logical viewport — a 1440-wide window produces a 2880-wide PNG. Post-process after each batch so the library isn't full of oversized files:
+
+```bash
+img-process batch ./screenshots --action optimise --max-width 1440
+```
+
+Idempotent — no-op on already-small files. Run at the end of each route's capture, or across the whole `screenshots/` folder at the end of the extract. Playwright MCP users can set `deviceScaleFactor: 1` in the context options and skip this step.
+
 ### 3. Scope
 
 Decide before starting:
