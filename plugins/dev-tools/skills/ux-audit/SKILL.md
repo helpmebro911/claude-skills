@@ -1,6 +1,6 @@
 ---
 name: ux-audit
-description: "Exhaustive UX audit of a web app. Walks every thread a real user would follow, tests every interactive element, runs scenario battery (keyboard-only, heavy data, destructive actions, second user, interrupted workflow, wrong turn, returning user, first contact), produces ranked findings with screenshots, then offers a fix-and-verify loop. Requires a persona. Trigger with 'ux audit', 'dogfood this', 'audit the app', 'qa sweep', 'exhaustive test', 'check all pages'."
+description: "Exhaustive UX audit of a web app. Walks every thread a real user would follow, tests every interactive element, runs visual polish sweep (AI-tells, optical centring, design-token discipline, animation timings) and scenario battery (keyboard-only, heavy data, destructive actions, second user, interrupted workflow, wrong turn, returning user, first contact), produces ranked findings with screenshots, then offers a fix-and-verify loop. Requires a persona. Trigger with 'ux audit', 'dogfood this', 'audit the app', 'qa sweep', 'exhaustive test', 'check all pages'."
 compatibility: claude-code-only
 ---
 
@@ -10,6 +10,7 @@ Exhaustively audit a web app from the perspective of a real user. Two lenses, co
 
 - **Flow lens** — walk the 3–5 real tasks a user would do ("threads"). Count clicks, mark dead ends, screenshot every state change.
 - **Element lens** — after threads, sweep every interactive element not already hit. Forms, menus, toggles, edge data volumes.
+- **Polish lens** — page-by-page visual polish sweep covering optical centring, design-token discipline, off-scale spacing, animation timings, and the other patterns that mark UIs as machine-generated.
 
 Then run an eight-scenario battery (first contact, interrupted workflow, wrong turn recovery, returning user, keyboard only, heavy data, destructive confidence, second user) and close with a fix-and-verify loop for critical findings.
 
@@ -61,6 +62,8 @@ The audit needs a persona. Without one, findings drift toward generic "looks fin
 3. **Ask** — if neither, ask one question: *"Who uses this app and what are they trying to get done?"*
 
 Capture: role, tech comfort, time pressure, emotional state, device context. A good persona predicts what they'd miss ("A receptionist between phone calls won't scroll below the fold").
+
+**Always also run the first-time-user lens** (see below) on every multi-page feature, even when the explicit persona is something else. It's the single biggest blind spot for AI / internal tooling — engineers writing the screen know what every field means, brand-new users don't.
 
 ### 5. Screenshot post-processing
 
@@ -117,6 +120,46 @@ For each route as you reach it, list every interactive element:
 This inventory powers the coverage metric. After the audit you can say *"tested 29 of 31 elements on /app/clients; 2 pagination controls not reached due to data volume"*. Coverage becomes arithmetic, not a vibe.
 
 Build inventories lazily — per-page as you traverse, not all up-front.
+
+## First-time-user lens (mandatory)
+
+Every multi-page feature the audit covers must pass the **first-time
+user** check. This catches the single biggest UX failure mode in
+internal/AI tooling: features built by the people who designed them
+work *for them*, but a brand-new user landing on the same screen has
+no idea what any of the controls mean, what to type into the inputs,
+or what defaults to keep.
+
+Run the lens like this. Adopt the persona of *someone signing in to
+this app for the very first time, with no prior context, no source
+access, no internal documentation*. Before each screen you audit, ask:
+
+| Question | What it catches |
+|---|---|
+| Could I complete the task without reading the code or docs? | Hidden technical knowledge baked into the form |
+| Are the field labels in plain language, not internal vocabulary? | `agentClass`, `slug`, `agentName`, `webhook_id`, `instance_id` leaking into UI |
+| Do dropdowns / pickers show **what each option does**, not just an ID? | Snake_case enums, raw class names, opaque slugs |
+| Are defaults sensible enough that I can keep them and move on? | Required fields with no defaults, mandatory ID inputs |
+| When I'm asked to enter something, is there a discoverable list of valid values? | Free-text inputs where a combobox / picker should be |
+| If I'd say "click Skip" because I don't understand a setting, that's a UX bug. | Optional-but-confusing settings exposed as primary inputs |
+
+When the lens fires, log a finding even if the screen technically
+works. The fix is usually one of:
+
+- **Replace text inputs with pickers** that read from a discovery
+  endpoint and show display names + descriptions
+- **Surface metadata** on every primitive (agent / tool / skill /
+  channel / role / outcome) so UIs never fall back to raw IDs
+- **Auto-derive** values that the user shouldn't have to invent
+  (instance names, slugs, IDs)
+- **Hide internal IDs** under an "Advanced" disclosure so they're
+  available for debugging but invisible by default
+- **Add inline guidance** ("Use this when…", "Pick the routine that…")
+  next to each control rather than gating users on tribal knowledge
+
+The lens applies to both new screens being audited and existing screens
+being polished. A screen passes the lens when a brand-new persona could
+complete the screen's task without back-channel help.
 
 ## Thread Traversal (primary phase)
 
@@ -187,6 +230,33 @@ For each route:
 On any page that breaks at an intermediate width, screenshot the transition point.
 
 Run the automated layout-detection JS (overflow, clipping, invisible text) at each width — snippets in [references/walkthrough-checklist.md](references/walkthrough-checklist.md). Read console output after injection; every warning is a potential finding.
+
+## Visual Polish Sweep
+
+A page-by-page micro-polish pass that catches the patterns separating *technically correct* UIs from *visibly considered* ones — and the patterns that mark a UI as machine-generated. Run after the Responsive Sweep, before the Scenario Battery.
+
+Cover this even if a separate design-review didn't run. The visual-polish concern lives in this phase by default.
+
+For each major page, walk the **AI-tell catalogue** in `references/visual-polish.md`. The ten checks:
+
+1. **Optical vs mathematical centring** — text in buttons, icons next to labels, numbers in badges. `align-items: center` is not optical centring.
+2. **Nested border-radius rule** — `inner radius = outer radius - padding`. Concentric arcs, not pinched corners.
+3. **Off-scale spacing** — every margin / padding / gap should land on the design system's scale. 22px where 24px belongs is the AI tell.
+4. **Vibe greys** — body text and borders trace to design tokens (`var(--*)`), not raw hex / Tailwind greys. Eyedropper every grey.
+5. **Border-weight drift** — 1px / 1.5px / 2px mixed in same logical category.
+6. **Drop shadow direction** — light source consistent across the app (all shadows point the same direction).
+7. **Animation timings off canonical** — durations on 150 / 200 / 300 / 500ms. Arbitrary values like 187ms are tells.
+8. **Hover-delta calibration** — perceptible state change (~10% brightness shift), not 5% imperceptible or 20% jarring.
+9. **Underline offset / uppercase letter-spacing** — set deliberately, not browser default.
+10. **Symmetry vs editorial pacing** — composed pages vs templated layouts. App shells generated by AI tend toward perfect mathematical symmetry.
+
+Plus a **per-component optical pass** for buttons, badges, inputs, dropdowns, cards, tabs, avatars, toasts. Each verified against the four-point check (text optically centred, icons on cap-height baseline, hover delta perceptible, nested radii correct).
+
+**Tools**: DevTools eyedropper for greys/colours, Computed styles tab for spacing/borders/timings, Layout overlay for grid/padding visualisation. Take screenshots of every finding *with the inspector overlay visible* — the overlay is the proof.
+
+**Severity**: stacked AI-tells on one component (off-centre text + arbitrary radius + raw grey) is **High**. Pattern-level violation across components (raw greys app-wide) is **High**. Single instance, single tell is **Low**.
+
+Full protocol, expected values, and findings shapes in [references/visual-polish.md](references/visual-polish.md).
 
 ## Scenario Battery
 
@@ -348,6 +418,7 @@ For audits expected to run longer than 30 minutes, set up a 15-min `/loop` check
 | Per-screen evaluation questions | [references/walkthrough-checklist.md](references/walkthrough-checklist.md) |
 | Workflow threads, wayfinding, mental model alignment, page-to-page continuity | [references/workflow-comprehension.md](references/workflow-comprehension.md) |
 | Full protocol for each of the 8 scenarios | [references/scenario-tests.md](references/scenario-tests.md) |
+| AI-tell catalogue, optical centring, design-token discipline, per-component pass | [references/visual-polish.md](references/visual-polish.md) |
 | Report format and severity rubrics | [references/report-template.md](references/report-template.md) |
 | Browser tool commands and viewport notes | [references/browser-tools.md](references/browser-tools.md) |
 | Long-running audit supervision via 15-min `/loop` check-in | [references/long-running-check-in-pattern.md](references/long-running-check-in-pattern.md) |
@@ -359,4 +430,5 @@ For audits expected to run longer than 30 minutes, set up a 15-min `/loop` check
 - **Write findings incrementally.** The report file is cheaper memory than your context.
 - **Stay in persona.** If you catch yourself thinking "a developer would know…" stop. Your persona doesn't.
 - **Every hesitation is a finding.** If you paused to figure out what to click, that's friction worth reporting.
+- **Use the eyedropper liberally.** Single fastest way to find vibe greys, off-token colours, and design-system drift.
 - **Coverage is arithmetic.** Inventoried ÷ tested. Publish the ratio in the report.
