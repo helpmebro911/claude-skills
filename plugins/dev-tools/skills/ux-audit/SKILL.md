@@ -1,6 +1,6 @@
 ---
 name: ux-audit
-description: "Walk through a live web app AS a real user to find usability + behavioural bugs that static reviews miss. REQUIRES proof of interaction (typing, clicking, sending, observing) before any verdict — a sweep that didn't interact terminates with verdict 'Incomplete'. Walks threads, exercises every element, runs the multi-pane stress matrix, visual polish sweep, component perfection checklist, scenario battery (10 scenarios), and stress recipes. Hard gates: console errors/warnings = 0, network 5xx = 0, layout collapse = 0. Each finding has reproduction steps, evidence path, and suspected code location. Trigger with 'ux audit', 'walkthrough', 'qa sweep', 'audit the app', 'dogfood this', 'check all pages', 'find what's broken', 'stress the UI'."
+description: "Walk through a live web app AS a real user to find usability + behavioural bugs that static reviews miss. REQUIRES proof of interaction (typing, clicking, sending, observing) before any verdict — a sweep that didn't interact terminates with verdict 'Incomplete'. Walks threads, exercises every element, runs the multi-pane stress matrix, visual polish sweep, component perfection checklist, automated a11y (axe-core), pragmatic performance budget (LCP/CLS/INP), scenario battery (10 scenarios), and stress recipes including the real-flavour data battery. Hard gates: console errors/warnings = 0, network 5xx = 0, layout collapse = 0, axe Critical/Serious = 0, perf budget green. Audit-the-audit meta-check rejects rushed reports. Each finding has reproduction steps, evidence path, and suspected code location. Trigger with 'ux audit', 'walkthrough', 'qa sweep', 'audit the app', 'dogfood this', 'check all pages', 'find what's broken', 'stress the UI'."
 compatibility: claude-code-only
 ---
 
@@ -27,9 +27,9 @@ The audit ends in exactly one of:
 - **Pass** — Critical = 0, High = 0, all hard gates green, Interaction Manifest complete.
 - **Conditional Pass** — Critical = 0, High = 0, all hard gates green, but Medium/Low present.
 - **Fail** — at least one Critical or High finding, OR a hard gate red.
-- **Incomplete** — Interaction Manifest missing required entries, or a phase wasn't run. Not legal to upgrade to Pass even if everything observed looked fine.
+- **Incomplete** — Interaction Manifest missing required entries, a phase wasn't run, OR the audit-the-audit meta-check fires (manifest timestamps clustered < 0.5s apart, screenshots fewer than 2 × routes, console reads fewer than 1 × routes, Phase 3 took < 1m for an exhaustive audit). Not legal to upgrade to Pass even if everything observed looked fine.
 
-If the work doesn't include a complete Interaction Manifest, the only legal verdict is **Incomplete**. "It looked OK" is not Pass.
+If the work doesn't include a complete Interaction Manifest, the only legal verdict is **Incomplete**. "It looked OK" is not Pass. A clean Pass with implausible timings is rejected — the agent must redo the audit with real interaction.
 
 ## Hard gates
 
@@ -42,9 +42,17 @@ These auto-fail the audit. They cannot be downgraded.
 | Network 5xx | > 0 | Critical |
 | Network 403 / 404 on authenticated pages | > 0 | High |
 | Layout collapse at any tested viewport / pane combo | > 0 | High |
+| axe-core Critical violations on any audited page | > 0 | Critical |
+| axe-core Serious violations on any audited page | > 0 | High |
+| LCP on representative route (pragmatic budget) | > 4.0s | High |
+| CLS on representative route | > 0.25 | High |
+| INP on representative route | > 500ms | High |
 | Required Interaction Manifest entry missing | n/a | Incomplete |
+| Manifest median gap between entries < 0.5s | n/a | Incomplete (didn't actually interact) |
 
 A console warning is High *minimum*. A 5xx is Critical *automatically*. There is no "Medium console error" — that category does not exist in this skill.
+
+axe-core thresholds are run **per page** (>1 violation on any single page fails). Performance thresholds are run **once on a representative route** (per-page is overkill); pragmatic budget is well above broken, well below CWV-strict. Full thresholds + rationale in [references/performance-budget.md](references/performance-budget.md). Full a11y wiring + severity mapping in [references/a11y-automation.md](references/a11y-automation.md).
 
 ### Allowlist for known noise
 
@@ -319,6 +327,25 @@ Each checkbox in the report cites a proof artefact (screenshot, console line, DO
 
 Full checklist in [references/perfection-checklist.md](references/perfection-checklist.md).
 
+### Automated accessibility (axe-core, mandatory)
+
+Manual keyboard-only walks (Scenario 5) catch focus traps and tab-order. They miss ~80% of structural a11y bugs (heading skips, hover/focus contrast failures, missing aria-labels, role mismatches). axe-core covers that 80% in <1 second per page.
+
+For every audited page:
+
+1. Inject axe-core via CDN (one script tag).
+2. Run `axe.run()` after the page settles.
+3. Map violations → audit findings (axe `critical` → audit Critical, axe `serious` → audit High, etc).
+4. Hard-gate: > 0 axe Critical OR > 0 axe Serious on any page = audit Fails.
+
+Total runtime for a 16-route audit is ~16 seconds. Allowlist via `.jez/audit-config.yml` for builder-mode reference pages (Components, Style guide). Full snippet, severity mapping, and findings format in [references/a11y-automation.md](references/a11y-automation.md).
+
+### Performance budget (pragmatic, mandatory)
+
+Run the Performance API capture once on a representative route (the page real users hit most — usually dashboard or main work surface). Pragmatic thresholds (LCP < 4.0s, CLS < 0.25, INP < 500ms) sit well above broken and well below Google's CWV "Good" tier. CWV-strict is for landing pages and marketing teams; for app interiors that real users sit inside, pragmatic is the right bar.
+
+Add to verdict block. Hard-gate any threshold breach. Diagnose with Chrome DevTools Performance trace (large hero, late font, heavy click handler, hydration cost). Full measurement snippet, throttling spec, and common offenders in [references/performance-budget.md](references/performance-budget.md).
+
 ## Phase 5 — Stress
 
 ### Scenario Battery (10 scenarios)
@@ -350,6 +377,7 @@ Beyond scenarios, run every relevant recipe in [references/stress-test-recipes.m
 | Offline mode | Retry / queue / dirty-state UX |
 | Print stylesheet | Forgotten media query |
 | High-contrast mode | Forced-colors media query handling |
+| **Real-flavour data battery** (mandatory for any form-accepting app) | Validation that strips characters silently (apostrophe, accents, RTL); length truncation without warning; SQL/XSS canaries not escaped; file uploads that don't fit (.heic, 8000×8000 PNG, 50MB PDF). AI-built UIs are notoriously dev-data clean. |
 
 ## Phase 6 — Verdict
 
@@ -369,14 +397,49 @@ Hard Gates:
   Network 5xx:           [count]   [GREEN/RED]
   Network 403/404 auth:  [count]   [GREEN/RED]   ([N] allowlisted)
   Layout collapse:       [count]   [GREEN/RED]
+  axe-core Critical:     [count]   [GREEN/RED]   ([N] allowlisted)
+  axe-core Serious:      [count]   [GREEN/RED]   ([N] allowlisted)
+
+Performance (sampled on /[representative-route]):
+  LCP:   [N]s    [GREEN/RED]   (threshold 4.0s)
+  CLS:   [N]     [GREEN/RED]   (threshold 0.25)
+  INP:   [N]ms   [GREEN/RED]   (threshold 500ms)
 
 Findings:
   Critical: [count]
   High:     [count]
   Medium:   [count]
   Low:      [count]
+
+Time per phase:
+  Phase 3 (walkthrough):  [N]m   ← exhaustive ≥ 5m
+  Total:                  [N]m
+
+Manifest plausibility:
+  Entries:                [N]    ← ≥ 6 per audited route
+  Median gap:             [N]s   ← if < 0.5s, agent didn't actually
+                                   interact; verdict → Incomplete
+  Screenshots:            [N]    ← ≥ 2 per audited route
 ═══════════════════════════════════════════════════════════
 ```
+
+### Audit-the-audit meta-check
+
+The verdict block's "Time per phase" + "Manifest plausibility" rows are not decoration — they're a forcing function against the agent (or a rushed human) claiming Pass without doing the work.
+
+Auto-Incomplete triggers:
+
+| Signal | Implies | Action |
+|---|---|---|
+| Phase 3 took < 1m for an exhaustive audit | Agent skipped the walkthrough | Verdict → Incomplete |
+| Median gap between manifest entries < 0.5s | Entries logged in bulk, no real interaction | Verdict → Incomplete |
+| Screenshots fewer than 2 × routes audited | Most pages didn't get before/after captures | Verdict → Incomplete |
+| Console reads fewer than 1 × routes audited | Pages weren't checked for warnings | Verdict → Incomplete |
+| Manifest first→last span < 5m for exhaustive | Whole audit was rushed | Verdict → Incomplete |
+
+These are non-negotiable. A clean Pass with implausible timings is rejected — the agent must redo the audit with real interaction.
+
+The reviewer (the human supervising the audit, or you reading the report later) can spot-check: do timestamps in the manifest cluster suspiciously? Do screenshot file mtimes align with manifest timestamps? Did the agent actually press keys and wait for state changes, or did it batch-emit a fictional log?
 
 ### Findings format (mandatory per finding)
 
@@ -493,6 +556,8 @@ For audits expected to run > 30 minutes, set up a 15-min `/loop` check-in alongs
 | Report format, verdict block, severity rubric, reproduction-step format | [references/report-template.md](references/report-template.md) |
 | Browser tool commands and viewport notes | [references/browser-tools.md](references/browser-tools.md) |
 | Round-trip workflow integrity (A→B→A pattern) | [references/round-trip-workflows.md](references/round-trip-workflows.md) |
+| Automated accessibility (axe-core injection + severity mapping) | [references/a11y-automation.md](references/a11y-automation.md) |
+| Pragmatic performance budget (LCP/CLS/INP via Performance API) | [references/performance-budget.md](references/performance-budget.md) |
 | Long-running audit supervision via 15-min `/loop` | [references/long-running-check-in-pattern.md](references/long-running-check-in-pattern.md) |
 
 ## Tips
