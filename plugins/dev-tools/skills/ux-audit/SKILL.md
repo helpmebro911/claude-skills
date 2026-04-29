@@ -1,6 +1,6 @@
 ---
 name: ux-audit
-description: "Walk through a live web app AS a real user to find usability + behavioural bugs that static reviews miss. REQUIRES proof of interaction (typing, clicking, sending, observing) before any verdict — a sweep that didn't interact terminates with verdict 'Incomplete'. Walks threads, exercises every element, runs the multi-pane stress matrix, visual polish sweep, component perfection checklist, scenario battery (9 scenarios), and stress recipes. Hard gates: console errors/warnings = 0, network 5xx = 0, layout collapse = 0. Each finding has reproduction steps, evidence path, and suspected code location. Trigger with 'ux audit', 'walkthrough', 'qa sweep', 'audit the app', 'dogfood this', 'check all pages', 'find what's broken', 'stress the UI'."
+description: "Walk through a live web app AS a real user to find usability + behavioural bugs that static reviews miss. REQUIRES proof of interaction (typing, clicking, sending, observing) before any verdict — a sweep that didn't interact terminates with verdict 'Incomplete'. Walks threads, exercises every element, runs the multi-pane stress matrix, visual polish sweep, component perfection checklist, scenario battery (10 scenarios), and stress recipes. Hard gates: console errors/warnings = 0, network 5xx = 0, layout collapse = 0. Each finding has reproduction steps, evidence path, and suspected code location. Trigger with 'ux audit', 'walkthrough', 'qa sweep', 'audit the app', 'dogfood this', 'check all pages', 'find what's broken', 'stress the UI'."
 compatibility: claude-code-only
 ---
 
@@ -48,31 +48,9 @@ A console warning is High *minimum*. A 5xx is Critical *automatically*. There is
 
 ### Allowlist for known noise
 
-Some apps have known-noisy console / network categories that aren't bugs — Sentry info logs in dev, third-party CDN deprecation chatter the team can't fix, expected 401s on auth-check probes. Without an escape hatch the skill drowns the report in non-findings.
+Some apps have known-noisy console / network categories that aren't bugs (Sentry info logs in dev, browser-extension chatter, expected 401 on auth-check probes). The audit reads `.jez/audit-config.yml` (or `.json`) before Phase 3 and applies the allowlist when classifying findings. Allowlisted entries stay in the Interaction Manifest (transparency) but suppress from the findings count. The verdict block always shows both raw and allowlisted counts — `Console warnings: 3 (1 allowlisted, 2 reportable)`.
 
-If the project ships an audit-config file at any of these paths, read it before Phase 3 and apply the allowlist when classifying findings:
-
-```yaml
-# .jez/audit-config.yml  (or audit-config.json — first match wins)
-console_allow:
-  - "[Sentry] DSN not configured"     # dev-only info log
-  - "Lighthouse Tools is loaded"      # browser extension chatter
-  - "/^Download the React DevTools/"  # leading + trailing slash = regex
-network_allow:
-  - "GET https://o*.ingest.sentry.io" # Sentry probe — 401 expected when DSN missing
-  - "GET /api/auth/get-session 401"   # unauth-on-load probe pattern
-```
-
-Allowlist semantics:
-
-- Plain string — substring match against the message / URL
-- `/regex/` — full regex match
-- Allowlisted entries are still recorded in the Interaction Manifest (transparency) but suppressed from the findings count.
-- The Verdict block always shows raw counts AND allowlisted counts — `Console warnings: 3 (1 allowlisted, 2 reportable)`.
-
-If no audit-config exists, default behaviour: every console error / warning is a finding. The allowlist is opt-in per project, not a global escape hatch.
-
-When you find yourself wanting to allowlist something for the first time on a project, add it to the file with a one-line comment explaining *why* it's allowed — future audits should be able to re-justify each entry.
+Default without a config: every console error / warning is a finding. Allowlist is opt-in per project, not a global escape hatch. Full format, semantics, surface overrides, and quarterly-audit discipline in [references/audit-config.md](references/audit-config.md).
 
 ## Phases (in order)
 
@@ -80,7 +58,7 @@ When you find yourself wanting to allowlist something for the first time on a pr
 2. **Discovery** — sitemap, thread inventory, element inventory
 3. **Walkthrough** — Interaction Manifest, threads, element exhaustion, multi-pane stress, first-time-user lens, live interaction smoke
 4. **Polish** — visual polish sweep, component perfection checklist
-5. **Stress** — scenario battery (9 scenarios) + extended stress recipes
+5. **Stress** — scenario battery (10 scenarios) + extended stress recipes
 6. **Verdict** — verdict state, hard-gate scorecard, perfection roadmap, findings with reproduction
 7. **Fix-and-verify** — patch findings, re-walk affected slices, update report
 
@@ -273,6 +251,25 @@ Code reading verifies a button exists and has an `onClick`. It does not verify c
 
 Known silent-failure controls (Approve/Deny on tool-call cards, OAuth-in-dialog popup-blocked, async-validation forms, optimistic-UI delete, off-by-one pagination, filter chips with stale TanStack Query, Reply/Forward without Message-ID): see [references/live-interaction-smoke.md](references/live-interaction-smoke.md) for the full silent-failure catalogue and SDK contract checks (`@ai-sdk/react`, better-auth, TanStack Query, React Router v7, Radix Dialog, zodResolver).
 
+### Round-trip Workflow Integrity (mandatory)
+
+For every workflow that traverses pages — A → B → A — the audit must exercise the full round-trip. The bug pattern: a mutation on B creates data tied to A, but B's mutation only invalidates B's own query key. A is stale on return. User sees an empty list, thinks the action failed, retries or gives up.
+
+For each cross-page workflow:
+
+1. Capture A's state (count, latest timestamp, badges).
+2. Trigger the action on A that navigates to B.
+3. Complete the mutation on B.
+4. Navigate back via the discoverable back affordance — NOT a hard reload.
+5. Verify A reflects the new state (incremented count, new row, updated timestamp, decremented badge).
+6. Verify the back affordance was discoverable: visible without hover, labelled with parent name, sized like a control, sidebar still shows parent context.
+
+If A is stale OR the back affordance is hidden, log a finding (severity High — looks like data loss to the user). Reload that "fixes" the staleness is the smoking gun.
+
+Build the round-trip surface inventory during Phase 2. For each mutation across the app, list every parent query key it should invalidate. Particular smells: header badges (notification bell, unread counts, pending pips) that depend on data multiple pages can mutate.
+
+Full protocol, surface inventory format, detection heuristics, and findings template in [references/round-trip-workflows.md](references/round-trip-workflows.md).
+
 ### Responsive Sweep
 
 Layout-detection JS at every width (overflow, clipping, invisible text). Capture transition points. Combined with multi-pane stress above for full coverage.
@@ -324,9 +321,9 @@ Full checklist in [references/perfection-checklist.md](references/perfection-che
 
 ## Phase 5 — Stress
 
-### Scenario Battery (9 scenarios)
+### Scenario Battery (10 scenarios)
 
-All nine, always. They catch what screen-by-screen testing misses. Full protocols in [references/scenario-tests.md](references/scenario-tests.md).
+All ten, always. They catch what screen-by-screen testing misses. Full protocols in [references/scenario-tests.md](references/scenario-tests.md).
 
 1. **First Contact** — figure out the app with zero prior knowledge, write a 2-min plain-English guide to each thread.
 2. **Interrupted Workflow** — start a task, close the tab, refresh, navigate away mid-form. Does state survive?
@@ -337,6 +334,7 @@ All nine, always. They catch what screen-by-screen testing misses. Full protocol
 7. **Destructive Confidence** — every delete/send/publish/pay/share: consent clear, copy specific, undo available.
 8. **Second User (Role)** — restricted role (viewer not editor, client not staff). Read-only views, permission errors.
 9. **Lifecycle Position** — same role at user #1 (founder), #2 (first invitee, partial state), #N (later joiner, populated workspace). Each sees a different reality.
+10. **Round-Trip Workflow Integrity** — every A→B→A flow: complete mutation on B, verify A reflects new state on return without reload. Discoverable back affordance. Header badges update. The single biggest "the project is just empty when I go back" source.
 
 ### Extended Stress Recipes
 
@@ -481,11 +479,12 @@ For audits expected to run > 30 minutes, set up a 15-min `/loop` check-in alongs
 | When | Read |
 |------|------|
 | Persona library + writing protocol | [references/persona-lock.md](references/persona-lock.md) |
+| Audit-config allowlist format + semantics + surface overrides | [references/audit-config.md](references/audit-config.md) |
 | Interaction Manifest template + replay protocol | [references/interaction-manifest.md](references/interaction-manifest.md) |
 | Multi-pane stress matrix + automation snippets | [references/multi-pane-stress.md](references/multi-pane-stress.md) |
 | Per-screen evaluation questions, layout-detection JS | [references/walkthrough-checklist.md](references/walkthrough-checklist.md) |
 | Wayfinding, mental model, page-to-page continuity | [references/workflow-comprehension.md](references/workflow-comprehension.md) |
-| Full protocol for each of the 9 scenarios | [references/scenario-tests.md](references/scenario-tests.md) |
+| Full protocol for each of the 10 scenarios | [references/scenario-tests.md](references/scenario-tests.md) |
 | Extended stress recipes (race, slow network, reduced motion, i18n) | [references/stress-test-recipes.md](references/stress-test-recipes.md) |
 | Component-level perfection checklist (6 categories + 6 states) | [references/perfection-checklist.md](references/perfection-checklist.md) |
 | AI-tell catalogue, optical centring, design-token discipline | [references/visual-polish.md](references/visual-polish.md) |
@@ -493,6 +492,7 @@ For audits expected to run > 30 minutes, set up a 15-min `/loop` check-in alongs
 | Playwright killer-flow test starters | [references/playwright-killer-flows.md](references/playwright-killer-flows.md) |
 | Report format, verdict block, severity rubric, reproduction-step format | [references/report-template.md](references/report-template.md) |
 | Browser tool commands and viewport notes | [references/browser-tools.md](references/browser-tools.md) |
+| Round-trip workflow integrity (A→B→A pattern) | [references/round-trip-workflows.md](references/round-trip-workflows.md) |
 | Long-running audit supervision via 15-min `/loop` | [references/long-running-check-in-pattern.md](references/long-running-check-in-pattern.md) |
 
 ## Tips

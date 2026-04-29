@@ -1,6 +1,6 @@
 # Scenario Tests
 
-Eight structured tests that go beyond page-by-page evaluation. Each simulates a real-world situation that exposes problems traditional QA misses. Run all eight during an exhaustive audit.
+Nine structured tests that go beyond page-by-page evaluation. Each simulates a real-world situation that exposes problems traditional QA misses. Run all nine during an exhaustive audit.
 
 ---
 
@@ -287,7 +287,7 @@ Plus:
 
 ---
 
-## 8. Second User
+## 8. Second User (Role)
 
 **Premise**: Most apps have roles — admin vs viewer, staff vs client, owner vs guest. The primary user experience is tested exhaustively. What about the others?
 
@@ -319,6 +319,115 @@ Plus:
 
 ---
 
+## 9. Lifecycle Position
+
+**Premise**: Same role can experience the app radically differently depending on *when* in the org's lifecycle the user joins. The primary user gets exhaustive testing from a fully-onboarded perspective. What about the founder on day one, the first invitee on day three, and the colleague who joined a workspace that already has a year of history?
+
+These are different products to different users. Empty-state copy that says "Get started by adding your first user" is correct for user #1 and broken for user #2. Activity feeds that look great with 50 contributors may break or feel hollow with one. Defaults that filter to "your work" are great for user #N and meaningless for user #1.
+
+**How to run**:
+
+Test three lifecycle positions, each with the same role (e.g. admin):
+
+### User #1 — Founder (fresh org)
+
+1. Sign up a fresh account / create a new org / start a new workspace.
+2. Walk the *initial setup* and *first meaningful task* as the persona.
+3. Specifically check:
+   - **Onboarding flow**: Was there one? Was it skippable? Did it explain the app's concepts or assume you knew them?
+   - **Empty workspace**: Helpful or hostile? Did the dashboard guide the next action or just show "no data" everywhere?
+   - **First-task time**: Could you complete one meaningful piece of work in 5 minutes?
+   - **Concept introduction**: Did the app teach its own vocabulary as you encountered it, or did you have to figure it out?
+
+### User #2 — First invitee (partial state)
+
+1. From user #1's account, invite user #2 with the same role.
+2. Accept the invite as user #2 and walk the same threads as user #1.
+3. Specifically check:
+   - **Invite welcome**: Did the welcome copy address you specifically, or did it dump you into the founder's setup wizard?
+   - **Setup-wizard misfire**: Were you forced through "set up your org" UI when the org already exists?
+   - **Wayfinding in partial state**: Could you find your way around an org someone else shaped, with limited data and one peer?
+   - **Peer-feature edge cases**: Mentions, assignments, comments, activity feeds, sharing — do they work meaningfully when there's only one other user?
+   - **Empty-with-context copy**: Does empty-state copy still say "Add your first user" when *you are* the first user being added?
+
+### User #N — Later joiner (full workspace)
+
+1. Either use a real workspace with established data, or seed a fresh org with rich state (50+ records, 5+ users, established saved views) before running this segment.
+2. Join as user #N (or simulate by seeding then signing up).
+3. Specifically check:
+   - **Onboarding stays out of the way**: You're catching up, not setting up. Does the app skip founder-flavoured onboarding?
+   - **Find your work**: Could you find what's *yours* amongst others' content? Defaults filtered to your context, or dumped into "all data"?
+   - **Convention learning**: Did the app teach the org's saved views, custom fields, naming conventions — or did you have to ask a teammate?
+   - **Joining-the-party UI**: Is there a "what you missed" / "what's relevant to you" affordance, or do you land in a generic dashboard?
+
+**What to report**:
+
+| Position | Setup flow shown? | Onboarding gap | Wayfinding works? | Empty/partial UI helpful? |
+|----------|-------------------|----------------|-------------------|--------------------------|
+| User #1 (founder) | Y/N + quality | [list gaps] | Y/N + detail | Y/N + detail |
+| User #2 (first invitee) | Y/N + quality | [list gaps] | Y/N + detail | Y/N + detail |
+| User #N (later joiner) | Y/N + quality | [list gaps] | Y/N + detail | Y/N + detail |
+
+Plus:
+- **Same-screen-three-faces inventory**: For each major page, is the empty / partial / full state coherent? Or does one of the three look unfinished?
+- **Onboarding scope creep**: Does setup UI bleed into screens user #2 and #N see?
+- **Activity feed dignity**: Does the app present activity sensibly when only one user has acted, or does it look hollow?
+- **Assignment / mention UX**: Test mentioning user #1 → user #2 with two-user setup. Does the @mention picker work? Are assignment dropdowns useful with 1, 2, 50 users?
+- **Default landing**: Does the default dashboard / home view differ usefully by lifecycle position, or is it identical-and-suboptimal-for-most?
+
+**Severity guide**: User #2 force-routed through founder setup wizard is **High**. Empty-state copy that's wrong for the user's lifecycle position ("Add your first user" shown to user #2) is **High**. Activity feed that breaks or shows raw nulls when only one user has acted is **High**. User #N dumped into all-data with no filter / scoping hint is **Medium**. Concept vocabulary never introduced anywhere (must learn from a teammate) is **Medium**. Onboarding shown to user #N when they don't need it (and unskippable) is **Medium**.
+
+**Why this beats the standard "second user" test**: Roles and lifecycle position are orthogonal axes. A viewer who joined on day one and a viewer who joined on day three hundred see different products. Scenario 8 covers the role axis. This covers the time axis.
+
+---
+
+## 10. Round-Trip Workflow Integrity
+
+**Premise**: Real users navigate A → B → A constantly. Open a project, type a prompt, get dropped into chat, agent replies, back to project — does the project show what just happened? When mutations on B affect data shown on A, the cache invalidation often gets missed and A serves stale state. Looks like data loss.
+
+**How to run**:
+
+For every workflow that traverses pages:
+
+1. Capture A's state — count of items, latest timestamp, badge values.
+2. Trigger an action on A that navigates to B.
+3. Complete a mutation on B (send a message, create a thing, approve an item, save a draft).
+4. Navigate back to A using the discoverable back affordance — NOT a hard reload.
+5. Verify A reflects the new state (incremented count, new row, updated timestamp, decremented badge).
+6. Verify the back affordance was discoverable (visible without hover, labelled with parent name, sized like a control, sidebar still highlights parent).
+
+If the round-trip leaves A stale, log a finding (severity High — looks like data loss). Reload that "fixes" the staleness is the smoking gun.
+
+**Cross-page mutation surfaces to test**:
+
+| Outbound (A → B) | Mutation on B | What A must reflect on return |
+|---|---|---|
+| Project page → Start chat | Conversation created | New conversation in project's list |
+| Item list → detail page edit | Item updated | List shows new title / status |
+| Bulk-action page → batch process | Items processed | List + count + header badge update |
+| Inbox → click finding | Finding marked-read | Unread count on bell decrements |
+| Approvals page → approve | Approval decided | Pending tab + Inbox unified view both update |
+| Settings → API tokens → create | Token created | List populates |
+| Connections → OAuth → callback | Connection persisted | Connection list shows new entry |
+| Routines /new → submit | Routine created | Sidebar + routines list show new row |
+
+**What to report**:
+
+| Round-trip | Stale on return? | Reload reveals data? | Back affordance discoverable? |
+|---|---|---|---|
+| project → chat → project | Y/N | Y/N | Y/N — describe (size, label, location) |
+| (etc) | | | |
+
+**Severity guide**: Stale parent on return is **High** (looks like data loss). Missing/hidden back affordance is **Medium** (recoverable but disorienting). Header badge that doesn't update is **High** (lies to the user about pending work).
+
+**Code-level companion check**: grep for every `useMutation` and check the keys it invalidates against the keys consumed by parent / sibling views. The classic miss: mutation invalidates `['inbox']` only, but the same data also appears under `['notifications']` (badge) + `['approvals']` (sibling tab). Audit each mutation: "what query keys consume the data this mutation affects?" — invalidate them all.
+
+Full protocol, surface inventory, detection heuristics, and findings template in [round-trip-workflows.md](round-trip-workflows.md).
+
+**Why this exists as its own scenario**: it doesn't fit "Wrong Turn Recovery" (user goes correctly, not wrongly), it doesn't fit "Returning User" (test runs in one sitting), and it's invisible to static analysis. It's the single biggest source of "I'm not sure how I got there / the project is just empty when I go back" UX feedback in real apps.
+
+---
+
 ## Running the Battery
 
 Recommended order:
@@ -331,6 +440,8 @@ Recommended order:
 6. **Returning User** — repeat threads, measure improvement, check the dashboard.
 7. **Keyboard Only** — unplug the mouse, re-walk the threads.
 8. **Destructive Confidence** — ask the user before running. Use a test account if possible.
-9. **Second User** — log out, log in as a restricted role.
+9. **Second User (Role)** — log out, log in as a restricted role.
+10. **Lifecycle Position** — fresh org as user #1, invited as user #2, joining a populated org as user #N.
+11. **Round-Trip Workflow Integrity** — exercise every A → B → A flow. Verify A reflects new state on return without reload. The single biggest source of "I'm not sure how I got there / the project is just empty when I go back" feedback.
 
-The First Contact output goes directly into the report and doubles as user documentation draft. The Destructive Confidence and Second User results often surface the highest-severity findings in the whole audit.
+The First Contact output goes directly into the report and doubles as user documentation draft. The Destructive Confidence, Second User, Lifecycle Position, and Round-Trip Integrity results often surface the highest-severity findings in the whole audit.
